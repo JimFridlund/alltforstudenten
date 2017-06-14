@@ -1,0 +1,22 @@
+<?php $this->load->view('_header'); ?>
+
+<div id="left">
+	<div class="left_box">
+		<h1>Medarbetare</h1>
+		
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+		sed do eiusmod tempor incididunt ut labore et dolore magna 
+		aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+		ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+		Duis aute irure dolor in reprehenderit in voluptate velit 
+		esse cillum dolore eu fugiat nulla pariatur.</p>
+	</div>
+</div>
+
+<div id="right">
+	<div class="right_box">
+		<?php $this->load->view('pages/_menu'); ?>
+	</div>
+</div>
+
+<?php $this->load->view('_footer'); ?>

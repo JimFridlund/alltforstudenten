@@ -1,0 +1,299 @@
+/*  
+Theme Name: Studenten 2011
+Description: Studenten 2011
+Version: 1.0
+Author: Kristoffer Lidman
+Author URI: http://identa.se/
+*/
+
+.heading_button {
+	width: 120px;
+	height: 19px;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 11px;
+	padding: 1px 0 0 8px;
+	font-weight: bold;
+	text-transform: none;
+	background: url(/public/images/heading_button.png) no-repeat;
+	cursor: pointer;
+}
+
+/*-------- Menu --------*/
+#right ul.menu {
+	list-style-type: none;
+	margin: 0 0 20px 0;
+	font-size: 14px;
+	font-weight: bold;
+}
+#right ul.menu li {
+	margin: 0 0 10px 0;
+}
+#right ul.menu li a {
+	background: #fff;
+}
+#right ul.menu li.active a {
+	color: #333;
+}
+#right ul.menu li img {
+	margin: 0 10px 0 0;
+	float: left;
+	display: inline;
+}
+#right ul.menu li#last {
+	border: none;
+	border-top: 1px dotted #eee;
+	padding: 10px 0 0 0;
+	margin: 0;
+}
+#right .right_button {
+	width: 246px;
+	height: 31px;
+	background: #ccc url(/public/images/right_button.png) no-repeat;
+	float: left;
+	padding: 9px 0 0 0;
+	font-weight: bold;
+	text-align: center;
+	color: #fff;
+	font-size: 18px;
+	margin: 0;
+	text-shadow: 0 1px 0 #333;
+	cursor: pointer;
+}
+#right .right_button:hover {
+	color: #222;
+	text-shadow: 0 1px 0 #999;
+}
+/*--------- Listor ---------*/
+#info_list {
+	width: 535px;
+	height: 27px;
+	float: left;
+	background: #666 url(/public/images/info_list.png) no-repeat;
+	color: #fff;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 8px 10px 0 10px;
+	text-shadow: 0px 1px 1px #000;
+}
+#info_list div {
+	float: left;
+}
+#info_list .atgarder {
+	float: right;
+	text-align: right;
+	padding: 0 2px 0 0;
+	width: 75px;
+}
+.dashboard_item {
+	width: 545px;
+	height: 45px;
+	padding: 11px 5px 0 5px;
+	float: left;
+	border-bottom: 1px solid #e8f0fa;
+}
+.dashboard_item div {
+	float: left;
+}
+.dashboard_item.alt {
+	background: #f5f9fd;
+	text-shadow: 0 1px 0 #fff;
+}
+.dashboard_item:hover {
+	background: #fffff2;
+	border-bottom: 1px solid #f1f1e4;
+	color: #000;
+}
+.dashboard_item div.actions {
+	float: right;
+}
+.dashboard_item div.actions img {
+	margin: 0 5px 0 0;
+}
+/*-------- Formulär ----------*/
+#left dl dd .textfield {
+	width: 334px;
+	padding: 2px;
+	color: #777;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+#left dl dd input:focus, #left dl dd select:focus {
+	-webkit-outline-radius: 4px;
+    -moz-outline-radius: 4px;
+    outline-radius: 4px;
+    outline: 2px solid rgba(104, 189, 244, 0.3);
+    outline-offset: 0px;
+}
+#left dl dd .textfield_postnr {
+	width: 60px;
+	padding: 2px;
+	color: #777;
+	margin: 0 15px 3px 0;
+	font-size: 14px;
+}
+#left dl dd .textfield_small {
+	width: 190px;
+	padding: 2px;
+	color: #777;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+#left dl dd .textfield_select {
+	width: 280px;
+	padding: 2px;
+	color: #777;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+#left dl dd .double {
+	margin: 0 0 10px 0;
+}
+#left dl dd .textfield_mini {
+	width: 90px;
+	padding: 2px;
+	color: #777;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+#left dl dd .selectbox_fat {	
+	width: 260px;
+	color: #888;
+	font-weight: bold;
+	font-size: 15px;
+	padding: 5px;
+	margin: 0 0 3px 0;
+}
+#left dl dd .what-is-this {
+	font-weight: bold;
+	float: left;
+	margin: 2px 0 20px 10px;
+}
+
+#left dl dd #msgbox {
+	position: absolute;
+	top: 0;
+	width: 82px;
+	height: 30px;
+	right: 72px;
+	padding: 2px 0 0 0;
+}
+/*-------- Add kommun ---------*/
+#left dl dd #add_cat {
+	font-weight: bold;
+	height: 25px;
+	padding: 5px 10px 0 10px;
+	margin: 8px 58px 0 0;
+	float: right;
+	cursor: pointer;
+	color: #26AED2;
+	background: #eee;
+	font-size: 14px;
+	text-shadow: 0 1px 0 #fff;
+}
+#left dl dd #add_cat:hover {
+	color: #333;
+}
+#left dl dd#added_cats {
+	color: #333;
+	font-size: 12px;
+}
+#left dl dd#added_cats p {
+	color: #989898;
+	font-size: 12px;
+	margin: 0;
+	font-weight: bold;
+}
+#left dl dd#added_cats ul {
+	font-size: 13px;
+	color: #888;
+	list-style-type: none;
+	margin: 5px 0 20px 0px;
+}
+#left dl dd#added_cats ul li {
+	margin: 0 0 5px 0;
+}
+#left dl dd#added_cats ul strong {
+	color: #333;
+	margin: 0 5px 0 0;
+}
+#left dl dd#added_cats ul li .cat_remove {
+	font-weight: bold;
+	margin: 0 0 0 15px;
+	cursor: pointer;
+	color: #26AED2;
+}
+#left dl dd#added_cats ul li .cat_remove:hover {
+	color: #333;
+}
+#left dl dd#cat_list {
+	margin: 0 0 10px 0;
+}
+/*-------- Logo i Form --------*/
+.logo_container {
+	width: 190px;
+	height: 85px;
+	float: left;
+	position: relative;
+	text-align: center;
+	padding: 10px;
+	background: #eee url(/public/images/right_logo.gif) no-repeat;
+	margin: 0 100px 10px 0;
+	clear: both;
+}
+.logo_container .remove_logo {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: -4px;
+	right: -4px;
+}
+.msg {
+	width: 555px;
+	padding: 10px 0 10px 0;
+	float: left;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 0 0 15px 0;
+	text-shadow: 0 1px 0 #fff;
+	-webkit-border-radius:4px;  
+	-moz-border-radius:4px;  
+	border-radius:4px;
+}
+.msg.ok {
+	background: #dfefa1;
+}
+.msg.notok {
+	background: #f4c5c6;
+}
+.msg.info {
+	background: #f8f4c6;
+}
+.msg.empty {
+	background: #f8f4c6;
+	margin: 1px 0 0 0;
+	border-bottom: 1px solid #efebbf;
+}
+/*-------- Sortable List --------*/
+ul#sort_list {
+	list-style-type: none;
+}
+.dashboard_item div.move {
+	width: 35px;
+	padding: 2px 0 0 0;
+	cursor: move;
+}
+/*-------- Paginering --------*/
+.pagination {
+	width: 535px;
+	float: left;
+	margin: 20px 0 0 0;
+	padding: 5px 10px;
+	text-shadow: 0px 1px 0px #fff;
+	background: #eee;
+	-webkit-border-radius:4px;  
+	-moz-border-radius:4px;  
+	border-radius:4px;
+}

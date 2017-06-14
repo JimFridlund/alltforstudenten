@@ -1,0 +1,75 @@
+<?php $this->load->view('_header'); ?>
+	
+<div class="wide_box searchbox">
+	<p class="search_heading">Sök på skola eller kommun, eller välj ditt län i listan</p>
+	<div class="search_container">
+		<?php echo form_open('sok');?>
+		<input type="text" class="fritext" name="s_value" value="Skola eller kommun" />
+		<input type="submit" class="submit" value="Sök" title="Sök" />
+		</form>
+	</div>
+	
+	<div class="list_container">
+		<div class="alignleft">Inget län valt</div>
+		<div class="list_button" title="Välj ditt län">Välj län</div>
+		
+		<div class="lan_container">
+			<?php if($lan > 0): ?>
+			<?php $i = 0; ?>
+			<div>
+			<?php foreach($lan as $data): ?>
+			<div class="lan_box"><a href="<?php echo base_url() ?>visa/<?php echo $data->permalink; ?>" title="<?php echo $data->title; ?>"><?php echo $data->title; ?></a></div>
+			<?php endforeach;?>
+			</div>
+			<?php else :?>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+
+<div class="wide_box">
+	<img src="<?php echo base_url() ?>public/images/temp_img_big.jpg" alt="" />
+</div>
+
+<div class="infoboxes">
+	<div class="box">
+		<h2>Hur gör man idag?</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+		sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+		Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+		nisi ut aliquip ex ea commodo consequat.</p>
+		
+		<img src="<?php echo base_url() ?>public/images/temp_img_box.jpg" alt="" />
+	</div>
+	<div class="box">
+		<h2>Varför denna mössa?</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+		sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+		Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+		nisi ut aliquip ex ea commodo consequat.</p>
+		
+		<img src="<?php echo base_url() ?>public/images/temp_img_box.jpg" alt="" />
+	</div>
+	<div class="box right">
+		<h2>Varför denna mössa?</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+		sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+		Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+		nisi ut aliquip ex ea commodo consequat.</p>
+		
+		<img src="<?php echo base_url() ?>public/images/temp_img_box.jpg" alt="" />
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".list_container").click(function() {
+	   $('.lan_container').slideToggle('fast', function() {
+
+		});
+		$(".list_button").toggleClass('open');
+	});
+});
+</script>
+	
+<?php $this->load->view('_footer'); ?>
