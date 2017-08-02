@@ -124,7 +124,7 @@ document.write(images[index]);
 
 
 	<div id="header">
-		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2017</a></div>
+		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2018</a></div>
 <a href="http://www.studeravidare.se">
 <div class="endelavstuderavidare">
 </div></a>		

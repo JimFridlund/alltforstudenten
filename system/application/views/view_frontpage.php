@@ -41,7 +41,7 @@
 <div class="infoboxes">
 	<div class="box">
 		<h2>Studenten, datum och firande</h2>
-		<p>Firandet av studenten skiljer sig mycket på olika håll i Sverige. Ofta arrangeras baler och man äter fina middagar hemma. På avslutningsdagen sjungs Studentsången, därefter åker studenterna genom orten på flak, traktorer, lastbilar och tjusiga bilar. Det finns idag drygt 1000 gymnasieskolor i Sverige och i början av juni varje år så tar drygt 100 000 gymnasieelever studenten! Datum för studenten 2017 varierar runt om i landet, det vanligaste är mellan 1 juni och 10 juni. Balen arrangeras i flesta fall före  studenten-dagen.</p>
+		<p>Firandet av studenten skiljer sig mycket på olika håll i Sverige. Ofta arrangeras baler och man äter fina middagar hemma. På avslutningsdagen sjungs Studentsången, därefter åker studenterna genom orten på flak, traktorer, lastbilar och tjusiga bilar. Det finns idag drygt 1000 gymnasieskolor i Sverige och i början av juni varje år så tar drygt 100 000 gymnasieelever studenten! Datum för studenten 2018 varierar runt om i landet, det vanligaste är mellan 1 juni och 10 juni. Balen arrangeras i flesta fall före  studenten-dagen.</p>
 		
 		<img src="<?php echo base_url() ?>public/images/sjung.jpg" alt="" />
 	</div>
@@ -53,7 +53,7 @@
 	</div>
 	<div class="box right">
 		<h2>Din checklista</h2>
-		<p>För att hitta din checklista för studenten och balen 2017 kan du enkel söka på din gymnasieskola eller klicka dig vidare genom att välja län. Här får du sedan information om vad som behövs för en lyckad student och bal. Frågor som &quot;Vem fixar studentflaket&quot; och &quot;Är fracken och eller balklänningen införskaffad?&quot; försöker vi besvara här. Andra saker som är viktiga att tänka på inför den stora dagen finns också listade. Detta är en bra hjälp till de ca 110 000 elever som  tar studenten i Sverige varje år.</p>
+		<p>För att hitta din checklista för studenten och balen 2018 kan du enkel söka på din gymnasieskola eller klicka dig vidare genom att välja län. Här får du sedan information om vad som behövs för en lyckad student och bal. Frågor som &quot;Vem fixar studentflaket&quot; och &quot;Är fracken och eller balklänningen införskaffad?&quot; försöker vi besvara här. Andra saker som är viktiga att tänka på inför den stora dagen finns också listade. Detta är en bra hjälp till de ca 110 000 elever som  tar studenten i Sverige varje år.</p>
 		
 		
 		<img src="<?php echo base_url() ?>public/images/studentflak.jpg" alt="" />
