@@ -90,7 +90,7 @@
 				<!-- Jarl Sandin -->
 				<?php if($ad['orderid'] == "1265"): ?>
 				<a href="http://shop.jarlsandin.se/" title="<?php echo $ad['company_title']; ?>" target="_blank" rel="nofollow">
-				<img src="http://www.studenten2017.se/uploads/logo/<?php echo $ad['logo']; ?>"  alt="" /></div>
+				<img src="http://www.studenten2018.se/uploads/logo/<?php echo $ad['logo']; ?>"  alt="" /></div>
 				</a>
 				<?php else: ?>
 				<!-- End -->
