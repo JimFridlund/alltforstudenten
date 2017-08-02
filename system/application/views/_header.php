@@ -14,7 +14,7 @@
 <?php if($this->uri->segment(1)=="backend"):?>
 
 <?php   
-include '/mnt/persist/www/docroot/ip-block.php';
+// include '/mnt/persist/www/docroot/ip-block.php';
 ?>
 	
 
