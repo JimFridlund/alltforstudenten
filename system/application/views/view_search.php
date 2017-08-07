@@ -2,7 +2,7 @@
 
 <?php if($result > 0): ?>
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
-<script src="http://www.studenten2018.se/public/js/jquery.gmap.min.js" type="text/javascript"></script>
+<script src="https://www.studenten2018.se/public/js/jquery.gmap.min.js" type="text/javascript"></script>
 <!-- 
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=<?php echo $this->config->item('maps_key'); ?>" type="text/javascript"></script> 
 <script src="<?php echo base_url() ?>public/js/jquery.gmap-1.0.4-min.js" type="text/javascript"></script>
@@ -48,7 +48,7 @@
 		
 
 			<li style="padding:5px;">
-			<img src="http://www.studenten2018.se/public/images/icons/icon_mark.gif" alt="">
+			<img src="https://www.studenten2018.se/public/images/icons/icon_mark.gif" alt="">
 			<a href="<?php echo base_url() ?>visa/<?php echo $this->studenten->parent_permalink($data->parent); ?>/<?php echo $data->permalink; ?>"><?php echo $data->region_title; ?></a>
 			</li>
 		
