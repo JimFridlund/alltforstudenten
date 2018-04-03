@@ -111,7 +111,7 @@ images[0] = "<a href = 'https://www.studenten2018.se/link/abc-gruppen-toppbanner
 //images[1] = "<a href = 'https://www.studenten2018.se/link/erecruit.html' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/erecruit-topbanner-918x112-st.gif' alt=''></a>";
 
 images[1] = "<a href = 'https://www.bachelorbox.se/' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/bachelorbox-toppbanner-st.gif' alt=''></a>";
-
+images[2] = "<a href = 'http://party-buss.se' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/rubuss-toppbanner1-studenten.png' alt=''></a>";
  index = Math.floor(Math.random() * images.length);
 document.write(images[index]);
 </script>
