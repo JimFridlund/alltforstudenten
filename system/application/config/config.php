@@ -14,7 +14,7 @@
 // $config['base_url']	= "http://www.studenten2012.nu";
 //$config['maps_key']	= "ABQIAAAAiNIeP2-hxE9vUCG39LpiLRRhrGMrESw83Vqt6sVVBXOIzuVqDBSQi988NU7LVgGzT-CU3wRFf9hFgA";
 
-$config['base_url']	= "https://www.studenten2018.se";
+$config['base_url']	= "https://www.studenten2019.se";
 $config['maps_key']	= "AIzaSyA2gop2irePB63n_F9GdvFilmlN1JNGgJ4";
 
 

@@ -89,7 +89,7 @@ clickHeatSite = 'www.studenten2012.nu';clickHeatGroup = encodeURIComponent(windo
  var images = [], 
  index = 0;
 
-images[0] = "<a href = 'https://www.studenten2018.se/link/smartphoto.html' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/studentbanner-900x140.jpg' alt=''></a>";
+images[0] = "<a href = 'https://www.studenten2019.se/link/smartphoto.html' target='_blank'><img src='https://www.studenten2019.se/uploads/logo/studentbanner-900x140.jpg' alt=''></a>";
 //images[0] = "<a href = 'http://tartfabriken.se' target='_blank'><img src='http://www.studenten2013.nu/uploads/logo/tartfabriken-toppbanner-studenten-1.png' alt=''></a>";
 
  index = Math.floor(Math.random() * images.length);
@@ -98,7 +98,7 @@ document.write(images[index]);
 </script>
 
 <? elseif($this->uri->segment(3)=="hassleholms-kommun" || $this->uri->segment(3)=="kristianstads-kommun" || $this->uri->segment(3)=="perstorps-kommun"):?>
-<a href="http://www.frackhuset.se" target="_blank"><img src="https://www.studenten2018.se/public/images/frackhuset.jpg"></a>
+<a href="http://www.frackhuset.se" target="_blank"><img src="https://www.studenten2019.se/public/images/frackhuset.jpg"></a>
 
 <?php else :?>
 
@@ -107,11 +107,11 @@ document.write(images[index]);
  var images = [], 
  index = 0;
 
-images[0] = "<a href = 'https://www.studenten2018.se/link/abc-gruppen-toppbanner.html' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/abc-gruppen-2486-st-toppbanner.gif' alt=''></a>";
-//images[1] = "<a href = 'https://www.studenten2018.se/link/erecruit.html' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/erecruit-topbanner-918x112-st.gif' alt=''></a>";
+images[0] = "<a href = 'https://www.studenten2019.se/link/abc-gruppen-toppbanner.html' target='_blank'><img src='https://www.studenten2019.se/uploads/logo/abc-gruppen-2486-st-toppbanner.gif' alt=''></a>";
+//images[1] = "<a href = 'https://www.studenten2019.se/link/erecruit.html' target='_blank'><img src='https://www.studenten2019.se/uploads/logo/erecruit-topbanner-918x112-st.gif' alt=''></a>";
 
-images[1] = "<a href = 'https://www.bachelorbox.se/' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/bachelorbox-toppbanner-st.gif' alt=''></a>";
-images[2] = "<a href = 'http://party-buss.se' target='_blank'><img src='https://www.studenten2018.se/uploads/logo/rubuss-toppbanner1-studenten.png' alt=''></a>";
+images[1] = "<a href = 'https://www.bachelorbox.se/' target='_blank'><img src='https://www.studenten2019.se/uploads/logo/bachelorbox-toppbanner-st.gif' alt=''></a>";
+images[2] = "<a href = 'http://party-buss.se' target='_blank'><img src='https://www.studenten2019.se/uploads/logo/rubuss-toppbanner1-studenten.png' alt=''></a>";
  index = Math.floor(Math.random() * images.length);
 document.write(images[index]);
 </script>
@@ -124,7 +124,7 @@ document.write(images[index]);
 
 
 	<div id="header">
-		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2018</a></div>
+		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2019</a></div>
 <a href="http://www.studeravidare.se">
 <div class="endelavstuderavidare">
 </div></a>		
