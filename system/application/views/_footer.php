@@ -45,7 +45,7 @@
     <div style="float:left; border:0px solid #f00; width:200px;">
       <a href="http://www.studeravidare.se/" id="title" style="display: block; top: 0px;" target="_blank">
      
-     	<img src="http://www.studeravidare.se//img/assets/logo.png" alt="Studeravidare.se - Allt om att studera vidare" style=" margin-top:15px;">
+     	<img src="https://www.studeravidare.se/img/assets/logo.png" alt="Studeravidare.se - Allt om att studera vidare" style=" margin-top:15px;">
      </a>
    </div>
 
