@@ -446,9 +446,7 @@ echo "<form method=POST name=form1 action='$PHP_SELF'>
           <a href="http://www.studeravidare.se/om-hogskolan/urvalsgrupper">Urvalsgrupper högskola</a>
 	</li>
 	<?php if($this->uri->segment(3)=="stockholms-stad"):?>
-	<li>
-          <a href="http://www.ekonomifokus.se" title="fokus på ekonomi och bostad">Bostad & Ekonomi</a>
-	</li>	
+	
 	<?php endif;?>
 	<?php if($this->uri->segment(3)=="boras-stad"):?>
 	<li>
