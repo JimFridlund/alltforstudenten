@@ -33,10 +33,8 @@
 
 <div id="wrapper">
 	<div id="header">
-		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2011</a></div>
-<a href="http://www.studeravidare.se">
-<div class="endelavstuderavidare">
-</div></a>		
+		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2021</a></div>
+	
 
 		<div id="menu">
 			<ul>
