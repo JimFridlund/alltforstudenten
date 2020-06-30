@@ -48,7 +48,7 @@
 		
 
 			<li style="padding:5px;">
-			<img src="https://www.studenten2019.se/public/images/icons/icon_mark.gif" alt="">
+			<img src="https://www.studenten2021.se/public/images/icons/icon_mark.gif" alt="">
 			<a href="<?php echo base_url() ?>visa/<?php echo $this->studenten->parent_permalink($data->parent); ?>/<?php echo $data->permalink; ?>"><?php echo $data->region_title; ?></a>
 			</li>
 		

@@ -14,7 +14,7 @@
 </script>
 <p></p>
 		<h1>Studentplakat</h1>
-		<p><img src="http://www.studenten2015.se/public/images/studentplakat.jpg" alt="Studentplakat" hspace="10" vspace="10" align="right" /> De vanligaste <strong>måtten</strong> för ett studentplakat är 50x75 cm eller 50x70 cm. Själva fotot på studenten som barn brukar vara ca 30x40 cm.<br />
+		<p><img src="http://www.studenten2021.se/public/images/studentplakat.jpg" alt="Studentplakat" hspace="10" vspace="10" align="right" /> De vanligaste <strong>måtten</strong> för ett studentplakat är 50x75 cm eller 50x70 cm. Själva fotot på studenten som barn brukar vara ca 30x40 cm.<br />
 		  <br />
 		  <strong>Leveranstiden</strong> kan variera och det är alltid bra att vara ute i god tid. Vanligtvis en vecka enligt en undersökning från GP.<br />
 		  <br />

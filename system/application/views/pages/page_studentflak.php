@@ -19,7 +19,7 @@
 	<div style="float:left; widtH:240px;">
 		<p>
 		<a href="http://www.lucas.se/shop/teknik/t/ljud" target="_blank">
-			<img src="http://www.studenten2015.se/uploads/logo/lucas-event-1384.png" alt="Lucas Event"  />
+			<img src="http://www.studenten2021.se/uploads/logo/lucas-event-1384.png" alt="Lucas Event"  />
 		</a>
 		<br />
 		<a href="http://www.lucas.se/shop/teknik/t/ljud" target="_blank" style="margin-left:6px;">Beställ studentflak här</a>
@@ -28,7 +28,7 @@
 </div>
 		<div style="float:left; width:310px;">
 		<p align="right">
-			<img src="http://www.studenten2015.se/public/images/studentflak_list.jpg" alt="Studentflak" />
+			<img src="http://www.studenten2021.se/public/images/studentflak_list.jpg" alt="Studentflak" />
 		</p>
 </div>
 
