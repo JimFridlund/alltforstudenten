@@ -125,9 +125,7 @@ document.write(images[index]);
 
 	<div id="header">
 		<div class="frontpage"><a href="<?php echo base_url() ?>">Studenten 2021</a></div>
-<a href="http://www.studeravidare.se">
-<div class="endelavstuderavidare">
-</div></a>		
+	
 
 		<div id="menu">
 			<ul>
