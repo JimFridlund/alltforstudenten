@@ -7,7 +7,7 @@
  *
  */
 
-var baseURL = "http://www.studenten2011.nu/";
+var baseURL = "http://www.studenten2021.se/";
 
 // Fade av meddelande
 $(document).ready(function() {

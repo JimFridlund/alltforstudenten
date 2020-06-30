@@ -17,7 +17,7 @@
 		<a name="slips"></a>
 		<p>
 			<object width="550" height="400">
-			<param name="movie" value="http://www.studenten2015.se/public/flash/slipsknutar.swf">
+			<param name="movie" value="http://www.studenten2021.se/public/flash/slipsknutar.swf">
 			<embed src="../public/flash/slipsknutar.swf" width="550" height="400">
 			</embed>
 			</object>

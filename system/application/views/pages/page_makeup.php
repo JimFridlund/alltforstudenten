@@ -14,7 +14,7 @@
 </script>
 <p></p>
 		<h1>Make up</h1>
-		<p><img src="http://www.studenten2015.se/public/images/makeup.jpg" alt="Make up" hspace="10" vspace="10" align="left" />
+		<p><img src="http://www.studenten2021.se/public/images/makeup.jpg" alt="Make up" hspace="10" vspace="10" align="left" />
 		Tjejerna sminkar sig till både studenten och balen, men framför allt till balen. Det är ofta så att dem besöker en professionell make-up artist som sminkar dem. Detta kan variera i pris allt från 150 kr till 500 kr.
 		</p>
 		

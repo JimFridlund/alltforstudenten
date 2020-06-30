@@ -96,7 +96,7 @@ ini_set('display_errors', 'On');
 				<!-- Jarl Sandin -->
 				<?php if($ad['orderid'] == "1265"): ?>
 				<a href="http://shop.jarlsandin.se/" title="<?php echo $ad['company_title']; ?>" target="_blank" rel="nofollow">
-				<img src="https://www.studenten2019.se/uploads/logo/<?php echo $ad['logo']; ?>"  alt="" /></div>
+				<img src="https://www.studenten2021.se/uploads/logo/<?php echo $ad['logo']; ?>"  alt="" /></div>
 				</a>
 				<?php else: ?>
 				<!-- End -->
@@ -363,7 +363,7 @@ echo "<form method=POST name=form1 action='$PHP_SELF'>
 			<?php endif; ?>
 			<?php else: ?>
 			<div class="info_empty">
-				<a href="<?php echo base_url() ?>om-oss/kontakt">Vill du synas på studenten 2017?</a>
+				<a href="<?php echo base_url() ?>om-oss/kontakt">Vill du synas på studenten 2021?</a>
 			</div>
 			<?php endif; ?>
 		</div>

@@ -14,7 +14,7 @@
 </script>
 <p></p>
 		<h1>Studentmössa</h2>
-		<p><img src="http://www.studenten2015.se/public/images/studentmossa.jpg" alt="Studentmössa" hspace="10" vspace="10" align="right" />
+		<p><img src="http://www.studenten2021.se/public/images/studentmossa.jpg" alt="Studentmössa" hspace="10" vspace="10" align="right" />
 		Det finns ett gäng olika studentmössor att välja bland, den vanligaste modellen är 
 		Uppsalamössan med blågult foder. Utöver denna finns även Lundamössan, 
 		Skånemössan, Sverigemössan, Nordenmössan och Sveamössan. Det skiljer inte 
@@ -23,7 +23,7 @@
 		från 300 kr.
 		</p><p>
 		<a href="http://www.abcgruppen.se/" target="_blank">
-			<img src="http://www.studenten2015.se/uploads/logo/abc-gruppen-studentmossa.png" alt="ABC-gruppen"  />
+			<img src="http://www.studenten2021.se/uploads/logo/abc-gruppen-studentmossa.png" alt="ABC-gruppen"  />
 		</a>
 		<br />
 		<a href="http://www.abcgruppen.se/" target="_blank">Beställ din studentmössa här</a>

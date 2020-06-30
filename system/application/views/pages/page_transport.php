@@ -15,7 +15,7 @@
 <p></p>
 		<h1>Transport</h2>
 		<p>Transport från och till balen sker vanligtvis i en limousine tillsammans med sina klasskamrater. Här bjuds det ofta på det första glaset champange och när ankomst sker är det fotografering tillsammans med klasskamrater, släkt och vänner. Vissa skolor har som tradition att studenterna själva står för någon sorts av transport, exklusiva bilar och mindre limousiner är mer vanligt då. Kostanden för detta varierar såklart men bokar man tillsammans med klasskamraterna kan man komma undan med ca 400 kr per person. Ett alternativ är också att använda sin egen bil, hyra en finare bil eller låna av bekanta.		<br />
-			<img src="http://www.studenten2015.se/public/images/transport.jpg" alt="Transport" />
+			<img src="http://www.studenten2021.se/public/images/transport.jpg" alt="Transport" />
 		</p>
 	  
 	</div>
