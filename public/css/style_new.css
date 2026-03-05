@@ -1,0 +1,482 @@
+/* ===== BAS ===== */
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+background:#F4F7FB;
+color:#0b1220;
+}
+
+.container{
+max-width:1180px;
+margin:auto;
+padding:0 20px;
+}
+
+/* ===== HEADER ===== */
+
+.siteTop{
+background:#ffffff;
+border-bottom:1px solid #e6eaf0;
+}
+
+.siteTopInner{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:18px 0;
+}
+
+.brand{
+font-family:Fraunces,serif;
+font-weight:800;
+font-size:26px;
+text-decoration:none;
+color:#0b2a4a;
+}
+
+.brand .dot{
+color:#f4c544;
+}
+
+.topNav{
+display:flex;
+gap:22px;
+}
+
+.topNav a{
+text-decoration:none;
+font-weight:600;
+color:#0b2a4a;
+}
+
+/* ===== HERO ===== */
+
+.hero{
+margin-top:40px;
+border-radius:16px;
+overflow:hidden;
+position:relative;
+}
+
+.heroBg{
+position:absolute;
+inset:0;
+background-size:cover;
+background-position:center;
+}
+
+.heroInner{
+position:relative;
+padding:60px;
+}
+
+.heroForce{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:40px;
+}
+
+.heroForceLeft{
+max-width:520px;
+}
+
+.h1{
+font-family:Fraunces,serif;
+font-size:56px;
+margin:0 0 10px 0;
+color:white;
+}
+
+.lead{
+color:#e5ecf5;
+font-size:18px;
+}
+
+/* ===== SEARCH ===== */
+
+.searchCard{
+margin-top:24px;
+background:rgba(255,255,255,0.9);
+padding:24px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.formRow{
+display:flex;
+gap:10px;
+}
+
+.input{
+padding:14px;
+border-radius:8px;
+border:1px solid #d4dce5;
+flex:1;
+}
+
+.btn{
+padding:14px 18px;
+background:#0b2a4a;
+color:white;
+border:0;
+border-radius:8px;
+font-weight:700;
+cursor:pointer;
+}
+
+/* ===== LÄN LISTA ===== */
+
+.lanBox{
+margin-top:16px;
+border:1px solid #e5e7eb;
+border-radius:10px;
+overflow:hidden;
+}
+
+.lanHead{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px;
+cursor:pointer;
+background:#f9fafb;
+}
+
+.lanPanel{
+display:none;
+padding:16px;
+}
+
+.lanGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+.lanItem a{
+text-decoration:none;
+color:#0b2a4a;
+font-weight:600;
+}
+
+/* ===== SECTIONS ===== */
+
+.section{
+margin-top:60px;
+}
+
+.split{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:60px;
+}
+
+.info h3{
+margin-bottom:6px;
+}
+
+.muted{
+color:#6b7280;
+}
+
+/* ===== CARDS ===== */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:24px;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:24px;
+border-radius:10px;
+text-decoration:none;
+color:#0b2a4a;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.cardTop{
+display:flex;
+gap:16px;
+align-items:center;
+}
+
+.ico{
+font-size:28px;
+}
+
+.cardBot{
+margin-top:14px;
+font-weight:700;
+}
+
+/* ===== KOMMUN ANNONSER ===== */
+
+.adsSection{
+margin-top:40px;
+display:flex;
+flex-direction:column;
+gap:28px;
+}
+
+.adCard{
+display:flex;
+gap:22px;
+padding:22px;
+background:white;
+border-radius:10px;
+box-shadow:0 4px 18px rgba(0,0,0,0.06);
+align-items:flex-start;
+}
+
+.adLogo img{
+width:120px;
+height:auto;
+border-radius:6px;
+}
+
+.adContent{
+flex:1;
+}
+
+.companyTitle{
+font-family:Fraunces,serif;
+font-size:22px;
+margin:0 0 6px 0;
+}
+
+.tel{
+margin:0 0 8px 0;
+color:#4a5568;
+}
+
+.buttons{
+display:flex;
+gap:12px;
+margin-top:8px;
+flex-wrap:wrap;
+}
+
+.btnVisit{
+background:#0b2a4a;
+color:white;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+font-weight:600;
+}
+
+.btnVisit:hover{
+opacity:.9;
+}
+
+.btnOffer{
+background:#f4c544;
+color:#0b2a4a;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+font-weight:700;
+}
+
+/* ===== AUTOSUGGEST ===== */
+
+.suggest{
+position:absolute;
+left:0;
+right:0;
+top:50px;
+background:white;
+border-radius:8px;
+box-shadow:0 6px 20px rgba(0,0,0,.15);
+z-index:50;
+}
+
+.suggestItem{
+display:block;
+padding:10px 14px;
+text-decoration:none;
+color:#111;
+}
+
+.suggestItem:hover
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:900px){
+
+.heroForce{
+grid-template-columns:1fr;
+}
+
+.split{
+grid-template-columns:1fr;
+}
+
+.lanGrid{
+grid-template-columns:1fr 1fr;
+}
+
+}
+/* ===== Kommun annonser ===== */
+
+.kommunTitle{
+font-family,serif;
+font-size:38px;
+margin-top:40px;
+margin-bottom:10px;
+}
+
+.kommunIntro{
+color:#4a5568;
+margin-bottom:30px;
+}
+
+.adsSection{
+display;
+flex-direction;
+gap:26px;
+margin-top:20px;
+}
+
+.adCard{
+display;
+gap:22px;
+padding:26px;
+background:#ffffff;
+border-radius:12px;
+box-shadow:0 8px 24px rgba(0,0,0,0.08);
+align-items;
+}
+
+.adLogo{
+width:120px;
+flex-shrink:0;
+}
+
+.adLogo img{
+width:100%;
+height;
+}
+
+.adContent{
+flex:1;
+}
+
+.companyTitle{
+font-family,serif;
+font-size:22px;
+margin-bottom:6px;
+}
+
+.tel{
+color:#4a5568;
+margin-bottom:10px;
+}
+
+.buttons{
+display;
+gap:12px;
+align-items;
+flex-wrap;
+}
+
+.btnVisit{
+background:#0b2a4a;
+color;
+padding:10px 16px;
+border-radius:6px;
+text-decoration;
+font-weight:600;
+}
+
+.btnOffer{
+background:#f4c544;
+color:#0b2a4a;
+padding:10px 16px;
+border-radius:6px;
+text-decoration;
+font-weight:700;
+}
+/* =================================
+MOBILFÖRBÄTTRING ALLTFÖRSTUDENTEN
+================================= */
+
+@media (max-width: 768px){
+
+/* NAV */
+
+header nav{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:14px;
+}
+
+header nav a{
+font-size:16px;
+padding:4px 6px;
+}
+
+/* HERO */
+
+.hero{
+padding:20px;
+border-radius:16px;
+}
+
+.hero h1{
+font-size:42px;
+line-height:1.1;
+}
+
+.hero p{
+font-size:18px;
+margin-top:12px;
+}
+
+/* SEARCH */
+
+.search-box{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:18px;
+}
+
+.search-box input{
+width:100%;
+font-size:16px;
+padding:14px;
+}
+
+.search-box button{
+width:100%;
+padding:14px;
+font-size:16px;
+}
+
+/* ANNONSER */
+
+.ads-grid{
+grid-template-columns:1fr !important;
+}
+
+/* ANNONSLOGGOR */
+
+.logo img{
+width:160px;
+height:80px;
+}
+
+/* SKOLOR */
+
+.school-box{
+margin-top:24px;
+position:relative;
+}
+
+}

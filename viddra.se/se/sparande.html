@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Sparande</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9.144,500;9.144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    .mobileMenuWrap{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;background:rgba(0,0,0,.35);z-index:60;padding:14px}
+    .mobileMenu{width:min(360px,100%);background:var(--panel);border-radius:18px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.25);padding:12px}
+    .mobileMenu a{display:block;padding:10px 12px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}
+    .mobileMenu a:hover{border-color:var(--line);background:rgba(255,255,255,.45)}
+    .nav a.is-active{font-weight:800;opacity:1;text-decoration:none}
+
+    .hero{margin-top:12px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.55)}
+    .hero img{display:block;width:100%;height:auto}
+
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .card{border:1px solid var(--line);background:rgba(255,255,255,.55);border-radius:18px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b}
+
+    .kpi{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.65);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    }
+    .kpi .title{font-weight:700}
+    .kpi .big{font-family:Fraunces,serif;font-size:34px;margin-top:6px}
+    .kpi .sub{color:var(--muted);font-size:13px;margin-top:4px}
+
+    .rows{display:grid;gap:8px;margin-top:10px}
+    .row{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:10px 12px;border:1px solid rgba(0,0,0,.08);
+      border-radius:14px;background:rgba(255,255,255,.65)
+    }
+    .row .l{font-weight:700}
+    .row .r{color:var(--muted);font-weight:700}
+
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer;text-decoration:none;color:inherit;display:inline-flex;align-items:center;gap:8px}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+
+    table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:10px}
+    td,th{padding:10px 12px;text-align:left;font-size:14px}
+    thead th{color:var(--muted);font-weight:700;font-size:12.5px}
+    tbody tr{background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.08)}
+    tbody tr td:first-child{border-top-left-radius:14px;border-bottom-left-radius:14px}
+    tbody tr td:last-child{border-top-right-radius:14px;border-bottom-right-radius:14px}
+    .right{text-align:right}
+    .tiny{font-size:12.5px;color:var(--muted);margin-top:8px}
+  </style>
+
+  <script src="assets/viddra-core.js"></script>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand"><p class="name">Viddra</p><p class="tag">Sparande</p></div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html" class="is-active">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <div class="hero">
+          <img src="assets/hero_sparande.png" alt="" onerror="this.closest('.hero').style.display='none'">
+        </div>
+
+        <h1>Sparande</h1>
+        <p class="lead">Budget är plan. Resultat är facit. Här ser du hur ditt sparande hänger ihop.</p>
+
+        <div class="grid">
+
+          <div>
+            <div class="kpi">
+              <div class="title">Du sparar per månad</div>
+              <div class="big"><span id="kpiSpar">0</span> kr</div>
+              <div class="sub" id="kpiSub">—</div>
+
+              <div class="btnrow">
+                <a class="btn primary" href="fill_budget.html">Ändra budget</a>
+                <a class="btn" href="resultat.html">Fyll i resultat</a>
+              </div>
+
+              <div class="tiny" id="sourceTiny">—</div>
+            </div>
+
+            <div class="card" style="margin-top:12px;">
+              <h2 style="margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px">Fördelning</h2>
+              <div class="muted">Det här är din plan (budget). Om du vill kan vi senare även visa facit per spar-typ.</div>
+
+              <div class="rows" id="breakdownRows"></div>
+
+              <div class="tiny" id="warnTiny"></div>
+            </div>
+
+            <div class="card" style="margin-top:12px;">
+              <h2 style="margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px">12 månader fram</h2>
+              <div class="muted">Enkel prognos: samma sparande varje månad.</div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Månad</th>
+                    <th class="right">Sparande</th>
+                    <th class="right">Ack</th>
+                  </tr>
+                </thead>
+                <tbody id="projBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h2 style="margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px">Plan vs facit</h2>
+              <div class="muted">Om du har fyllt i Resultat den här månaden visas facit här.</div>
+
+              <div class="rows">
+                <div class="row">
+                  <div class="l">Plan (budget)</div>
+                  <div class="r" id="planVal">—</div>
+                </div>
+                <div class="row">
+                  <div class="l">Facit (resultat)</div>
+                  <div class="r" id="actualVal">—</div>
+                </div>
+              </div>
+
+              <div class="tiny" id="actualTiny">—</div>
+            </div>
+
+            <div class="card" style="margin-top:12px;">
+              <h2 style="margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px">Snabbt smart</h2>
+              <div class="rows" id="tipsRows">
+                <div class="row">
+                  <div class="l">1) Buffert först</div>
+                  <div class="r">1–2 mån</div>
+                </div>
+                <div class="row">
+                  <div class="l">2) Barnspar</div>
+                  <div class="r">automat</div>
+                </div>
+                <div class="row">
+                  <div class="l">3) Pension</div>
+                  <div class="r">lång</div>
+                </div>
+              </div>
+              <div class="tiny">Vi håller detta enkelt nu. Sen kan vi koppla råd till din profil och boende-extra.</div>
+            </div>
+
+            <div class="card" style="margin-top:12px;">
+              <h2 style="margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px">Debug (lugn)</h2>
+              <div class="muted" id="debugBox">—</div>
+            </div>
+          </div>
+
+        </div><!-- /grid -->
+      </div><!-- /content -->
+    </div><!-- /frame -->
+  </div><!-- /shell -->
+
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+<script>
+(function(){
+  if (window.ViddraCore && window.ViddraCore.redirectToWwwIfNeeded && window.ViddraCore.redirectToWwwIfNeeded()) return;
+
+  // Mobile menu
+  var menuWrap = document.getElementById("menuWrap");
+  var openMenu = document.getElementById("openMenu");
+  var closeMenu = document.getElementById("closeMenu");
+  if (menuWrap && openMenu && closeMenu) {
+    openMenu.onclick = function(){ menuWrap.style.display = "flex"; };
+    closeMenu.onclick = function(){ menuWrap.style.display = "none"; };
+    menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display = "none"; };
+  }
+
+  function safeParse(s){ try{return JSON.parse(s);}catch(e){ return null; } }
+  function ymNow(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=String(d.getMonth()+1).padStart(2,'0');
+    return y + "-" + m;
+  }
+  function fmtKr(v){ return (Math.round(v)||0).toLocaleString("sv-SE") + " kr"; }
+  function n(v){
+    if (v===null || typeof v==="undefined") return 0;
+    if (typeof v==="number") return isNaN(v)?0:v;
+    var s=String(v).trim();
+    if (!s) return 0;
+    if (/^\d{4}-\d{2}(-\d{2})?$/.test(s)) return 0;
+    var m=s.match(/-?\d[\d\s\.,]*/);
+    if(!m) return 0;
+    var t=m[0].replace(/\s+/g,"");
+    if (t.indexOf(",")!==-1){
+      var parts=t.split(",");
+      var last=parts[parts.length-1];
+      if (last.length===1 || last.length===2) t = parts.slice(0,-1).join("") + "." + last;
+      else t = parts.join("");
+    }
+    if (t.indexOf(".")!==-1){
+      var p2=t.split(".");
+      var last2=p2[p2.length-1];
+      if (!(last2.length===1 || last2.length===2)) t = p2.join("");
+    }
+    var x=parseFloat(t);
+    return isNaN(x)?0:x;
+  }
+
+  // Show Boende link depending on profile housing
+  function readProfile(){
+    if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+    return safeParse(localStorage.getItem("viddra_profile_v1")||"") || null;
+  }
+  function getHousingType(p){
+    if(!p) return "";
+    if(p.housing && p.housing.type) return String(p.housing.type||"");
+    if(p.housingType) return String(p.housingType||"");
+    return "";
+  }
+  (function(){
+    var p = readProfile();
+    var show = !!String(getHousingType(p)||"").trim();
+    var a1 = document.getElementById("navBoendeExtra");
+    var a2 = document.getElementById("navBoendeExtraMobile");
+    if(a1) a1.style.display = show ? "" : "none";
+    if(a2) a2.style.display = show ? "" : "none";
+  })();
+
+  // Read names for pensions
+  function readAdultNames(){
+    var p = readProfile();
+    if (p && Array.isArray(p.adults) && p.adults.length){
+      return {
+        n1: (p.adults[0] && p.adults[0].name) ? String(p.adults[0].name) : "Vuxen 1",
+        n2: (p.adults[1] && p.adults[1].name) ? String(p.adults[1].name) : "Vuxen 2",
+        count: Math.min(2, Math.max(1, p.adults.length))
+      };
+    }
+    // fallback
+    return { n1:"Vuxen 1", n2:"Vuxen 2", count:2 };
+  }
+
+  var MONTH = ymNow();
+
+  // Budget canonical
+  function readBudgetCanon(){
+    var c = safeParse(localStorage.getItem("viddra_budget_values_v1")||"");
+    if (c && typeof c === "object") return c;
+    return null;
+  }
+  function sumObj(o){
+    var s=0;
+    if (!o || typeof o !== "object") return 0;
+    Object.keys(o).forEach(function(k){
+      if (k === "_meta") return;
+      s += n(o[k]);
+    });
+    return s;
+  }
+
+  var names = readAdultNames();
+  var budgetCanon = readBudgetCanon();
+
+  var planSavings = 0;
+  var planIncome = 0;
+  var planBreakdown = [];
+
+  // Keys (match our fill_budget naming)
+  function getPlanBreakdown(){
+    var out = [];
+    var sObj = budgetCanon && budgetCanon.savings ? budgetCanon.savings : null;
+    var buffer = n(sObj && sObj.save_buffer);
+    var pension1 = n(sObj && sObj.save_pension1);
+    var pension2 = n(sObj && sObj.save_pension2);
+    var kids = n(sObj && sObj.save_kids);
+    var goal = n(sObj && sObj.save_goal);
+
+    out.push({label:"Buffert", val: buffer});
+    out.push({label:"Pension ("+names.n1+")", val: pension1});
+    if (names.count >= 2) out.push({label:"Pension ("+names.n2+")", val: pension2});
+    out.push({label:"Barnspar", val: kids});
+    out.push({label:"Målspar", val: goal});
+
+    return out;
+  }
+
+  if (budgetCanon){
+    planIncome = sumObj(budgetCanon.income);
+    planBreakdown = getPlanBreakdown();
+    planSavings = planBreakdown.reduce(function(a,b){ return a + n(b.val); }, 0);
+  }
+
+  document.getElementById("planVal").textContent = fmtKr(planSavings);
+
+  // Render breakdown rows
+  (function(){
+    var mount = document.getElementById("breakdownRows");
+    mount.innerHTML = "";
+    planBreakdown.forEach(function(r){
+      var div = document.createElement("div");
+      div.className = "row";
+      div.innerHTML = '<div class="l">'+r.label+'</div><div class="r">'+fmtKr(n(r.val))+'</div>';
+      mount.appendChild(div);
+    });
+    if (!budgetCanon){
+      mount.innerHTML = '<div class="muted">Ingen budget hittad ännu. Fyll i budget först.</div>';
+    }
+    var warn = "";
+    if (budgetCanon && planSavings === 0) warn = "Tips: Sätt minst en liten buffert så du får momentum.";
+    document.getElementById("warnTiny").textContent = warn;
+  })();
+
+  // Projection
+  function monthAdd(ym, add){
+    var y = parseInt(ym.slice(0,4),10);
+    var m = parseInt(ym.slice(5,7),10);
+    m += add;
+    while (m > 12){ y++; m -= 12; }
+    while (m < 1){ y--; m += 12; }
+    return y + "-" + String(m).padStart(2,'0');
+  }
+  (function(){
+    var tbody = document.getElementById("projBody");
+    tbody.innerHTML = "";
+    var monthly = planSavings;
+    var acc = 0;
+
+    for (var i=0;i<12;i++){
+      var mk = monthAdd(MONTH, i);
+      acc += monthly;
+      var tr = document.createElement("tr");
+      tr.innerHTML = '<td>'+mk+'</td><td class="right">'+fmtKr(monthly)+'</td><td class="right">'+fmtKr(acc)+'</td>';
+      tbody.appendChild(tr);
+    }
+  })();
+
+  // Backend actual summary
+  var token = localStorage.getItem("viddra_session_token") || localStorage.getItem("viddra_token") || "";
+  var actualSavings = null;
+  var actualIncome = null;
+  var actualCost = null;
+  var used = "budget";
+
+  function updateKpi(){
+    // prefer actual savings if available, else plan
+    var base = (actualSavings !== null) ? actualSavings : planSavings;
+    used = (actualSavings !== null) ? "facit" : "budget";
+
+    var income = (actualIncome !== null) ? actualIncome : planIncome;
+    var pct = 0;
+    if (income > 0) pct = (base / income) * 100;
+
+    document.getElementById("kpiSpar").textContent = (Math.round(base)||0).toLocaleString("sv-SE");
+    var sub = (income > 0)
+      ? ("Det är " + (pct.toFixed(1).replace('.',',')) + "% av din inkomst.")
+      : ("Fyll i budget eller resultat för % av inkomst.");
+    document.getElementById("kpiSub").textContent = sub;
+
+    document.getElementById("actualVal").textContent = (actualSavings !== null) ? fmtKr(actualSavings) : "—";
+    document.getElementById("actualTiny").textContent =
+      token
+        ? ("Månad: " + MONTH + ". (API: get_results_summary_v2.php)")
+        : ("Ingen token/session hittad – visar bara budget.");
+
+    document.getElementById("sourceTiny").textContent =
+      (used === "facit")
+        ? "KPI baseras på facit (Resultat) när det finns."
+        : "KPI baseras på din plan (Budget).";
+
+    var dbg = [];
+    dbg.push("month="+MONTH);
+    dbg.push("token="+(token?("yes ("+token.slice(0,6)+"…)"):"no"));
+    dbg.push("planSavings="+planSavings);
+    dbg.push("planIncome="+planIncome);
+    dbg.push("actualSavings="+(actualSavings===null?"null":actualSavings));
+    document.getElementById("debugBox").textContent = dbg.join(" | ");
+  }
+
+  function applyActual(json){
+    if (!json || !json.ok) return;
+
+    if (json.totals && typeof json.totals === "object"){
+      actualIncome = n(json.totals.income);
+      actualCost = n(json.totals.cost);
+      actualSavings = n(json.totals.savings);
+      return;
+    }
+    // fallback
+    actualIncome = n(json.income_total);
+    actualSavings = n(json.savings_total);
+    actualCost = n(json.total_spent || json.total);
+  }
+
+  if (token){
+    fetch("api/get_results_summary_v2.php?token="+encodeURIComponent(token)+"&month_key="+encodeURIComponent(MONTH), {method:"GET"})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        applyActual(j);
+        updateKpi();
+      })
+      .catch(function(){
+        updateKpi();
+      });
+  } else {
+    updateKpi();
+  }
+})();
+</script>
+
+</body>
+</html>

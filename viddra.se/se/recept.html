@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Recept</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .recipe-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:12px}
+    @media (max-width:1100px){.recipe-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:680px){.recipe-grid{grid-template-columns:1fr}}
+
+    .recipe-card{
+      position:relative;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(255,255,255,.55);
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+
+    .recipe-thumb{
+      width:100%;
+      aspect-ratio:4/3;
+      object-fit:cover;
+      display:block;
+      background:rgba(47,61,51,.06);
+    }
+
+    /* BODY: reservera plats för fast knapp i botten */
+    .recipe-body{
+      padding:12px;
+      padding-bottom:58px; /* plats för .add */
+    }
+
+    .recipe-title{margin:0;font-family:Fraunces,serif;font-size:16px;line-height:1.2}
+    .recipe-sub{margin:6px 0 0 0;color:var(--muted);font-size:13px}
+
+    .tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .tools input[type="search"]{flex:1; min-width:220px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);outline:none}
+    .tools select{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);outline:none}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.45);cursor:pointer;user-select:none;font-size:13px}
+    .chip.on{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.18)}
+    .muterow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;color:var(--muted);font-size:13px}
+    .btnlink{border:0;background:transparent;color:var(--muted);cursor:pointer;text-decoration:underline;padding:0}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer}
+    .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+
+    /* Favorit-hjärta */
+    .fav{
+      position:absolute; top:10px; right:10px;
+      width:36px; height:36px; border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.75);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px;
+      cursor:pointer;
+      z-index:5;
+    }
+    .fav.on{background:rgba(255,255,255,.95);border-color:rgba(0,0,0,.22)}
+
+    /* Badges */
+    .badges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.75);
+      border-radius:999px;
+      padding:6px 10px;
+      color:var(--muted);
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    /* ✅ Veckoplan-knapp: fäst i botten på kortet */
+    .add{
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:12px;
+
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.85);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:700;
+      font-size:13px;
+      cursor:pointer;
+      z-index:4;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+    .add.on{
+      background:rgba(255,255,255,.95);
+      border-color:rgba(0,0,0,.22);
+    }
+
+    /* ===== EXAKT samma mobilmeny-stil som resultat.html ===== */
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);padding:14px}
+    .mobileMenu a{display:block;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.55);text-decoration:none;color:var(--ink);font-weight:600;margin-top:10px}
+
+    /* Mobil: lite tightare, och knappen lite mindre */
+    @media (max-width:680px){
+      .recipe-body{ padding: 10px; padding-bottom:56px; }
+      .recipe-title{ font-size: 15px; }
+      .recipe-sub{ font-size: 12.5px; }
+
+      .badges{ gap: 6px; }
+      .badge{
+        font-size: 11.5px;
+        padding: 5px 8px;
+        line-height: 1.1;
+      }
+
+      .add{
+        left:10px; right:10px; bottom:10px;
+        padding: 9px 10px;
+        font-size: 12.5px;
+        border-radius: 13px;
+      }
+
+      .fav{
+        width: 34px; height: 34px;
+        border-radius: 11px;
+        font-size: 17px;
+      }
+    }
+
+    /* HERO (samma som övriga sidor) */
+    .hero{
+      margin: 14px 0 18px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    }
+    .hero img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <!-- Header: kopierad struktur från resultat.html -->
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand"><p class="name">Viddra</p><p class="tag">Recept</p></div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html" style="text-decoration:underline;opacity:1">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <h1>Recept</h1>
+        <p class="lead">Standard visar vi bara “populära”. Filtrera för att hitta billigt/snabbt/matlåda.</p>
+
+        <!-- ✅ HERO -->
+        <div class="hero">
+          <img src="assets/hero_recept.png" alt="" loading="lazy" onerror="this.closest('.hero').style.display='none'">
+        </div>
+
+        <div class="card">
+          <div class="tools">
+            <input id="q" type="search" placeholder="Sök (t.ex. kyckling, pasta, ugn, soppa)" />
+            <select id="cuisine">
+              <option value="">Alla kök</option>
+              <option value="svenskt">Svenskt</option>
+              <option value="italienskt">Italienskt</option>
+              <option value="asiatiskt">Asiatiskt</option>
+              <option value="mexikanskt">Mexikanskt</option>
+              <option value="indiskt">Indiskt</option>
+              <option value="franskt">Franskt</option>
+              <option value="amerikanskt">Amerikanskt</option>
+              <option value="medelhav">Medelhav</option>
+            </select>
+            <select id="sort">
+              <option value="popular">Populärast</option>
+              <option value="time_asc">Tid: kortast</option>
+              <option value="cost_asc">Pris: billigast</option>
+              <option value="title_asc">A–Ö</option>
+            </select>
+          </div>
+
+          <div class="chips">
+            <span class="chip" data-chip="snabbt">Snabbt (≤30 min)</span>
+            <span class="chip" data-chip="billigt">Billigt (≤30 kr)</span>
+            <span class="chip" data-chip="matlada">Matlåda</span>
+            <span class="chip" data-chip="barn">Barnvänligt</span>
+            <span class="chip" data-chip="fav">Favoriter</span>
+          </div>
+
+          <div class="muterow">
+            <div id="count">Laddar…</div>
+            <button class="btnlink" id="clear">Rensa filter</button>
+          </div>
+
+          <div class="bar">
+            <button class="btn" id="more" style="display:none;">Visa fler</button>
+            <button class="btn" id="top" style="display:none;">Tillbaka till populära</button>
+          </div>
+
+          <div id="grid" class="recipe-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobilmeny overlay: kopierad från resultat.html -->
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Tips</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+  <!-- ✅ viktigt: core först så profil-läsning blir robust -->
+  <script src="assets/viddra-core.js"></script>
+  <script src="assets/recipes.js"></script>
+  <script>
+    (function(){
+      // Mobile menu (exakt som resultat.html)
+      var menuWrap = document.getElementById("menuWrap");
+      var openBtn = document.getElementById("openMenu");
+      var closeBtn = document.getElementById("closeMenu");
+      if (openBtn && closeBtn && menuWrap){
+        openBtn.onclick = function(){ menuWrap.style.display="flex"; };
+        closeBtn.onclick = function(){ menuWrap.style.display="none"; };
+        menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display="none"; };
+      }
+
+      // ===== Meny: visa "Boende" bara om profilen har boendetyp =====
+      function safeParse(s){ try { return JSON.parse(s); } catch(e){ return null; } }
+      function readProfile(){
+        if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+        return safeParse(localStorage.getItem("viddra_profile_v1") || "") || null;
+      }
+
+      // Robust housingTag: klarar profile.housing.type / housing.type / radhus osv
+      function housingTag(p){
+        try{
+          if (window.ViddraCore && window.ViddraCore.isVilla && window.ViddraCore.isVilla(p)) return "villa";
+          if (window.ViddraCore && window.ViddraCore.isBrf && window.ViddraCore.isBrf(p)) return "brf";
+          if (window.ViddraCore && window.ViddraCore.isHyra && window.ViddraCore.isHyra(p)) return "hyra";
+        }catch(e){}
+
+        var t = "";
+        if (p){
+          if (p.housing && typeof p.housing === "object" && p.housing.type) t = String(p.housing.type || "");
+          else if (p.profile && p.profile.housingType) t = String(p.profile.housingType || "");
+          else if (p.housingType) t = String(p.housingType || "");
+          else if (typeof p.housing === "string") t = String(p.housing || "");
+          else if (p.boende) t = String(p.boende || "");
+        }
+        t = String(t || "").toLowerCase().trim();
+
+        if (!t) return "okand";
+        if (t.indexOf("radhus") >= 0) return "villa";
+        if (t.indexOf("villa") >= 0) return "villa";
+        if (t.indexOf("småhus") >= 0 || t.indexOf("smahus") >= 0) return "villa";
+        if (t === "hus") return "villa";
+
+        if (t.indexOf("brf") >= 0 || t.indexOf("bostads") >= 0) return "brf";
+        if (t.indexOf("hyra") >= 0 || t.indexOf("hyr") >= 0) return "hyra";
+        if (t.indexOf("hyres") >= 0) return "hyra";
+
+        return "okand";
+      }
+
+      (function(){
+        var p = readProfile();
+        var show = false;
+        if (p) {
+          var ht = housingTag(p);
+          show = (ht && ht !== "okand");
+        }
+        var a1 = document.getElementById("navBoendeExtra");
+        var a2 = document.getElementById("navBoendeExtraMobile");
+        if (a1) a1.style.display = show ? "" : "none";
+        if (a2) a2.style.display = show ? "" : "none";
+      })();
+
+      function safeJSON(s, fallback){ try{ return JSON.parse(s); }catch(e){ return fallback; } }
+
+      // Profile: vuxna/barn (för badges)
+      function getFamily(){
+        var p = safeJSON(localStorage.getItem("viddra_profile_v1") || "{}", {});
+        var adults = 1, kids = 0;
+        if (p && Array.isArray(p.adults) && p.adults.length) adults = Math.min(2, Math.max(1, p.adults.length));
+        if (p && Array.isArray(p.children)) kids = p.children.length;
+        if (typeof p.kids === "number") kids = p.kids;
+        if (typeof p.childrenCount === "number") kids = p.childrenCount;
+        return { adults: adults, kids: kids };
+      }
+      var fam = getFamily();
+
+      // Weekplan
+      var WEEK_KEY = "viddra_weekplan_v1";
+      function getWeekplan(){
+        var a = safeJSON(localStorage.getItem(WEEK_KEY) || "[]", []);
+        return Array.isArray(a) ? a : [];
+      }
+      function setWeekplan(arr){ localStorage.setItem(WEEK_KEY, JSON.stringify(arr || [])); }
+      function isInWeekplan(id){ return getWeekplan().indexOf(id) >= 0; }
+      function toggleWeekplan(id){
+        var a = getWeekplan();
+        var idx = a.indexOf(id);
+        if (idx >= 0) a.splice(idx, 1); else a.push(id);
+        setWeekplan(a);
+        return a;
+      }
+
+      var grid = document.getElementById("grid");
+      var qEl = document.getElementById("q");
+      var cuisineEl = document.getElementById("cuisine");
+      var sortEl = document.getElementById("sort");
+      var countEl = document.getElementById("count");
+      var clearEl = document.getElementById("clear");
+      var moreEl = document.getElementById("more");
+      var topEl = document.getElementById("top");
+
+      var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+      var state = { snabb:false, billig:false, matlada:false, barn:false, fav:false };
+
+      var limitPopular = 10;
+      var limitFiltered = 60;
+      var currentLimit = limitPopular;
+
+      var CURATED_TOP = [
+        "kottbullar-med-potatis-och-graddsas",
+        "pytt-i-panna-med-agg",
+        "kottfarssas",
+        "korvstroganoff",
+        "lasagne",
+        "chiliconcarne",
+        "kycklingmedvitlok",
+        "fettuccinealfredo",
+        "flaskfilegryta",
+        "sjomansbiff"
+      ];
+
+      function normalize(s){
+        return String(s||"").toLowerCase().replace(/å/g,"a").replace(/ä/g,"a").replace(/ö/g,"o");
+      }
+
+      function getRating(id){
+        var v = localStorage.getItem("viddra_rating_" + id);
+        var n = parseInt(v, 10);
+        if (!n || n < 1 || n > 5) return 0;
+        return n;
+      }
+
+      function getFavMap(){
+        try{
+          var s = localStorage.getItem("viddra_favs");
+          if (!s) return {};
+          var obj = JSON.parse(s);
+          return obj && typeof obj === "object" ? obj : {};
+        }catch(e){ return {}; }
+      }
+      function setFav(id, on){
+        var m = getFavMap();
+        if (on) m[id] = 1; else delete m[id];
+        localStorage.setItem("viddra_favs", JSON.stringify(m));
+      }
+      function isFav(id){
+        var m = getFavMap();
+        return !!m[id];
+      }
+
+      function hasTag(r, tag){
+        var tags = r.tags || [];
+        for (var i=0;i<tags.length;i++){
+          if (normalize(tags[i]) === normalize(tag)) return true;
+        }
+        return false;
+      }
+      function passesChips(r){
+        if (state.snabb && !(r.time && r.time <= 30)) return false;
+        if (state.billig && !(r.cost && r.cost <= 30)) return false;
+        if (state.matlada && !(hasTag(r,"matlada") || hasTag(r,"matlåda") || /gryta|lasagne|gratäng|chili|soppa/i.test(r.title))) return false;
+        if (state.barn && !(hasTag(r,"barn") || /korv|köttbull|pannk|ugnspannk/i.test(r.title))) return false;
+        if (state.fav && !isFav(r.id)) return false;
+        return true;
+      }
+
+      function popularityScore(r){
+        var rating = getRating(r.id);
+        var boost = (CURATED_TOP.indexOf(r.id) >= 0) ? 0.2 : 0;
+        var favBoost = isFav(r.id) ? 0.5 : 0;
+        return rating + boost + favBoost;
+      }
+
+      function budgetLabel(r){
+        var c = parseInt(r.cost || 0, 10);
+        if (!c) return "Okänd";
+        if (c <= 25) return "Budgetvänlig";
+        if (c <= 35) return "Normal";
+        return "Dyrare";
+      }
+
+      function render(recipes){
+        grid.innerHTML = "";
+        for (var i=0;i<recipes.length;i++){
+          var r = recipes[i];
+
+          var card = document.createElement("div");
+          card.className = "recipe-card";
+
+          var fav = document.createElement("div");
+          fav.className = "fav" + (isFav(r.id) ? " on" : "");
+          fav.textContent = isFav(r.id) ? "♥" : "♡";
+          fav.title = "Favorit";
+
+          fav.onclick = (function(id){
+            return function(e){
+              e.stopPropagation();
+              var on = !isFav(id);
+              setFav(id, on);
+              fav.className = "fav" + (on ? " on" : "");
+              fav.textContent = on ? "♥" : "♡";
+              apply();
+            };
+          })(r.id);
+
+          var img = document.createElement("img");
+          img.className = "recipe-thumb";
+          img.alt = r.title;
+          if (window.VIDDRA_ATTACH_SMART_IMAGE) window.VIDDRA_ATTACH_SMART_IMAGE(img, r.id);
+          else img.src = r.image || "";
+
+          var rating = getRating(r.id);
+          var ratingText = rating ? (" · ★" + rating + "/5") : "";
+
+          var body = document.createElement("div");
+          body.className = "recipe-body";
+
+          var title = document.createElement("p");
+          title.className = "recipe-title";
+          title.textContent = r.title;
+
+          var sub = document.createElement("p");
+          sub.className = "recipe-sub";
+          sub.textContent = (r.time||0) + " min · ca " + (r.cost||0) + " kr/portion" + ratingText;
+
+          var badges = document.createElement("div");
+          badges.className = "badges";
+          badges.innerHTML =
+            '<span class="badge">Passar: ' + fam.adults + ' vuxna · ' + fam.kids + ' barn</span>' +
+            '<span class="badge">' + budgetLabel(r) + '</span>';
+
+          // ✅ Veckoplan-knapp fast i botten
+          var add = document.createElement("button");
+          add.type = "button";
+          add.className = "add" + (isInWeekplan(r.id) ? " on" : "");
+          add.textContent = isInWeekplan(r.id) ? "✓ Veckoplan" : "+ Veckoplan";
+
+          add.onclick = (function(id){
+            return function(e){
+              e.stopPropagation();
+              toggleWeekplan(id);
+              add.className = "add" + (isInWeekplan(id) ? " on" : "");
+              add.textContent = isInWeekplan(id) ? "✓ Veckoplan" : "+ Veckoplan";
+            };
+          })(r.id);
+
+          body.appendChild(title);
+          body.appendChild(sub);
+          body.appendChild(badges);
+
+          card.appendChild(fav);
+          card.appendChild(img);
+          card.appendChild(body);
+          card.appendChild(add);
+
+          (function(id){
+            card.onclick = function(){ location.href = "recept_detalj.html?id=" + encodeURIComponent(id); };
+          })(r.id);
+
+          grid.appendChild(card);
+        }
+      }
+
+      function isFiltering(){
+        if (qEl.value.trim()) return true;
+        if (cuisineEl.value) return true;
+        if (state.snabb || state.billig || state.matlada || state.barn || state.fav) return true;
+        return false;
+      }
+
+      function apply(){
+        var all = (window.VIDDRA_RECIPES && window.VIDDRA_RECIPES.length) ? window.VIDDRA_RECIPES.slice() : [];
+        if (!all.length){
+          countEl.textContent = "0 recept (recipes.js laddade inte)";
+          render([]);
+          moreEl.style.display = "none";
+          topEl.style.display = "none";
+          return;
+        }
+
+        var filtering = isFiltering();
+        currentLimit = filtering ? limitFiltered : limitPopular;
+
+        var q = normalize(qEl.value.trim());
+        var cu = normalize(cuisineEl.value);
+
+        var filtered = [];
+        for (var i=0;i<all.length;i++){
+          var r = all[i];
+          var title = normalize(r.title);
+          var cuisine = normalize(r.cuisine || "");
+          if (q && title.indexOf(q) === -1) continue;
+          if (cu && cuisine !== cu) continue;
+          if (!passesChips(r)) continue;
+          filtered.push(r);
+        }
+
+        var sort = sortEl.value;
+        filtered.sort(function(a,b){
+          if (sort === "time_asc") return (a.time||9999) - (b.time||9999);
+          if (sort === "cost_asc") return (a.cost||9999) - (b.cost||9999);
+          if (sort === "title_asc") return normalize(a.title) < normalize(a.title) ? -1 : 1;
+          return popularityScore(b) - popularityScore(a);
+        });
+
+        if (!filtering) {
+          var byId = {};
+          for (var z=0; z<filtered.length; z++) byId[filtered[z].id] = filtered[z];
+
+          var top = [];
+          for (var t=0; t<CURATED_TOP.length; t++){
+            var id = CURATED_TOP[t];
+            if (byId[id]) top.push(byId[id]);
+          }
+          var out = top.slice();
+          for (var r2=0; r2<filtered.length && out.length < limitPopular; r2++){
+            var item = filtered[r2];
+            var exists = false;
+            for (var u=0; u<out.length; u++) if (out[u].id === item.id) exists = true;
+            if (!exists) out.push(item);
+          }
+          filtered = out;
+        }
+
+        var shown = filtered.slice(0, currentLimit);
+        countEl.textContent = (filtering ? (filtered.length + " matchar") : "Populära (10)") + " · visar " + shown.length;
+
+        render(shown);
+
+        if (filtering && filtered.length > shown.length) moreEl.style.display = "inline-block";
+        else moreEl.style.display = "none";
+
+        topEl.style.display = filtering ? "inline-block" : "none";
+
+        localStorage.setItem("viddra_recipe_filters", JSON.stringify({
+          q: qEl.value, cuisine: cuisineEl.value, sort: sortEl.value, state: state
+        }));
+      }
+
+      moreEl.onclick = function(){ limitFiltered += 60; apply(); };
+
+      topEl.onclick = function(){
+        qEl.value = "";
+        cuisineEl.value = "";
+        sortEl.value = "popular";
+        state = { snabb:false, billig:false, matlada:false, barn:false, fav:false };
+        chips.forEach(function(ch){ ch.classList.remove("on"); });
+        limitFiltered = 60;
+        apply();
+      };
+
+      clearEl.onclick = function(){
+        qEl.value = "";
+        cuisineEl.value = "";
+        sortEl.value = "popular";
+        state = { snabb:false, billig:false, matlada:false, barn:false, fav:false };
+        chips.forEach(function(ch){ ch.classList.remove("on"); });
+        limitFiltered = 60;
+        apply();
+      };
+
+      chips.forEach(function(ch){
+        ch.onclick = function(){
+          var key = ch.getAttribute("data-chip");
+          if (key === "snabbt") state.snabb = !state.snabb;
+          if (key === "billigt") state.billig = !state.billig;
+          if (key === "matlada") state.matlada = !state.matlada;
+          if (key === "barn") state.barn = !state.barn;
+          if (key === "fav") state.fav = !state.fav;
+          ch.classList.toggle("on");
+          apply();
+        };
+      });
+
+      qEl.addEventListener("input", apply);
+      cuisineEl.addEventListener("change", apply);
+      sortEl.addEventListener("change", apply);
+
+      try{
+        var saved = localStorage.getItem("viddra_recipe_filters");
+        if (saved){
+          var obj = JSON.parse(saved);
+          if (obj && typeof obj === "object"){
+            qEl.value = obj.q || "";
+            cuisineEl.value = obj.cuisine || "";
+            sortEl.value = obj.sort || "popular";
+            if (obj.state){
+              state = {
+                snabb: !!obj.state.snabb,
+                billig: !!obj.state.billig,
+                matlada: !!obj.state.matlada,
+                barn: !!obj.state.barn,
+                fav: !!obj.state.fav
+              };
+              chips.forEach(function(ch){
+                var key = ch.getAttribute("data-chip");
+                var on =
+                  (key==="snabbt" && state.snabb) ||
+                  (key==="billigt" && state.billig) ||
+                  (key==="matlada" && state.matlada) ||
+                  (key==="barn" && state.barn) ||
+                  (key==="fav" && state.fav);
+                if (on) ch.classList.add("on"); else ch.classList.remove("on");
+              });
+            }
+          }
+        }
+      }catch(e){}
+
+      apply();
+    })();
+  </script>
+</body>
+</html>

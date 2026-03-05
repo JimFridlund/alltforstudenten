@@ -1,0 +1,2 @@
+#!/bin/bash
+git --work-tree=/home/studen36/public_html --git-dir=/home/studen36/repositories/alltforstudenten/.git checkout -f

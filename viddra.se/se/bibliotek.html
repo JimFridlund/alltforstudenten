@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Bibliotek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+    .mobileMenuWrap{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;background:rgba(0,0,0,.35);z-index:60;padding:14px}
+    .mobileMenu{width:min(360px,100%);background:var(--panel);border-radius:18px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.25);padding:12px}
+    .mobileMenu a{display:block;padding:10px 12px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}
+    .mobileMenu a:hover{border-color:var(--line);background:rgba(255,255,255,.45)}
+
+    /* Active link (NO pill/oval, no height change) */
+    .nav a.is-active{font-weight:800;opacity:1;text-decoration:none}
+
+    /* HERO */
+    .hero{
+      margin: 14px 0 18px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    }
+    .hero img{width:100%;height:auto;display:block}
+
+    /* Bibliotek UI */
+    .tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .tools input[type="search"]{
+      flex:1;min-width:240px;padding:10px 12px;border:1px solid var(--line);
+      border-radius:12px;background:rgba(255,255,255,.60);outline:none
+    }
+    .tools select{
+      padding:10px 12px;border:1px solid var(--line);
+      border-radius:12px;background:rgba(255,255,255,.60);outline:none
+    }
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media(min-width:980px){.grid{grid-template-columns: 1.05fr .95fr;}}
+
+    .card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.55);padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .card h2{margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px}
+
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{
+      display:inline-flex;gap:8px;align-items:center;
+      border:1px solid rgba(0,0,0,.10);
+      background:rgba(255,255,255,.55);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.on{border-color:rgba(9,50,96,.18);background:rgba(185,214,248,.55);font-weight:700}
+
+    .list{display:grid;gap:10px;margin-top:10px}
+    .item{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.65);
+      padding:12px;
+    }
+    .itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .itemTop b{display:block}
+    .itemTop small{color:var(--muted);white-space:nowrap}
+    .item p{margin:6px 0 0 0;color:var(--muted);line-height:1.45}
+    .miniActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand">
+          <div class="name">Viddra</div>
+          <div class="tag">Bibliotek</div>
+        </div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html" class="is-active">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <h1>Bibliotek</h1>
+        <p class="lead">Här samlar vi smarta guider och verktyg. Sök och filtrera.</p>
+
+        <div class="hero">
+          <img src="assets/library_hero.png" alt="" loading="lazy" onerror="this.closest('.hero').style.display='none'">
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h2>Hitta rätt</h2>
+            <div class="tools">
+              <input id="q" type="search" placeholder="Sök… (t.ex. mat, el, lån, rot)" />
+              <select id="type">
+                <option value="">Alla typer</option>
+                <option value="guide">Guide</option>
+                <option value="verktyg">Verktyg</option>
+                <option value="checklista">Checklista</option>
+              </select>
+              <select id="topic">
+                <option value="">Alla områden</option>
+                <option value="boende">Boende</option>
+                <option value="mat">Mat</option>
+                <option value="transport">Transport</option>
+                <option value="abonnemang">Abonnemang</option>
+                <option value="lan">Lån</option>
+                <option value="spar">Sparande</option>
+                <option value="deklaration">Deklaration</option>
+              </select>
+            </div>
+
+            <div class="chips" id="chips">
+              <div class="chip" data-chip="villa">Villa</div>
+              <div class="chip" data-chip="brf">BRF</div>
+              <div class="chip" data-chip="hyra">Hyra</div>
+              <div class="chip" data-chip="barn">Barn</div>
+              <div class="chip" data-chip="bil">Bil</div>
+            </div>
+
+            <div class="btnrow">
+              <button class="btn" id="toggleMine" type="button">Visa mina</button>
+              <button class="btn" id="clear" type="button">Rensa</button>
+              <span class="pill" id="countPill">0 träffar</span>
+            </div>
+
+            <div class="muted" style="margin-top:10px;">
+              Tips: “Mina” är saker du markerat som relevanta/bra att göra.
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Innehåll</h2>
+            <div class="muted">Klicka “Mina” på ett kort för att spara det till dig.</div>
+            <div class="list" id="list"></div>
+            <div class="muted" id="empty" style="display:none;margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobilmeny -->
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+  <script src="assets/viddra-core.js"></script>
+  <script>
+    (function(){
+      // ===== Mobile menu =====
+      var menuWrap = document.getElementById("menuWrap");
+      var openBtn = document.getElementById("openMenu");
+      var closeBtn = document.getElementById("closeMenu");
+      if (menuWrap && openBtn && closeBtn) {
+        openBtn.onclick = function(){ menuWrap.style.display = "flex"; };
+        closeBtn.onclick = function(){ menuWrap.style.display = "none"; };
+        menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display = "none"; };
+      }
+
+      // ===== Profile helpers =====
+      function safeParse(s){ try { return JSON.parse(s); } catch(e){ return null; } }
+
+      function readProfile(){
+        if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+        return safeParse(localStorage.getItem("viddra_profile_v1") || "") || null;
+      }
+      function kidsCount(p){
+        if (window.ViddraCore && window.ViddraCore.getKidsCount) return window.ViddraCore.getKidsCount(p);
+        if (p && Array.isArray(p.children)) return p.children.length;
+        if (p && Array.isArray(p.kids)) return p.kids.length;
+        return 0;
+      }
+      function carCount(p){
+        if (window.ViddraCore && window.ViddraCore.getCarCount) return window.ViddraCore.getCarCount(p);
+        if (p && typeof p.cars === "number") return p.cars;
+        if (p && typeof p.hasCar === "boolean") return p.hasCar ? 1 : 0;
+        return 0;
+      }
+      function housingTag(p){
+        if (window.ViddraCore && window.ViddraCore.isVilla && window.ViddraCore.isVilla(p)) return "villa";
+        if (window.ViddraCore && window.ViddraCore.isBrf && window.ViddraCore.isBrf(p)) return "brf";
+        if (window.ViddraCore && window.ViddraCore.isHyra && window.ViddraCore.isHyra(p)) return "hyra";
+        var t = (p && (p.housing || p.boende || p.housingType)) ? String(p.housing || p.boende || p.housingType).toLowerCase() : "";
+        if (t.indexOf("villa") >= 0) return "villa";
+        if (t.indexOf("brf") >= 0) return "brf";
+        if (t.indexOf("hyra") >= 0) return "hyra";
+        return "okand";
+      }
+
+      // ===== Meny: visa "Boende" bara om profilen har boendetyp =====
+      (function(){
+        var p = readProfile();
+        var show = false;
+        if (p) {
+          var ht = housingTag(p);
+          show = (ht && ht !== "okand");
+        }
+        var a1 = document.getElementById("navBoendeExtra");
+        var a2 = document.getElementById("navBoendeExtraMobile");
+        if (a1) a1.style.display = show ? "" : "none";
+        if (a2) a2.style.display = show ? "" : "none";
+      })();
+
+      // ===== Library content =====
+      var profile = readProfile();
+      var tag = housingTag(profile);
+      var kids = kidsCount(profile);
+      var cars = carCount(profile);
+
+      var MINE_KEY = "viddra_library_mine_v1";
+      function getMine(){ try { return safeParse(localStorage.getItem(MINE_KEY) || "") || {}; } catch(e){ return {}; } }
+      function setMine(x){ try { localStorage.setItem(MINE_KEY, JSON.stringify(x||{})); } catch(e){} }
+
+      var DATA = [
+        { id:"dek1", type:"guide", topic:"deklaration", title:"Deklaration: ruta för ruta", text:"En tydlig genomgång av de vanligaste rutorna + vanliga avdrag.", tags:["alla"] },
+        { id:"mat1", type:"guide", topic:"mat", title:"Mat: veckoplan som faktiskt funkar", text:"3 middagar, 1 handling, mindre småköp. Enkelt upplägg.", tags:["alla"] },
+        { id:"ab1", type:"checklista", topic:"abonnemang", title:"Rensa abonnemang", text:"Mobil, streaming, försäkringstjänster – plocka bort det du inte använder.", tags:["alla"] },
+        { id:"lan1", type:"guide", topic:"lan", title:"Smålån: samla eller betala av?", text:"Hur du tänker med ränta, avgifter och vilken ordning du betalar i.", tags:["alla"] },
+        { id:"spar1", type:"verktyg", topic:"spar", title:"Sparande-simulator (kommer)", text:"Simulera 3 000 / 5 000 / 7 000 kr i månaden med olika räntor.", tags:["alla"] },
+
+        { id:"villa1", type:"guide", topic:"boende", title:"Villa: el & värme – snabb vinst", text:"5 enkla saker som ofta ger direkt effekt på kostnaden.", tags:["villa"], show:(tag==="villa") },
+        { id:"brf1", type:"guide", topic:"boende", title:"BRF: avgift & drift", text:"Hur du tolkar avgiftshöjningar och vad du kan påverka hemma.", tags:["brf"], show:(tag==="brf") },
+        { id:"hyra1", type:"guide", topic:"boende", title:"Hyra: planera för höjning", text:"När hyran höjs: vilka poster du justerar först för att inte gå back.", tags:["hyra"], show:(tag==="hyra") },
+
+        { id:"barn1", type:"checklista", topic:"mat", title:"Barn: mellis utan småköp", text:"Planera mellis och utflykter så slipper ni onödiga köp.", tags:["barn"], show:(kids>0) },
+        { id:"bil1", type:"guide", topic:"transport", title:"Bil: håll koll på drift", text:"De stora bovarna och ett enkelt sätt att sätta tak per månad.", tags:["bil"], show:(cars>0) }
+      ];
+
+      function visible(d){
+        if (typeof d.show === "boolean") return d.show;
+        return true;
+      }
+
+      // ===== UI state =====
+      var qEl = document.getElementById("q");
+      var typeEl = document.getElementById("type");
+      var topicEl = document.getElementById("topic");
+      var listEl = document.getElementById("list");
+      var emptyEl = document.getElementById("empty");
+      var countPill = document.getElementById("countPill");
+      var clearBtn = document.getElementById("clear");
+      var toggleMineBtn = document.getElementById("toggleMine");
+
+      var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+      var chipState = { villa:false, brf:false, hyra:false, barn:false, bil:false };
+      var onlyMine = (localStorage.getItem("viddra_library_onlyMine") === "1");
+
+      function updateMineBtn(){
+        toggleMineBtn.textContent = onlyMine ? "Visar mina" : "Visa mina";
+        toggleMineBtn.className = onlyMine ? "btn primary" : "btn";
+      }
+
+      function matchText(d, q){
+        if (!q) return true;
+        q = q.toLowerCase();
+        return (d.title.toLowerCase().indexOf(q) >= 0) || (d.text.toLowerCase().indexOf(q) >= 0);
+      }
+      function matchSelect(d){
+        var t = typeEl.value;
+        var top = topicEl.value;
+        if (t && d.type !== t) return false;
+        if (top && d.topic !== top) return false;
+        return true;
+      }
+      function matchChips(d){
+        var anyOn = false;
+        for (var k in chipState){ if (chipState[k]) { anyOn = true; break; } }
+        if (!anyOn) return true;
+        for (var k2 in chipState){
+          if (chipState[k2] && d.tags && d.tags.indexOf(k2) >= 0) return true;
+        }
+        return false;
+      }
+
+      function render(){
+        var mine = getMine();
+        var q = (qEl.value || "").trim();
+
+        var out = DATA.filter(visible).filter(function(d){
+          if (!matchText(d, q)) return false;
+          if (!matchSelect(d)) return false;
+          if (!matchChips(d)) return false;
+          if (onlyMine && !mine[d.id]) return false;
+          return true;
+        });
+
+        listEl.innerHTML = "";
+        if (!out.length){
+          emptyEl.style.display = "block";
+          emptyEl.textContent = "Inget matchade din filtrering.";
+        } else {
+          emptyEl.style.display = "none";
+        }
+
+        countPill.textContent = out.length + " träffar";
+
+        out.forEach(function(d){
+          var mineOn = !!mine[d.id];
+
+          var div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML =
+            '<div class="itemTop">' +
+              '<div><b>'+d.title+'</b><small>'+d.type+' · '+d.topic+'</small></div>' +
+              '<small>'+ (mineOn ? "⭐ Mina" : "") +'</small>' +
+            '</div>' +
+            '<p>'+d.text+'</p>' +
+            '<div class="miniActions">' +
+              '<button class="btn" data-open="'+d.id+'">Öppna</button>' +
+              '<button class="btn '+(mineOn ? "primary" : "")+'" data-mine="'+d.id+'">'+(mineOn ? "I mina" : "Mina")+'</button>' +
+            '</div>';
+
+          listEl.appendChild(div);
+        });
+
+        var openBtns = listEl.querySelectorAll('[data-open]');
+        Array.prototype.forEach.call(openBtns, function(b){
+          b.onclick = function(){
+            var id = b.getAttribute("data-open");
+            if (id === "dek1") { location.href = "deklaration.html"; return; }
+            alert("Öppna: " + id + " (placeholder)");
+          };
+        });
+
+        var mineBtns = listEl.querySelectorAll('[data-mine]');
+        Array.prototype.forEach.call(mineBtns, function(b){
+          b.onclick = function(){
+            var id = b.getAttribute("data-mine");
+            var mine2 = getMine();
+            mine2[id] = !mine2[id];
+            setMine(mine2);
+            render();
+          };
+        });
+      }
+
+      qEl.oninput = render;
+      typeEl.onchange = render;
+      topicEl.onchange = render;
+
+      chips.forEach(function(ch){
+        ch.onclick = function(){
+          var key = ch.getAttribute("data-chip");
+          if (!key) return;
+          chipState[key] = !chipState[key];
+          ch.classList.toggle("on");
+          render();
+        };
+      });
+
+      toggleMineBtn.onclick = function(){
+        onlyMine = !onlyMine;
+        localStorage.setItem("viddra_library_onlyMine", onlyMine ? "1" : "0");
+        updateMineBtn();
+        render();
+      };
+
+      clearBtn.onclick = function(){
+        qEl.value = "";
+        typeEl.value = "";
+        topicEl.value = "";
+        for (var k in chipState) chipState[k] = false;
+        chips.forEach(function(ch){ ch.classList.remove("on"); });
+        render();
+      };
+
+      updateMineBtn();
+      render();
+    })();
+  </script>
+</body>
+</html>

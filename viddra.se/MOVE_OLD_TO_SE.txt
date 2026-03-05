@@ -1,0 +1,13 @@
+MOVE CURRENT SITE TO /se/ (CHEAT SHEET)
+
+1) Backup current public_html -> download zip
+2) Create folder: public_html/se/
+3) Move everything from public_html/ into public_html/se/
+4) Test https://viddra.se/se/
+
+If broken CSS/images:
+- Old site uses absolute paths like /assets/...
+Fix by:
+A) Edit old site templates: change /assets/... -> /se/assets/...
+B) OR add: <base href="/se/"> in <head>
+C) OR use subdomain se.viddra.se (recommended)

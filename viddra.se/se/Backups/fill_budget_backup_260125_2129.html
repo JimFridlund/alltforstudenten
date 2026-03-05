@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Viddra – Fyll i budget</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500,600,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#3f4a3f;
+      --shell:#f3efe6;
+      --card:rgba(255,255,255,.60);
+      --card2:rgba(255,255,255,.72);
+      --ink:#161616;
+      --muted:#6b6b6b;
+      --line:rgba(0,0,0,.10);
+      --shadow:0 12px 34px rgba(0,0,0,.14);
+      --radius:18px;
+      --btn:#1f2a1f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);}
+    h1,h2,h3{font-family:Fraunces,serif;}
+    .wrap{min-height:100vh;padding:18px 14px 26px;display:flex;justify-content:center;}
+    .shell{width:min(1120px,100%);background:var(--shell);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(0,0,0,.06);}
+
+    header{padding:18px 18px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand{display:flex;align-items:center;gap:10px;}
+    .brand img{height:30px;width:auto;display:block}
+    .brand .title{font-family:Fraunces,serif;font-weight:700;letter-spacing:.2px;font-size:18px;}
+    .topnote{color:var(--muted);font-size:13px;}
+
+    .grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px;padding:18px;align-items:start;}
+    .left h1{margin:0 0 6px;font-weight:700;font-size:22px;}
+    .sub{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.35;}
+
+    .accordion{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(0,0,0,.08);background:var(--card);margin-bottom:12px;}
+    .acc-head{width:100%;border:none;background:var(--card2);padding:14px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;text-align:left;}
+    .acc-head .name{font-family:Fraunces,serif;font-weight:700;font-size:16px;}
+    .acc-head .right{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;}
+    .acc-head .right .groupSum{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;}
+    .chev{width:10px;height:10px;border-right:2px solid rgba(0,0,0,.45);border-bottom:2px solid rgba(0,0,0,.45);transform:rotate(45deg);transition:transform .18s ease;margin-left:2px;}
+    .accordion[data-open="1"] .chev{transform:rotate(-135deg);}
+    .acc-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--line);}
+    .accordion[data-open="1"] .acc-body{display:block;}
+
+    .rows{display:grid;gap:10px;}
+    .row{display:grid;grid-template-columns:1fr 180px;gap:10px;align-items:center;padding:10px 10px;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:rgba(255,255,255,.62);}
+    .lbl{display:flex;flex-direction:column;gap:4px;}
+    .lbl .t{font-weight:600;font-size:14px;}
+    .lbl .h{color:var(--muted);font-size:12px;line-height:1.25;}
+
+    input[type="text"]{width:100%;padding:10px 10px;border-radius:12px;border:1px solid rgba(0,0,0,.18);background:#fff;font-size:14px;font-variant-numeric:tabular-nums;}
+    input::placeholder{color:#9a9a9a;}
+
+    .cta{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 0 4px;}
+    .btn{appearance:none;border:none;border-radius:14px;padding:12px 14px;background:var(--btn);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 10px 20px rgba(0,0,0,.12);}
+    .btn:active{transform:translateY(1px);}
+    .ghost{background:transparent;border:1px solid rgba(0,0,0,.22);color:rgba(0,0,0,.82);box-shadow:none;font-weight:600;}
+    .msg{color:var(--muted);font-size:12px;line-height:1.25;}
+
+    .side{position:sticky;top:14px;align-self:start;border-radius:var(--radius);overflow:hidden;border:1px solid rgba(0,0,0,.08);background:var(--card);}
+    .side .img{height:270px;background:#ddd;overflow:hidden;}
+    .side .img img{width:100%;height:100%;object-fit:cover;display:block;}
+    .side .body{padding:14px;}
+    .side h3{margin:0 0 10px;font-family:Fraunces,serif;font-weight:700;font-size:16px;}
+    .sumline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;}
+    .sumline:last-child{border-bottom:none;}
+    .sumline .kronor{font-variant-numeric:tabular-nums;}
+    .totals{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;gap:6px;}
+    .totals .row2{display:flex;justify-content:space-between;gap:12px;font-size:14px;}
+    .totals .row2 b{font-variant-numeric:tabular-nums;}
+    .totals .row2.big{font-size:15px;}
+
+    @media (max-width:860px){
+      .grid{grid-template-columns:1fr;}
+      .side{position:relative;top:0;}
+      .side .img{height:210px;}
+      .side .img img{object-fit:contain;background:#e9e6df;}
+    }
+    @media (max-width:520px){
+      .row{grid-template-columns:1fr;}
+    }
+
+    .dbg{display:none;white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;color:#0b2a1f;background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.15);padding:10px;border-radius:14px;margin:10px 0 14px;}
+    .dbg.on{display:block;}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <img id="brandLogo" src="/assets/logo.png" alt="Viddra"
+             onerror="this.onerror=null;this.src='/assets/A_logo_design_for_the_brand_\"Viddra\"_is_centered_o.png';">
+        <div class="title">Viddra</div>
+      </div>
+      <div class="topnote" id="contextLine">Fyll i budget</div>
+    </header>
+
+    <div class="grid">
+      <div class="left">
+        <h1>Fyll i budget</h1>
+        <p class="sub">Fyll i det du vet. Lämna tomt om du är osäker – vi kan förbättra detaljerna senare.</p>
+        <div id="dbg" class="dbg"></div>
+
+        <section class="accordion" data-acc="income" data-open="1">
+          <button class="acc-head" type="button">
+            <span class="name">Inkomster</span>
+            <span class="right"><span class="groupSum" data-sum="income">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="incomeRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="housing">
+          <button class="acc-head" type="button">
+            <span class="name">Boende</span>
+            <span class="right"><span class="groupSum" data-sum="housing">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="housingRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="heating">
+          <button class="acc-head" type="button">
+            <span class="name">Uppvärmning</span>
+            <span class="right"><span class="groupSum" data-sum="heating">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="heatingRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="smallloans">
+          <button class="acc-head" type="button">
+            <span class="name">Smålån & krediter</span>
+            <span class="right"><span class="groupSum" data-sum="smallloans">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="smallLoansRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="transport">
+          <button class="acc-head" type="button">
+            <span class="name">Transport</span>
+            <span class="right"><span class="groupSum" data-sum="transport">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="transportRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="pets" id="petsAcc" style="display:none;">
+          <button class="acc-head" type="button">
+            <span class="name">Husdjur</span>
+            <span class="right"><span class="groupSum" data-sum="pets">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="petsRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="everyday">
+          <button class="acc-head" type="button">
+            <span class="name">Vardag</span>
+            <span class="right"><span class="groupSum" data-sum="everyday">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="everydayRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="subscriptions">
+          <button class="acc-head" type="button">
+            <span class="name">Abonnemang & tjänster</span>
+            <span class="right"><span class="groupSum" data-sum="subscriptions">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="subsRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="saving">
+          <button class="acc-head" type="button">
+            <span class="name">Sparande & mål</span>
+            <span class="right"><span class="groupSum" data-sum="saving">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="savingRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="cottage" id="cottageAcc" style="display:none;">
+          <button class="acc-head" type="button">
+            <span class="name">Semesterbostad</span>
+            <span class="right"><span class="groupSum" data-sum="cottage">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="cottageRows"></div></div>
+        </section>
+
+        <section class="accordion" data-acc="other">
+          <button class="acc-head" type="button">
+            <span class="name">Övrigt</span>
+            <span class="right"><span class="groupSum" data-sum="other">0 kr</span><span class="chev"></span></span>
+          </button>
+          <div class="acc-body"><div class="rows" id="otherRows"></div></div>
+        </section>
+
+        <div class="cta">
+          <button class="btn ghost" type="button" id="btnBack">Tillbaka</button>
+          <div class="msg">Sparar lokalt (viddra_budget) och går till översikten.</div>
+          <button class="btn" type="button" id="btnSave">Spara & fortsätt</button>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="img">
+          <img id="sideImg" src="/assets/step8_budget.png" alt="Budget"
+               onerror="this.onerror=null;this.src='/assets/budget.jpg';">
+        </div>
+        <div class="body">
+          <h3>Summering</h3>
+          <div id="sideSums"></div>
+          <div class="totals">
+            <div class="row2"><span>Inkomster</span><b id="sumIncome">0 kr</b></div>
+            <div class="row2"><span>Utgifter</span><b id="sumExpense">0 kr</b></div>
+            <div class="row2 big"><span><b>Kvar</b></span><b id="sumLeft">0 kr</b></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script>
+const ONBOARDING_KEY = "viddra_onboarding";
+const BUDGET_KEY = "viddra_budget";
+
+const kr = (n) => (Math.round(n||0)).toLocaleString("sv-SE") + " kr";
+function safeJSON(raw){ try { return JSON.parse(raw); } catch(e){ return null; } }
+function parseKr(v){
+  if(v===null||v===undefined) return 0;
+  if(typeof v==="number") return Number.isFinite(v)?v:0;
+  const s = String(v).trim().replace(/\s/g,"").replace(/kr/ig,"").replace(/\./g,"").replace(",","."); 
+  const n = Number(s);
+  return Number.isFinite(n)?n:0;
+}
+function calcAge(yyMMdd){
+  if(!yyMMdd) return null;
+  const s = String(yyMMdd).trim();
+  if(!/^\d{6}$/.test(s)) return null;
+  const y = Number("20"+s.slice(0,2));
+  const m = Number(s.slice(2,4))-1;
+  const d = Number(s.slice(4,6));
+  const bd = new Date(y,m,d);
+  if(isNaN(bd.getTime())) return null;
+  const t = new Date();
+  let age = t.getFullYear() - bd.getFullYear();
+  const md = t.getMonth() - bd.getMonth();
+  if(md < 0 || (md===0 && t.getDate() < bd.getDate())) age--;
+  return age;
+}
+
+function readOnboarding(){
+  const raw = localStorage.getItem(ONBOARDING_KEY);
+  const obj = safeJSON(raw);
+  return (obj && typeof obj==="object") ? obj : {};
+}
+
+function truthyAny(v){
+  if(v === true) return true;
+  if(v === false || v === null || v === undefined) return false;
+  if(typeof v === "number") return v > 0;
+  if(typeof v === "string"){
+    const s = v.trim().toLowerCase();
+    if(!s) return false;
+    if(["nej","no","false","0","n"].includes(s)) return false;
+    if(["ja","yes","true","1","y"].includes(s)) return true;
+    return true;
+  }
+  if(Array.isArray(v)) return v.length > 0;
+  if(typeof v === "object"){
+    const keys = Object.keys(v);
+    if(keys.length===0) return false;
+    for(const k of keys){
+      const lk = k.toLowerCase();
+      if(["has","enabled","active","yes","value","selected","count","antal"].includes(lk)){
+        if(truthyAny(v[k])) return true;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
+function normalizeOnboarding(onb){
+  let adultsCount = Number(onb.adultsCount ?? onb.adultCount ?? (Array.isArray(onb.adults)?onb.adults.length:1));
+  if(!Number.isFinite(adultsCount) || adultsCount<1) adultsCount = 1;
+  if(adultsCount>2) adultsCount = 2;
+
+  let adultNames = [];
+  if(Array.isArray(onb.adultNames)) adultNames = onb.adultNames.map(x=>String(x||"").trim());
+  else if(Array.isArray(onb.adults)) adultNames = onb.adults.map(a=>String(a?.name||"").trim());
+  else adultNames = [String(onb.adult1Name||"").trim(), String(onb.adult2Name||"").trim()];
+  adultNames = [adultNames[0]||"", adultNames[1]||""];
+
+  let children = Array.isArray(onb.children) ? onb.children : [];
+  children = children.map(ch => ({
+    name: String(ch?.name||"").trim(),
+    birthYYMMDD: String(ch?.birthYYMMDD||ch?.birth||ch?.dob||"").trim()
+  })).filter(ch => ch.birthYYMMDD);
+
+  const htRaw = String(onb?.housing?.type ?? onb.housingType ?? onb.boendeform ?? onb?.housing?.boendeform ?? "villa")
+    .toLowerCase().replace(/\s+/g,"");
+  let housingType = "villa";
+  if(htRaw.includes("hyres")) housingType = "hyresratt";
+  else if(htRaw.includes("bostads")) housingType = "bostadsratt";
+  else if(htRaw.includes("radhus")) housingType = "radhus";
+  else if(htRaw.includes("villa")) housingType = "villa";
+
+  // Pets: include nested shapes too
+  const petsValue =
+    onb.pets ?? onb.hasPets ?? onb.husdjur ?? onb.pet ?? onb.petsCount ?? onb.petCount ?? onb.animals ??
+    onb?.pets?.has ?? onb?.pets?.enabled ?? onb?.pets?.count ?? onb?.pets?.antal ??
+    onb?.household?.pets ?? onb?.onboarding?.pets ?? onb?.meta?.pets;
+
+  const pets = truthyAny(petsValue);
+
+  const carValue =
+    onb.hasCar ?? onb.car ?? onb.bil ?? onb.hasBil ?? onb.cars ?? onb.bilar ?? onb.vehicle ??
+    onb?.transport?.car ?? onb?.transport?.hasCar ?? onb?.car?.has ?? onb?.car?.enabled ?? onb?.car?.count ?? onb?.car?.antal;
+
+  let hasCar = truthyAny(carValue);
+  let carCount = Number(
+    onb.carCount ?? onb.bilar ?? onb.numberOfCars ?? onb.carsCount ??
+    onb?.car?.count ?? onb?.car?.antal ?? onb?.cars?.count ?? onb?.vehicle?.count ?? 0
+  );
+  if(hasCar and (not Number.isFinite(carCount) or carCount < 1)): pass
+  // JS doesn't allow Python, fix below in runtime
+  if(hasCar && (!Number.isFinite(carCount) || carCount < 1)) carCount = 1;
+  if(!hasCar) carCount = 0;
+  if(carCount > 2) carCount = 2;
+
+  const cottageValue =
+    onb.hasCottage ?? onb.cottage ?? onb.fritidshus ?? onb.semesterbostad ?? onb.secondHome ?? onb.vacationHome ?? onb.hasSecondHome ??
+    onb?.housing?.cottage ?? onb?.housing?.secondHome ?? onb?.housing?.vacationHome ??
+    onb?.cottage?.has ?? onb?.cottage?.enabled ?? onb?.cottage?.count ?? onb?.cottage?.antal ??
+    onb?.secondHome?.has ?? onb?.vacationHome?.has;
+
+  const hasCottage = truthyAny(cottageValue);
+
+  return { adultsCount, adultNames, children, housingType, pets, hasCar, carCount, hasCottage, raw:onb };
+}
+
+function defaultBudget(){
+  return { meta:{}, groups:{ income:{}, housing:{}, heating:{}, smallloans:{}, transport:{}, pets:{}, everyday:{}, subscriptions:{}, saving:{}, cottage:{}, other:{} } };
+}
+function loadBudget(){
+  const raw = localStorage.getItem(BUDGET_KEY);
+  const obj = safeJSON(raw);
+  const d = defaultBudget();
+  if(obj && typeof obj==="object"){
+    return { ...d, ...obj, groups:{...d.groups, ...(obj.groups||{})} };
+  }
+  return d;
+}
+function saveBudget(b){ localStorage.setItem(BUDGET_KEY, JSON.stringify(b)); }
+
+function rowHTML(r){
+  const help = r.help ? `<div class="h">${r.help}</div>` : "";
+  const ph = r.placeholder ?? "0";
+  return `
+    <div class="row" data-key="${r.key}" data-group="${r.group}">
+      <div class="lbl">
+        <div class="t">${r.title}</div>
+        ${help}
+      </div>
+      <input type="text" inputmode="numeric" placeholder="${ph}" />
+    </div>
+  `;
+}
+function mount(containerId, rows){
+  document.getElementById(containerId).innerHTML = rows.map(rowHTML).join("");
+}
+function bind(containerId, groupId, budget){
+  const wrap = document.getElementById(containerId);
+  wrap.querySelectorAll(".row").forEach(r=>{
+    const key = r.getAttribute("data-key");
+    const inp = r.querySelector("input");
+    const v = budget.groups?.[groupId]?.[key];
+    inp.value = (v!==undefined && v!==null && String(v).trim()!=="") ? String(v) : "";
+    inp.addEventListener("input", ()=>{
+      budget.groups[groupId] = budget.groups[groupId] || {};
+      budget.groups[groupId][key] = inp.value;
+      recalcAndSave(budget);
+    });
+  });
+}
+
+function buildRows(ctx){
+  const { adultsCount, adultNames, children, housingType, pets, carCount, hasCottage } = ctx;
+  const hasKids = children.length>0;
+  const ages = children.map(c=>calcAge(c.birthYYMMDD)).filter(a=>a!==null);
+  const anyKid16to18 = ages.some(a=>a>=16 && a<=18);
+  const anyKidUnder16 = ages.some(a=>a<16);
+  const anyKid6plus = ages.some(a=>a>=6);
+  const eligibleCount = ages.filter(a=>a<16).length;
+  const base = 1250;
+  const multi = (eligibleCount>=2) ? 150*(eligibleCount-1) : 0;
+  const suggestedChildAllowance = eligibleCount*base + multi;
+
+  const incomeRows = [];
+  for(let i=0;i<adultsCount;i++){
+    const name = (adultNames[i]||"").trim() || `Vuxen ${i+1}`;
+    incomeRows.push({ group:"income", key:`income_adult_${i+1}`, title:`${name} – inkomst efter skatt`, help:"Netto per månad.", placeholder:"t.ex. 32000" });
+  }
+  if(hasKids && anyKidUnder16){
+    incomeRows.push({ group:"income", key:"income_child_allowance", title:"Barnbidrag (förslag)", help:"Vi föreslår belopp – justera vid behov.", placeholder: suggestedChildAllowance>0 ? String(suggestedChildAllowance) : "0" });
+  }
+  if(hasKids && anyKid16to18){
+    incomeRows.push({ group:"income", key:"income_study_allowance", title:"Studiebidrag 16–18 (förslag)", help:"Ofta 0 kr här eftersom barnet får det själv.", placeholder:"0" });
+  }
+  incomeRows.push({ group:"income", key:"income_support", title:"Underhållsbidrag", help:"Betalar du underhåll: skriv med minustecken (t.ex. -1500). Får du: skriv positivt.", placeholder:"t.ex. -1500" });
+  incomeRows.push({ group:"income", key:"income_other", title:"Övriga inkomster", help:"T.ex. pension, a-kassa, extrajobb.", placeholder:"t.ex. 2000" });
+
+  const housingRows = [];
+  if(housingType==="hyresratt") housingRows.push({group:"housing", key:"housing_rent", title:"Hyra", help:"Din månadshyra.", placeholder:"t.ex. 9500"});
+  if(housingType==="bostadsratt"){
+    housingRows.push({group:"housing", key:"housing_fee", title:"Avgift", help:"Månadsavgift till föreningen.", placeholder:"t.ex. 4200"});
+    housingRows.push({group:"housing", key:"housing_mortgage", title:"Bolån (ränta + amortering)", help:"Total månadskostnad för bolån.", placeholder:"t.ex. 13000"});
+  }
+  if(housingType==="villa" || housingType==="radhus"){
+    housingRows.push({group:"housing", key:"housing_mortgage", title:"Bolån (ränta + amortering)", help:"Total månadskostnad för bolån.", placeholder:"t.ex. 15000"});
+    housingRows.push({group:"housing", key:"housing_water", title:"Vatten & avlopp", help:"Bara villa/radhus.", placeholder:"t.ex. 400"});
+    housingRows.push({group:"housing", key:"housing_waste", title:"Sopor & renhållning", help:"Bara villa/radhus.", placeholder:"t.ex. 250"});
+    housingRows.push({group:"housing", key:"housing_maintenance", title:"Underhåll / renovering", help:"Bara villa/radhus (snitt).", placeholder:"t.ex. 800"});
+  }
+  housingRows.push({group:"housing", key:"housing_insurance", title:"Hemförsäkring", help:"Månadssnitt.", placeholder:"t.ex. 250"});
+
+  const heatingRows = [
+    { group:"heating", key:"heating_cost", title:"Uppvärmning",
+      help:(housingType==="hyresratt"||housingType==="bostadsratt") ? "På hyresrätt/bostadsrätt kan uppvärmning ingå i hyra/avgift. Lämna tomt eller 0 kr om det ingår." : "",
+      placeholder:"t.ex. 1200"
+    },
+    { group:"heating", key:"heating_electricity", title:"Hushållsel", help:"El som inte är värme.", placeholder:"t.ex. 650" }
+  ];
+
+  const smallLoansRows = [{ group:"smallloans", key:"smallloans_total", title:"Månadsbetalningar totalt", help:"T.ex. Klarna, Anyfin, Qliro, Santander, avbetalningar. En totalsumma räcker.", placeholder:"t.ex. 1000" }];
+
+  const transportRows = [
+    {group:"transport", key:"transport_public", title:"Kollektivtrafik", help:"Buss, tåg, månadskort.", placeholder:"t.ex. 800"},
+    {group:"transport", key:"transport_taxi", title:"Taxi", help:"Om du använder ibland.", placeholder:"t.ex. 200"},
+  ];
+  if(carCount>=1){
+    transportRows.push(
+      {group:"transport", key:"car1_fuel", title:"Bil 1 – bränsle / laddning", help:"Bensin/diesel/el.", placeholder:"t.ex. 1800"},
+      {group:"transport", key:"car1_insurance", title:"Bil 1 – försäkring", help:"Månadssnitt.", placeholder:"t.ex. 600"},
+      {group:"transport", key:"car1_tax", title:"Bil 1 – fordonsskatt", help:"Månadssnitt.", placeholder:"t.ex. 150"},
+      {group:"transport", key:"car1_service", title:"Bil 1 – service & däck", help:"Månadssnitt över året.", placeholder:"t.ex. 300"},
+      {group:"transport", key:"car1_parking", title:"Bil 1 – parkering / trängsel", help:"P-plats, garage, avgifter.", placeholder:"t.ex. 400"},
+      {group:"transport", key:"car1_loan", title:"Bil 1 – billån / leasing", help:"Total månadsbetalning.", placeholder:"t.ex. 2500"},
+    );
+  }
+  if(carCount>=2):
+    pass
+  // JS fix below
+  if(carCount>=2){
+    transportRows.push(
+      {group:"transport", key:"car2_fuel", title:"Bil 2 – bränsle / laddning", help:"Bensin/diesel/el.", placeholder:"t.ex. 1200"},
+      {group:"transport", key:"car2_insurance", title:"Bil 2 – försäkring", help:"Månadssnitt.", placeholder:"t.ex. 500"},
+      {group:"transport", key:"car2_tax", title:"Bil 2 – fordonsskatt", help:"Månadssnitt.", placeholder:"t.ex. 150"},
+      {group:"transport", key:"car2_service", title:"Bil 2 – service & däck", help:"Månadssnitt över året.", placeholder:"t.ex. 250"},
+      {group:"transport", key:"car2_parking", title:"Bil 2 – parkering / trängsel", help:"P-plats, garage, avgifter.", placeholder:"t.ex. 300"},
+      {group:"transport", key:"car2_loan", title:"Bil 2 – billån / leasing", help:"Total månadsbetalning.", placeholder:"t.ex. 2200"},
+    );
+  }
+  transportRows.push({group:"transport", key:"transport_other", title:"Övrig transport", help:"T.ex. cykelservice, bilpool, hyrbil.", placeholder:"t.ex. 150"});
+
+  const petsRows = [
+    {group:"pets", key:"pets_food", title:"Djurfoder", help:"Mat, godis, tillskott.", placeholder:"t.ex. 500"},
+    {group:"pets", key:"pets_insurance", title:"Djurförsäkring", help:"Månadssnitt.", placeholder:"t.ex. 300"},
+    {group:"pets", key:"pets_accessories", title:"Djurtillbehör", help:"Sand, leksaker, småköp.", placeholder:"t.ex. 250"},
+  ];
+
+  const everydayRows = [
+    {group:"everyday", key:"everyday_food", title:"Mat & dagligvaror", help:"All mat, hushåll, hygien.", placeholder:"t.ex. 6500"},
+    {group:"everyday", key:"everyday_hygiene", title:"Hygien & förbrukning", help:"Schampo, tvättmedel, papper, småköp.", placeholder:"t.ex. 500"},
+    {group:"everyday", key:"everyday_clothes", title:"Kläder & skor", help:"Månadssnitt.", placeholder:"t.ex. 800"},
+    {group:"everyday", key:"everyday_fun", title:"Fritid & nöjen", help:"Utemat, fika, aktiviteter.", placeholder:"t.ex. 800"},
+  ];
+  if(hasKids){
+    everydayRows.push(
+      {group:"everyday", key:"kids_preschool", title:"Förskola / fritids", help:"Avgifter och kostnader.", placeholder:"t.ex. 1000"},
+      {group:"everyday", key:"kids_activities", title:"Barnens aktiviteter", help:"Sport, musik, fritid (snitt).", placeholder:"t.ex. 600"},
+      {group:"everyday", key:"kids_clothes", title:"Barn – kläder & skor", help:"Månadssnitt.", placeholder:"t.ex. 400"},
+    );
+    if(anyKid6plus) everydayRows.push({group:"everyday", key:"kids_pocket", title:"Vecko-/månadspeng", help:"Månadssnitt. Justera efter behov.", placeholder:"t.ex. 200"});
+  }
+
+  const subsRows = [
+    {group:"subscriptions", key:"subs_streaming", title:"Streaming", help:"Netflix/Viaplay/Spotify osv.", placeholder:"t.ex. 350"},
+    {group:"subscriptions", key:"subs_mobile", title:"Mobilabonnemang", help:"För hushållet totalt.", placeholder:"t.ex. 500"},
+    {group:"subscriptions", key:"subs_broadband", title:"Bredband", help:(housingType==="hyresratt"||housingType==="bostadsratt")?"Kan ibland ingå i hyra/avgift – lämna tomt om det ingår.":"", placeholder:"t.ex. 400"},
+  ];
+
+  const savingRows = [
+    {group:"saving", key:"save_buffer", title:"Buffert / långsiktigt sparande", help:"Autoöverföring, ISK, etc.", placeholder:"t.ex. 1500"},
+    {group:"saving", key:"save_pension", title:"Pensionssparande", help:"Privat pensionssparande.", placeholder:"t.ex. 500"},
+  ];
+  if(hasKids) savingRows.push({group:"saving", key:"save_kids", title:"Barnsparande", help:"Visas bara om du har barn.", placeholder:"t.ex. 300"});
+  savingRows.push({group:"saving", key:"save_other", title:"Övrigt sparande", help:"T.ex. målsparande.", placeholder:"t.ex. 700"});
+
+  const cottageRows = [
+    {group:"cottage", key:"cottage_drift", title:"Drift & underhåll", help:"El, vatten, vägavgift, småfix (snitt).", placeholder:"t.ex. 900"},
+    {group:"cottage", key:"cottage_insurance", title:"Försäkring", help:"Månadssnitt.", placeholder:"t.ex. 150"},
+    {group:"cottage", key:"cottage_loan", title:"Lån (ränta + amortering)", help:"Om du har lån på semesterbostaden.", placeholder:"t.ex. 2500"},
+  ];
+
+  const otherRows = [
+    {group:"other", key:"other_gifts", title:"Presenter & högtider", help:"Månadssnitt över året.", placeholder:"t.ex. 250"},
+    {group:"other", key:"other_memberships", title:"Föreningar & medlemskap", help:"Gym, klubbavgifter.", placeholder:"t.ex. 300"},
+    {group:"other", key:"other_unexpected", title:"Oförutsett", help:"Småutgifter du vill räkna med.", placeholder:"t.ex. 400"},
+  ];
+
+  return { incomeRows, housingRows, heatingRows, smallLoansRows, transportRows, petsRows, everydayRows, subsRows, savingRows, cottageRows, otherRows };
+}
+
+document.querySelectorAll(".accordion .acc-head").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const acc = btn.closest(".accordion");
+    const open = acc.getAttribute("data-open")==="1";
+    acc.setAttribute("data-open", open ? "0" : "1");
+  });
+});
+
+function sumGroup(budget, gid){
+  const g = budget.groups?.[gid] || {};
+  let s = 0;
+  for(const k in g) s += parseKr(g[k]);
+  return s;
+}
+
+const GROUPS = [
+  {id:"income", name:"Inkomster", kind:"income"},
+  {id:"housing", name:"Boende", kind:"expense"},
+  {id:"heating", name:"Uppvärmning", kind:"expense"},
+  {id:"smallloans", name:"Smålån & krediter", kind:"expense"},
+  {id:"transport", name:"Transport", kind:"expense"},
+  {id:"pets", name:"Husdjur", kind:"expense", optional:"pets"},
+  {id:"everyday", name:"Vardag", kind:"expense"},
+  {id:"subscriptions", name:"Abonnemang & tjänster", kind:"expense"},
+  {id:"saving", name:"Sparande & mål", kind:"expense"},
+  {id:"cottage", name:"Semesterbostad", kind:"expense", optional:"cottage"},
+  {id:"other", name:"Övrigt", kind:"expense"},
+];
+
+let CONTEXT = null;
+
+function recalcAndSave(budget){
+  const sums = {};
+  GROUPS.forEach(g=>{
+    if(g.optional==="pets" && !CONTEXT.pets) return;
+    if(g.optional==="cottage" && !CONTEXT.hasCottage) return;
+    sums[g.id] = sumGroup(budget, g.id);
+  });
+
+  document.querySelectorAll("[data-sum]").forEach(el=>{
+    const id = el.getAttribute("data-sum");
+    el.textContent = kr(sums[id] || 0);
+  });
+
+  const side = document.getElementById("sideSums");
+  side.innerHTML = "";
+  let income = sums.income || 0;
+  let expense = 0;
+
+  GROUPS.forEach(g=>{
+    if(g.kind!=="expense") return;
+    if(g.optional==="pets" && !CONTEXT.pets) return;
+    if(g.optional==="cottage" && !CONTEXT.hasCottage) return;
+    const v = sums[g.id] || 0;
+    expense += v;
+    const div = document.createElement("div");
+    div.className = "sumline";
+    div.innerHTML = `<span>${g.name}</span><span class="kronor"><b>${kr(v)}</b></span>`;
+    side.appendChild(div);
+  });
+
+  const left = income - expense;
+  document.getElementById("sumIncome").textContent = kr(income);
+  document.getElementById("sumExpense").textContent = kr(expense);
+  document.getElementById("sumLeft").textContent = kr(left);
+
+  saveBudget(budget);
+}
+
+function baseDir(){
+  const u = window.location.href.split("#")[0].split("?")[0];
+  return u.replace(/[^\/]+$/, "");
+}
+
+(function init(){
+  const rawOnb = readOnboarding();
+  const onb = normalizeOnboarding(rawOnb);
+  CONTEXT = onb;
+
+  const dbgOn = /(^|[?&])debug=1($|&)/.test(window.location.search);
+  if(dbgOn){
+    const el = document.getElementById("dbg");
+    el.classList.add("on");
+    el.textContent = "ONBOARDING (rå):\n" + JSON.stringify(rawOnb, null, 2) + "\n\nNORMALISERAD:\n" + JSON.stringify({
+      adultsCount:onb.adultsCount, adultNames:onb.adultNames, childrenCount:onb.children.length,
+      pets:onb.pets, hasCar:onb.hasCar, carCount:onb.carCount, hasCottage:onb.hasCottage, housingType:onb.housingType
+    }, null, 2);
+  }
+
+  const ht = onb.housingType;
+  const htLabel = ht==="hyresratt"?"Hyresrätt":ht==="bostadsratt"?"Bostadsrätt":ht==="radhus"?"Radhus":"Villa";
+  document.getElementById("contextLine").textContent = `Fyll i budget • ${htLabel}`;
+
+  if(onb.pets) document.getElementById("petsAcc").style.display="";
+  if(onb.hasCottage) document.getElementById("cottageAcc").style.display="";
+
+  const built = buildRows(onb);
+  mount("incomeRows", built.incomeRows);
+  mount("housingRows", built.housingRows);
+  mount("heatingRows", built.heatingRows);
+  mount("smallLoansRows", built.smallLoansRows);
+  mount("transportRows", built.transportRows);
+  mount("petsRows", built.petsRows);
+  mount("everydayRows", built.everydayRows);
+  mount("subsRows", built.subsRows);
+  mount("savingRows", built.savingRows);
+  mount("cottageRows", built.cottageRows);
+  mount("otherRows", built.otherRows);
+
+  const budget = loadBudget();
+  budget.meta = {
+    updatedAt: new Date().toISOString(),
+    adultsCount:onb.adultsCount, adultNames:onb.adultNames, children:onb.children,
+    housingType:onb.housingType, pets:onb.pets, hasCar:onb.hasCar, carCount:onb.carCount, hasCottage:onb.hasCottage
+  };
+
+  bind("incomeRows","income",budget);
+  bind("housingRows","housing",budget);
+  bind("heatingRows","heating",budget);
+  bind("smallLoansRows","smallloans",budget);
+  bind("transportRows","transport",budget);
+  bind("petsRows","pets",budget);
+  bind("everydayRows","everyday",budget);
+  bind("subsRows","subscriptions",budget);
+  bind("savingRows","saving",budget);
+  bind("cottageRows","cottage",budget);
+  bind("otherRows","other",budget);
+
+  recalcAndSave(budget);
+
+  document.getElementById("btnBack").addEventListener("click", ()=> window.location.href = baseDir() + "index.html");
+  document.getElementById("btnSave").addEventListener("click", ()=>{
+    recalcAndSave(budget);
+    window.location.href = baseDir() + "budget.html";
+  });
+})();
+</script>
+</body>
+</html>

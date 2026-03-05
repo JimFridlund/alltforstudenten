@@ -1,75 +1,65 @@
-﻿
-	<div id="footer">
-		
-					<div class="alignleft">Copyright &copy; 2011 - <? echo date("Y"); ?> <a href="<?php echo base_url() ?>">Studenten2016.se</a> - <a href="<?php echo base_url() ?>sitemap.xml">sitemap</a> | <a href="http://www.studeravidare.se/om-hogskolan/meritvarde">Meritvärde</a> | <a href="http://www.foraldraledighet.se" title="Föräldraledig">Föräldraledighet</a> | <a href="http://www.babycard.se/">Rabattkort för barnfamiljer</a><?php if($this->uri->segment(3)=="boras-stad"):?> | <a href="http://www.webbjobb.io/">Lediga webbjobb på nätet</a><?php endif;?></div>
-		<div class="alignright">
-		
-			<a href="<?php echo base_url() ?>om-oss" <?php if($this->uri->segment(1)=="om-oss") echo 'class="active"';?>>Om oss</a>
-			<a href="<?php echo base_url() ?>" <?php if($this->uri->segment(1)=="") echo 'class="active"';?>>Hem</a>
-			
-			
-			<?php if($this->dx_auth->is_logged_in()): ?>
-			<a href="<?php echo base_url() ?>backend" rel="nofollow" <?php if($this->uri->segment(1)=="backend") echo 'class="active"';?> title="GÃ¥ till kontrollpanelen">Admin</a>
-			<?php else: ?>
+</main>
 
-			<?php endif; ?>			
-			
-		</div>
-		<p id="lastone"></p>
-	</div>
+<footer class="siteFooter">
+  <div class="container footerInner" style="padding:28px 0;">
 
+    <div style="display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-start;">
 
-			
+      <div style="min-width:260px;max-width:520px;">
+        <div style="font-weight:950;font-size:16px;margin-bottom:8px;">
+          AlltFörStudenten
+        </div>
 
+        <div style="color:#5b6472;line-height:1.55;">
+          Checklistor, inspiration och lokala sidor inför studenten.
+          Hitta rätt för din kommun — och hitta gymnasieskolor över hela Sverige.
+        </div>
 
-</div>
+        <div style="margin-top:14px;color:#5b6472;font-size:13px;">
+          Copyright &copy; 2011 - <?php echo date("Y"); ?>
+          <a href="<?php echo base_url(); ?>" style="font-weight:900;text-decoration:none;">
+            Alltforstudenten.se
+          </a>
+        </div>
+      </div>
 
+      <div style="min-width:220px;">
+        <div style="font-weight:950;font-size:14px;margin-bottom:10px;">
+          Snabblänkar
+        </div>
 
-			
-    <div id="slidebox">
-    <a class="close"></a>
-    <div style="float:left; border:0px solid #f00; width:200px;">
-   
-    <p>Har du koll på vilka högskolor och universitet som finns?</p>
+        <div style="display:grid;gap:8px;">
+          <a href="<?php echo base_url(); ?>" style="font-weight:900;text-decoration:none;">Hem</a>
+          <a href="<?php echo base_url(); ?>gymnasieskolor" style="font-weight:900;text-decoration:none;">Gymnasieskolor</a>
+          <a href="<?php echo base_url(); ?>balen" style="font-weight:900;text-decoration:none;">Bal</a>
+          <a href="<?php echo base_url(); ?>om-oss" style="font-weight:900;text-decoration:none;">Om oss</a>
+          <a href="<?php echo base_url(); ?>kontakt" style="font-weight:900;text-decoration:none;">Kontakt</a>
 
-    <ul style="margin-left:17px;">
-         	<li><a href="http://www.studeravidare.se/om-hogskolan/meritvarde/" target="_blank">Meritvärde</a></li> 
-         	<li><a href="http://www.studeravidare.se/skolor" target="_blank">Alla högskolor</a></li>
-         	<li><a href="http://www.studeravidare.se/om-hogskolan" target="_blank">Om högskolan</a></li>
-            <li><a href="http://www.studeravidare.se/om-hogskolan/hogskoleprovet/" target="_blank">Högskoleprovet</a></li>
-            
-            <li><a href="http://www.studeravidare.se/utbildningar" target="_blank">Utbildningar</a></li>
-         </ul><br />
+          <?php if(isset($this->dx_auth) && $this->dx_auth->is_logged_in()): ?>
+            <a href="<?php echo base_url(); ?>backend" rel="nofollow" style="font-weight:900;text-decoration:none;">Admin</a>
+          <?php endif; ?>
+        </div>
+      </div>
 
-<a class="more" href="http://www.studeravidare.se" target="_blank"> Läs mer på <br />studeravidare.se</a></div>
-    <div style="float:left; border:0px solid #f00; width:200px;">
-      <a href="http://www.studeravidare.se/" id="title" style="display: block; top: 0px;" target="_blank">
-     
-     	<img src="https://www.studeravidare.se/img/assets/logo.png" alt="Studeravidare.se - Allt om att studera vidare" style=" margin-top:15px;">
-     </a>
-   </div>
+      <div style="min-width:220px;">
+        <div style="font-weight:950;font-size:14px;margin-bottom:10px;">
+          Sitemap
+        </div>
 
+        <div style="display:grid;gap:8px;">
+          <a href="<?php echo base_url(); ?>sitemap.xml" style="font-weight:900;text-decoration:none;">Sitemap</a>
+          <a href="<?php echo base_url(); ?>sitemap-skolor.xml" style="font-weight:900;text-decoration:none;">Sitemap skolor</a>
+        </div>
+      </div>
 
-    
-</div>
+    </div>
 
-			
-<script type="text/javascript">
-$(function() {
-    $(window).scroll(function(){
-        var distanceTop = $('#lastone').offset().top - $(window).height();
- 
-        if  ($(window).scrollTop() > distanceTop)
-            $('#slidebox').animate({'right':'0px'},300);
-        else
-            $('#slidebox').stop(true).animate({'right':'-430px'},100);
-    });
- 
-    $('#slidebox .close').bind('click',function(){
-        $(this).parent().remove();
-    });
-});
-</script>			
-		
+    <div style="margin-top:22px;padding-top:16px;border-top:1px solid #e6eaf0;color:#5b6472;font-size:13px;">
+      Tips: Sök din kommun för att hitta lokala checklistor och erbjudanden inför studenten.
+    </div>
+
+  </div>
+</footer>
+
 </body>
 </html>

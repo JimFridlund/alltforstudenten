@@ -1,0 +1,131 @@
+VIDDRA (UK) — LEGO MANUAL (Deploy)
+Generated: 2026-02-27
+
+GOAL
+You will end up with:
+- New UK Viddra running on https://viddra.se/  (root)
+- Old current Viddra preserved at https://viddra.se/se/
+
+IMPORTANT NOTE (READ THIS ONCE)
+Moving an old site into /se/ may break it if it uses absolute paths like "/assets/..." or "/css/..."
+If that happens, use Option A (recommended): use a subdomain (se.viddra.se) instead.
+If you MUST use /se/, you may need to edit the old site's paths after moving.
+
+========================================================
+PART 1 — BACKUP FIRST (DO THIS)
+========================================================
+1) Log in to your hosting (cPanel or similar)
+2) Go to File Manager
+3) Open your web root folder (often: public_html/)
+4) Create a backup:
+   - Select ALL current files/folders in public_html
+   - Compress -> "current_viddra_backup.zip"
+   - Download it to your computer (so you have a local copy)
+
+========================================================
+PART 2 — SAVE CURRENT VIDDRA AS /se/
+========================================================
+You have two ways:
+
+-------------------------
+OPTION A (RECOMMENDED): Use subdomain instead of /se/
+-------------------------
+This avoids path issues.
+
+A1) Create subdomain: se.viddra.se
+A2) Point subdomain document root to: public_html_se/  (or any folder you choose)
+A3) Move/copy your current site from public_html/ into public_html_se/
+A4) Test: https://se.viddra.se/
+
+If you still want /se/ as a URL, you can later do a redirect /se -> https://se.viddra.se/
+
+-------------------------
+OPTION B (YOUR REQUEST): Use /se/ folder
+-------------------------
+B1) In public_html/, create a folder named: se
+B2) Move ALL your current site files/folders into /public_html/se/
+    - This includes index.php, assets, css, js, etc.
+B3) Test: https://viddra.se/se/
+
+If it looks broken (missing CSS/images):
+B4) The old site likely uses absolute paths. Fix by:
+    - Searching the old code for: href="/", src="/", url(/)
+    - Changing them to: href="/se/", src="/se/", url(/se/)
+    - OR add in old site's <head>: <base href="/se/">
+
+========================================================
+PART 3 — PUT NEW UK VIDDRA ON ROOT (/)
+========================================================
+1) Make sure public_html/ is now clean OR only contains the /se folder
+2) Upload the ZIP you got from me:
+   - viddra_uk_root_bundle.zip  (created below)
+3) Extract the zip INTO public_html/
+4) After extract, your public_html/ should contain folders like:
+   /app
+   /assets
+   /core
+   /includes
+   /install
+   and possibly other project files
+
+========================================================
+PART 4 — DATABASE: RUN SQL IN ORDER
+========================================================
+Run these SQL files in phpMyAdmin (or similar), in this exact order:
+
+01) /install/schema_step31_household_financials.sql
+02) /install/schema_step32_categories.sql
+03) /install/schema_step33_transactions.sql
+04) /install/schema_step34_monthly_rollups.sql   (optional, but safe to run)
+05) /install/schema_step35_budgets.sql
+
+(If your earlier steps already created some tables, CREATE TABLE IF NOT EXISTS will simply skip.)
+
+========================================================
+PART 5 — CONFIG (MOST COMMON)
+========================================================
+A) Database credentials
+- Find where DB is configured in your project.
+  Common file names:
+  - /includes/config.php
+  - /includes/bootstrap.php
+  - /core/Database.php
+Set:
+  host, database name, user, password
+
+B) HTTPS
+- Ensure your site uses HTTPS (usually hosting-level)
+- If you have hardcoded URLs, keep them relative.
+
+========================================================
+PART 6 — QUICK TEST CHECKLIST
+========================================================
+Open these URLs:
+
+1) https://viddra.se/                (homepage)
+2) https://viddra.se/pricing.php      (pricing)
+3) https://viddra.se/app/login.php    (login)
+4) After login:
+   - /app/onboarding.php
+   - /app/categories.php
+   - /app/transactions.php
+   - /app/monthly.php
+   - /app/budget.php
+   - /app/forecast.php
+
+If you see a 500 error:
+- Turn on error reporting (if you have an admin flag like earlier)
+- Check PHP version requirements
+- Check that Database config is correct
+
+========================================================
+PART 7 — WHAT YOU DEPLOYED (FEATURES)
+========================================================
+- Onboarding (income, fixed, goals, snapshot) saved to DB per household
+- Categories per household
+- Manual transactions
+- Monthly rollups by category
+- Budget vs Actual
+- Forecast (run-rate projection)
+
+DONE.

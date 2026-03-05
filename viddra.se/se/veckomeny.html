@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Veckomeny</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --olive:#66725d;
+      --shell:#f4f0e8;
+      --ink:#1c1c1c;
+      --muted:#6b6b6b;
+      --line:rgba(0,0,0,.12);
+      --shadow:0 10px 30px rgba(0,0,0,.16);
+      --radius:26px;
+
+      --btn:#1f2b21;
+      --btnBorder:rgba(0,0,0,.14);
+
+      --cardBg: rgba(255,255,255,.60);
+      --inputBg: rgba(255,255,255,.92);
+      --okBg: rgba(10,107,47,.08);
+      --okBorder: rgba(10,107,47,.25);
+      --warnBg: rgba(180,90,0,.08);
+      --warnBorder: rgba(180,90,0,.25);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--olive);color:var(--ink)}
+    .stage{padding:28px;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .shell{
+      width:min(1320px,calc(100vw - 56px));
+      background:var(--shell);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px 22px 26px;
+    }
+    @media(max-width:980px){
+      .stage{padding:12px}
+      .shell{width:calc(100vw - 24px);padding:18px 14px 18px}
+    }
+
+    /* topbar/menu */
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 6px 16px;border-bottom:1px solid var(--line);margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:44px;height:44px;border-radius:12px;object-fit:contain;background:#55664f}
+    .brand .name{font-family:Fraunces,serif;font-weight:700;font-size:22px;line-height:1.1}
+    .brand .sub{color:var(--muted);font-size:12.5px;margin-top:1px}
+    .navDesk{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+    .navDesk a{color:inherit;text-decoration:none;font-weight:800;font-size:13px;opacity:.9;padding:8px 10px;border-radius:12px}
+    .navDesk a:hover{opacity:1;background:rgba(255,255,255,.35)}
+    .navDesk a.active{background:rgba(31,43,33,.10);opacity:1}
+    .hamburger{display:none;border:1px solid var(--btnBorder);background:rgba(255,255,255,.75);border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:50}
+    .drawer{position:fixed;top:0;right:0;height:100vh;width:min(84vw,320px);background:rgba(244,240,232,.98);
+      border-left:1px solid rgba(0,0,0,.10);transform:translateX(100%);transition:transform .22s ease;z-index:60;
+      padding:16px;display:flex;flex-direction:column;gap:12px}
+    .drawer .dTop{display:flex;align-items:center;justify-content:space-between}
+    .drawer .dTitle{font-family:Fraunces,serif;font-size:20px;font-weight:700}
+    .drawer a{display:block;padding:12px;border:1px solid rgba(0,0,0,.10);border-radius:14px;background:rgba(255,255,255,.75);
+      text-decoration:none;color:inherit;font-weight:900}
+    .drawer .close{border:1px solid rgba(0,0,0,.12);border-radius:12px;background:rgba(255,255,255,.75);padding:10px 12px;font-weight:900;cursor:pointer}
+    body.open .backdrop{opacity:1;pointer-events:auto}
+    body.open .drawer{transform:translateX(0)}
+    @media(max-width:980px){.navDesk{display:none}.hamburger{display:inline-block}}
+
+    h1{font-family:Fraunces,serif;font-weight:700;font-size:54px;margin:18px 0 10px;letter-spacing:-.6px}
+    .lead{margin:0 0 16px;color:var(--muted);font-size:15.5px;line-height:1.5;max-width:920px}
+
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}h1{font-size:44px}}
+
+    .card{background:var(--cardBg);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;margin-bottom:14px}
+    .card h2{font-family:Fraunces,serif;font-weight:700;margin:0 0 10px;font-size:26px;letter-spacing:-.2px}
+    .muted{color:var(--muted);font-size:12.5px;line-height:1.45}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{display:inline-block;border:1px solid var(--btnBorder);background:rgba(255,255,255,.75);border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer;text-decoration:none;color:inherit}
+    .btnPrimary{background:var(--btn);border-color:transparent;color:#fff}
+    .pill{display:inline-block;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.55);font-weight:800;font-size:12.5px;color:var(--muted)}
+    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .mini{border:1px solid rgba(0,0,0,.10);border-radius:14px;background:rgba(255,255,255,.55);padding:10px}
+    .mini .l{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .mini .v{font-weight:900}
+
+    .rangeWrap{margin-top:10px;border:1px solid rgba(0,0,0,.10);border-radius:14px;background:rgba(255,255,255,.55);padding:10px}
+    input[type="range"]{width:100%}
+    .select{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:800;background:var(--inputBg)}
+    .infoOk{border:1px solid var(--okBorder);background:var(--okBg);border-radius:14px;padding:10px;display:none}
+    .infoWarn{border:1px solid var(--warnBorder);background:var(--warnBg);border-radius:14px;padding:10px;display:none}
+
+    .list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .meal{
+      border:1px solid rgba(0,0,0,.10);
+      background:rgba(255,255,255,.75);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .meal .t{font-weight:900}
+    .meal .meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .meal .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .meal .tag{display:inline-block;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.55);padding:6px 8px;border-radius:999px;font-size:12px;font-weight:800;color:var(--muted)}
+    .smallBtn{border:1px solid rgba(0,0,0,.14);background:rgba(255,255,255,.75);border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
+
+    .shop{white-space:pre-line;font-size:13px;line-height:1.45}
+  </style>
+</head>
+
+<body>
+<div class="stage">
+  <div class="shell">
+
+    <div class="topbar">
+      <div class="brand">
+        <img src="assets/logo.png" alt="Viddra">
+        <div>
+          <div class="name">Viddra</div>
+          <div class="sub">Veckomeny</div>
+        </div>
+      </div>
+
+      <div class="navDesk">
+        <a href="index.html">Start</a>
+        <a href="fill_budget.html">Fyll i budget</a>
+        <a href="budget.html">Budget</a>
+        <a href="resultat.html">Resultat</a>
+        <a href="min_sida.html">Min sida</a>
+        <a href="veckomeny.html" class="active">Veckomeny</a>
+        <a href="recept.html">Recept</a>
+        <a href="tips.html">Tips</a>
+        <a href="bibliotek.html">Bibliotek</a>
+      </div>
+
+      <button class="hamburger" id="btnHamb" aria-label="Öppna meny">☰</button>
+    </div>
+
+    <div class="backdrop" id="backdrop"></div>
+    <aside class="drawer" aria-label="Mobilmeny">
+      <div class="dTop">
+        <div class="dTitle">Meny</div>
+        <button class="close" id="btnClose" aria-label="Stäng meny">✕</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="veckomeny.html">Veckomeny</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Tips</a>
+      <a href="bibliotek.html">Bibliotek</a>
+    </aside>
+
+    <h1>Veckomeny</h1>
+    <p class="lead">
+      V1: Skapa veckans middagar baserat på din matbudget. Tryck på knappen för att skapa en meny automatiskt.
+    </p>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Inställningar</h2>
+
+          <div class="kpi">
+            <div class="mini">
+              <div class="l">Matbudget (per månad)</div>
+              <div class="v" id="matBudget">—</div>
+            </div>
+            <div class="mini">
+              <div class="l">Middagsbudget (per vecka)</div>
+              <div class="v" id="dinnerWeekBudget">—</div>
+            </div>
+          </div>
+
+          <div class="rangeWrap">
+            <div class="row" style="justify-content:space-between">
+              <div style="font-weight:900">Andel av matbudgeten till middagar</div>
+              <div class="pill" id="pctLabel">80%</div>
+            </div>
+            <input id="pctDinner" type="range" min="40" max="95" step="5" value="80">
+            <div class="muted">Tips: 70–85% är vanligt om du vill att vardagsmat ska få plats utan stress.</div>
+          </div>
+
+          <div class="rangeWrap">
+            <div class="row" style="justify-content:space-between">
+              <div style="font-weight:900">Sparläge</div>
+              <div class="pill" id="saveLabel">0%</div>
+            </div>
+            <input id="pctSave" type="range" min="0" max="30" step="5" value="0">
+            <div class="muted">Ökar kraven på billigare recept när du vill spara.</div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <label class="muted" for="dinners">Antal middagar</label>
+            <select id="dinners" class="select">
+              <option value="5">5 middagar</option>
+              <option value="6">6 middagar</option>
+              <option value="7" selected>7 middagar</option>
+            </select>
+
+            <label class="muted" for="style">Stil</label>
+            <select id="style" class="select">
+              <option value="mix" selected>Blandat</option>
+              <option value="classic">Klassiskt</option>
+              <option value="quick">Snabbt</option>
+              <option value="budget">Billigt</option>
+            </select>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button class="btn btnPrimary" id="btnAuto">Skapa veckomeny automatiskt</button>
+            <button class="btn" id="btnSave">Spara veckomeny</button>
+            <button class="btn" id="btnClear">Rensa</button>
+            <span class="muted" id="status">—</span>
+          </div>
+
+          <div class="infoOk" id="okBox"></div>
+          <div class="infoWarn" id="warnBox"></div>
+        </div>
+
+        <div class="card">
+          <h2>Veckans middagar</h2>
+          <div class="muted">Tryck på “Skapa veckomeny automatiskt” så fylls listan.</div>
+          <div class="list" id="menuList"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Inköpslista</h2>
+          <div class="muted">V1: råvaror sammanställs enkelt (dubletter slås ihop).</div>
+          <div class="shop" id="shoppingList">—</div>
+        </div>
+
+        <div class="card">
+          <h2>Genvägar</h2>
+          <div class="row">
+            <a class="btn btnPrimary" href="min_sida.html">Till Min sida</a>
+            <a class="btn" href="budget.html">Till budget</a>
+            <a class="btn" href="recept.html">Till recept</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="recipes.js"></script>
+<script>
+(function(){
+  var btn=document.getElementById("btnHamb"), close=document.getElementById("btnClose"), back=document.getElementById("backdrop");
+  function open(){document.body.classList.add("open")} function shut(){document.body.classList.remove("open")}
+  btn&&btn.addEventListener("click",open); close&&close.addEventListener("click",shut); back&&back.addEventListener("click",shut);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")shut()});
+})();
+
+function safe(s){try{return JSON.parse(s)}catch(e){return null}}
+function n(v){var s=String(v??"").replace(/\s/g,"").replace(",",".");var x=parseFloat(s);return Number.isFinite(x)?x:0}
+function fmt(v){return Math.round(v||0).toLocaleString("sv-SE")+" kr"}
+
+const LS_BUDGET = "viddra_budget_values_v1";
+const LS_WEEKMENU = "viddra_weekmenu_v1";
+
+// Receptkälla (kopplat!)
+const RECIPES = (window.VIDDRA_RECIPES || []).slice();
+
+/* ---- UI refs ---- */
+const elMat = document.getElementById("matBudget");
+const elDinnerW = document.getElementById("dinnerWeekBudget");
+const elPct = document.getElementById("pctLabel");
+const elSave = document.getElementById("saveLabel");
+const rngPct = document.getElementById("pctDinner");
+const rngSave = document.getElementById("pctSave");
+const selDinners = document.getElementById("dinners");
+const selStyle = document.getElementById("style");
+const btnAuto = document.getElementById("btnAuto");
+const btnSave = document.getElementById("btnSave");
+const btnClear = document.getElementById("btnClear");
+const elStatus = document.getElementById("status");
+const listEl = document.getElementById("menuList");
+const shopEl = document.getElementById("shoppingList");
+const okBox = document.getElementById("okBox");
+const warnBox = document.getElementById("warnBox");
+
+/* ---- State ---- */
+let state = {
+  createdAt: null,
+  pctDinner: 80,
+  pctSave: 0,
+  dinners: 7,
+  style: "mix",
+  matBudgetMonthly: 0,
+  dinnerBudgetWeekly: 0,
+  menu: [],        // array of recipe ids
+  shopping: {}     // map ingredient -> {name, qty[]}
+};
+
+function showOk(msg){
+  okBox.style.display="block"; warnBox.style.display="none";
+  okBox.textContent = msg;
+}
+function showWarn(msg){
+  warnBox.style.display="block"; okBox.style.display="none";
+  warnBox.textContent = msg;
+}
+function clearMsg(){
+  okBox.style.display="none"; warnBox.style.display="none";
+  okBox.textContent=""; warnBox.textContent="";
+}
+
+function calcBudgets(){
+  const monthly = state.matBudgetMonthly;
+  const pctDinner = state.pctDinner/100;
+  const pctSave = state.pctSave/100;
+
+  const effectiveDinnerMonthly = monthly * pctDinner * (1 - pctSave);
+  state.dinnerBudgetWeekly = effectiveDinnerMonthly / 4.33;
+
+  elMat.textContent = fmt(monthly);
+  elDinnerW.textContent = fmt(state.dinnerBudgetWeekly);
+  elPct.textContent = state.pctDinner + "%";
+  elSave.textContent = state.pctSave + "%";
+}
+
+function readMatBudget(){
+  const budget = safe(localStorage.getItem(LS_BUDGET)||"") || {};
+  state.matBudgetMonthly = n(budget.everyday_food);
+
+  if(state.matBudgetMonthly <= 0){
+    showWarn("Jag hittar ingen matbudget ännu. Gå till Fyll i budget och fyll i Mat, så kan jag skapa veckomeny automatiskt.");
+  } else {
+    clearMsg();
+  }
+  calcBudgets();
+}
+
+function pickPool(){
+  const style = state.style;
+  const save = state.pctSave;
+
+  let pool = RECIPES.slice();
+
+  if(style==="classic"){
+    pool = pool.filter(r => (r.tags||[]).includes("klassisk") || (r.tags||[]).includes("gryta") || (r.tags||[]).includes("matlåda"));
+  } else if(style==="quick"){
+    pool = pool.filter(r => (r.time||999) <= 30 || (r.tags||[]).includes("snabbt"));
+  } else if(style==="budget"){
+    pool = pool.filter(r => r.cost==="budget" || (r.tags||[]).includes("snabbt"));
+  }
+
+  if(save >= 15){
+    pool = pool.filter(r => r.cost!=="lyx");
+  }
+  if(save >= 25){
+    pool = pool.filter(r => r.cost==="budget" || r.cost==="normal");
+  }
+
+  if(pool.length < 3) pool = RECIPES.slice(); // fallback
+  return pool;
+}
+
+function shuffled(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function generateMenu(){
+  if(RECIPES.length < 1){
+    showWarn("Jag hittar inga recept. Kontrollera att recipes.js ligger rätt och att window.VIDDRA_RECIPES finns.");
+    return;
+  }
+  if(state.matBudgetMonthly <= 0){
+    showWarn("Kan inte auto-skapa meny utan matbudget. Fyll i Mat i Fyll i budget först.");
+    return;
+  }
+
+  const dinners = parseInt(state.dinners,10);
+  const pool = pickPool();
+  const order = shuffled(pool);
+
+  // plocka unika först, sen tillåt dublett om det behövs
+  const picked = [];
+  const used = new Set();
+  for(let i=0;i<order.length && picked.length<dinners;i++){
+    if(!used.has(order[i].id)){
+      picked.push(order[i].id);
+      used.add(order[i].id);
+    }
+  }
+  while(picked.length < dinners){
+    picked.push(pool[Math.floor(Math.random()*pool.length)].id);
+  }
+
+  state.menu = picked;
+  state.createdAt = new Date().toISOString();
+
+  buildShopping();
+  renderMenu();
+  renderShopping();
+
+  showOk("Veckomeny skapad ✅ Tryck Spara så ligger den kvar till Min sida.");
+  elStatus.textContent = "Meny skapad ✅";
+}
+
+function buildShopping(){
+  const map = {};
+  state.menu.forEach(id => {
+    const r = RECIPES.find(x => x.id===id);
+    if(!r) return;
+    (r.ingredients||[]).forEach(pair => {
+      const name = (pair[0]||"").trim();
+      const qty  = (pair[1]||"").trim();
+      if(!name) return;
+      const key = name.toLowerCase();
+      if(!map[key]) map[key] = { name: name, qty: [] };
+      if(qty) map[key].qty.push(qty);
+    });
+  });
+  state.shopping = map;
+}
+
+function costLabel(c){
+  if(c==="budget") return "Billigt";
+  if(c==="lyx") return "Lite lyx";
+  return "Normal";
+}
+
+function renderMenu(){
+  listEl.innerHTML = "";
+  if(!state.menu.length){
+    listEl.innerHTML = "<div class='muted'>Ingen meny ännu. Tryck på knappen för att skapa automatiskt.</div>";
+    return;
+  }
+  const titles = ["Mån","Tis","Ons","Tors","Fre","Lör","Sön"];
+  state.menu.forEach((id, idx) => {
+    const r = RECIPES.find(x => x.id===id);
+    if(!r) return;
+
+    const tags = (r.tags||[]).slice(0,4).map(t=>`<span class="tag">${t}</span>`).join(" ");
+    const div = document.createElement("div");
+    div.className = "meal";
+    div.innerHTML = `
+      <div>
+        <div class="t">${titles[idx] || ("Middag " + (idx+1))}: ${r.title}</div>
+        <div class="meta">${(r.time||0)} min · ${costLabel(r.cost)} · ${tags}</div>
+      </div>
+      <div class="actions">
+        <button class="smallBtn" data-act="swap" data-id="${r.id}">Byt</button>
+        <button class="smallBtn" data-act="remove" data-id="${r.id}">Ta bort</button>
+      </div>
+    `;
+    listEl.appendChild(div);
+  });
+}
+
+function renderShopping(){
+  if(!state.menu.length){
+    shopEl.textContent = "—";
+    return;
+  }
+  const items = Object.values(state.shopping)
+    .sort((a,b)=>a.name.localeCompare(b.name, "sv-SE"))
+    .map(x => `• ${x.name}: ${x.qty.length ? x.qty.join(" + ") : ""}`.trim());
+
+  shopEl.textContent = items.join("\n");
+}
+
+function swapOne(id){
+  const pool = pickPool();
+  const used = new Set(state.menu);
+  let cand = pool.filter(r => !used.has(r.id));
+  if(!cand.length) cand = pool;
+  const pick = cand[Math.floor(Math.random()*cand.length)];
+  const i = state.menu.indexOf(id);
+  if(i>=0 && pick){
+    state.menu[i] = pick.id;
+    buildShopping();
+    renderMenu();
+    renderShopping();
+    elStatus.textContent = "Bytt ✅";
+  }
+}
+
+function removeOne(id){
+  const i = state.menu.indexOf(id);
+  if(i>=0){
+    state.menu.splice(i,1);
+    buildShopping();
+    renderMenu();
+    renderShopping();
+    elStatus.textContent = "Borttagen ✅";
+  }
+}
+
+function saveWeekmenu(){
+  if(!state.menu.length){
+    showWarn("Inget att spara ännu. Skapa meny först.");
+    return;
+  }
+  const payload = {
+    version: "v1",
+    savedAt: new Date().toISOString(),
+    createdAt: state.createdAt,
+    pctDinner: state.pctDinner,
+    pctSave: state.pctSave,
+    dinners: state.dinners,
+    style: state.style,
+    matBudgetMonthly: state.matBudgetMonthly,
+    dinnerBudgetWeekly: state.dinnerBudgetWeekly,
+    menu: state.menu,
+    shopping: state.shopping
+  };
+  localStorage.setItem(LS_WEEKMENU, JSON.stringify(payload));
+  showOk("Sparat ✅ Veckomenyn ligger nu i localStorage (viddra_weekmenu_v1).");
+  elStatus.textContent = "Sparat ✅";
+}
+
+function loadSaved(){
+  const saved = safe(localStorage.getItem(LS_WEEKMENU)||"");
+  if(!saved || !saved.menu) return;
+
+  state.pctDinner = saved.pctDinner ?? state.pctDinner;
+  state.pctSave = saved.pctSave ?? state.pctSave;
+  state.dinners = saved.dinners ?? state.dinners;
+  state.style = saved.style ?? state.style;
+  state.menu = saved.menu || [];
+  state.createdAt = saved.createdAt || null;
+
+  rngPct.value = String(state.pctDinner);
+  rngSave.value = String(state.pctSave);
+  selDinners.value = String(state.dinners);
+  selStyle.value = String(state.style);
+
+  readMatBudget();
+  buildShopping();
+  renderMenu();
+  renderShopping();
+
+  showOk("Tidigare sparad veckomeny laddad ✅");
+  elStatus.textContent = "Laddad ✅";
+}
+
+function clearAll(){
+  state.menu = [];
+  state.shopping = {};
+  localStorage.removeItem(LS_WEEKMENU);
+  renderMenu();
+  renderShopping();
+  clearMsg();
+  elStatus.textContent = "Rensad";
+}
+
+/* events */
+rngPct.addEventListener("input", () => {
+  state.pctDinner = parseInt(rngPct.value,10);
+  calcBudgets();
+});
+rngSave.addEventListener("input", () => {
+  state.pctSave = parseInt(rngSave.value,10);
+  calcBudgets();
+});
+
+selDinners.addEventListener("change", () => state.dinners = parseInt(selDinners.value,10));
+selStyle.addEventListener("change", () => state.style = selStyle.value);
+
+btnAuto.addEventListener("click", generateMenu);
+btnSave.addEventListener("click", saveWeekmenu);
+btnClear.addEventListener("click", () => { clearAll(); });
+
+listEl.addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if(!b) return;
+  const act = b.dataset.act;
+  const id = b.dataset.id;
+  if(act==="swap") swapOne(id);
+  if(act==="remove") removeOne(id);
+});
+
+/* init */
+(function init(){
+  state.pctDinner = parseInt(rngPct.value,10);
+  state.pctSave = parseInt(rngSave.value,10);
+  state.dinners = parseInt(selDinners.value,10);
+  state.style = selStyle.value;
+
+  readMatBudget();
+  renderMenu();
+  renderShopping();
+  loadSaved();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Resultat</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    .mobileMenuWrap{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;background:rgba(0,0,0,.35);z-index:60;padding:14px}
+    .mobileMenu{width:min(360px,100%);background:var(--panel);border-radius:18px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.25);padding:12px}
+    .mobileMenu a{display:block;padding:10px 12px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}
+    .mobileMenu a:hover{border-color:var(--line);background:rgba(255,255,255,.45)}
+
+    .hero{margin-top:12px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.18);box-shadow:0 18px 40px rgba(0,0,0,.18)}
+    .hero img{width:100%;height:auto;display:block}
+
+    .grid{display:grid;grid-template-columns: 1fr; gap:12px; margin-top:12px;}
+    @media(min-width:980px){ .grid{grid-template-columns: 1.2fr .8fr;} }
+
+    .card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.55);padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .card h2{margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+    .row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:rgba(255,255,255,.65);margin-top:10px}
+    .left{font-weight:800}
+    .right{color:var(--muted)}
+    .small{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:8px}
+    .status{margin-top:8px;color:var(--muted);font-size:13px}
+    .ok{color:#1a6f3b;font-weight:700}
+    .bad{color:#9b1c1c;font-weight:700}
+
+    .sec{margin-top:12px}
+    .secTitle{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .secTitle h3{margin:0;font-size:16px;font-weight:900}
+    .secTitle span{color:var(--muted);font-size:13px}
+
+    .fields{display:grid;grid-template-columns: 1fr; gap:10px; margin-top:10px}
+    @media(min-width:820px){ .fields{grid-template-columns: 1fr 1fr;} }
+
+    .field{border:1px solid rgba(0,0,0,.08);border-radius:14px;background:rgba(255,255,255,.65);padding:10px}
+    .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    .field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.75);outline:none;font-weight:700;text-align:right}
+
+    .customRow{display:grid;grid-template-columns: 1fr 140px 44px;gap:10px;align-items:center;margin-top:10px}
+    @media(max-width:520px){.customRow{grid-template-columns: 1fr 120px 44px}}
+    .customRow input.name{font-weight:600;text-align:left}
+    .iconBtn{width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.65);cursor:pointer;font-weight:900}
+    .subtleBtn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+
+        <div class="brand">
+          <div class="name">Viddra</div>
+          <div class="tag">Resultat</div>
+        </div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html" style="text-decoration:underline;opacity:1">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="hero">
+        <img src="assets/hero_resultat.png" alt="" loading="lazy">
+      </div>
+
+      <div class="content">
+        <h1>Resultat</h1>
+        <p class="lead">Fyll i hur din ekonomi faktiskt ser ut. Här hittar vi utgiftsbovarna.</p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="btnrow" style="justify-content:space-between">
+              <span class="pill">Månad: <b id="monthLabel">—</b></span>
+              <span class="pill">DB: <b id="dbPill">—</b></span>
+            </div>
+
+            <div class="btnrow">
+              <button class="btn primary" id="saveBtn" type="button">Spara</button>
+              <button class="btn" id="loadBtn" type="button">Hämta</button>
+              <button class="btn" id="zeroBtn" type="button">Nollställ</button>
+              <button class="btn" id="prevMonthBtn" type="button">Förra månaden</button>
+              <button class="btn" id="thisMonthBtn" type="button">Denna månad</button>
+            </div>
+
+            <div class="status" id="status">—</div>
+            <div class="small">
+              Tips: Resultat är facit. Budget är din plan.
+            </div>
+
+            <div id="sections"></div>
+          </div>
+
+          <div class="card">
+            <h2>Summering</h2>
+            <div class="muted">Inkomster, utgifter och sparande för månaden.</div>
+
+            <div style="margin-top:10px">
+              <div class="row">
+                <div class="left">Totala inkomster</div>
+                <div class="right" id="sumIncome">—</div>
+              </div>
+              <div class="row">
+                <div class="left">Totala utgifter</div>
+                <div class="right" id="sumCost">—</div>
+              </div>
+              <div class="row">
+                <div class="left">Kvar</div>
+                <div class="right" id="sumLeft">—</div>
+              </div>
+            </div>
+
+            <div class="small" id="sumHint"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+  <script src="assets/viddra-core.js"></script>
+  <script>
+  (function(){
+    var menuWrap = document.getElementById("menuWrap");
+    var openMenu = document.getElementById("openMenu");
+    var closeMenu = document.getElementById("closeMenu");
+    if (menuWrap && openMenu && closeMenu) {
+      openMenu.onclick = function(){ menuWrap.style.display = "flex"; };
+      closeMenu.onclick = function(){ menuWrap.style.display = "none"; };
+      menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display = "none"; };
+    }
+  })();
+
+  (function(){
+    function safeParse(s){ try{ return JSON.parse(s); }catch(e){ return null; } }
+
+    function readProfile(){
+      if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+      return safeParse(localStorage.getItem("viddra_profile_v1") || "") || null;
+    }
+
+    function getAdultsAndNames(p){
+      var adults = 1;
+      var name1 = "Vuxen 1";
+      var name2 = "Vuxen 2";
+
+      if (p && Array.isArray(p.adults) && p.adults.length){
+        adults = Math.min(2, Math.max(1, p.adults.length));
+        if (p.adults[0] && p.adults[0].name) name1 = String(p.adults[0].name);
+        if (p.adults[1] && p.adults[1].name) name2 = String(p.adults[1].name);
+      } else {
+        if (p && typeof p.adults === "number") adults = Math.min(2, Math.max(1, p.adults));
+        if (p && p.adult1Name) name1 = String(p.adult1Name);
+        if (p && p.adult2Name) name2 = String(p.adult2Name);
+      }
+      return { adults: adults, name1: name1, name2: name2 };
+    }
+
+    function getKidsCount(p){
+      if (!p) return 0;
+      if (Array.isArray(p.children)) return p.children.length;
+      if (Array.isArray(p.kids)) return p.kids.length;
+      if (typeof p.kidsCount === "number") return Math.max(0, p.kidsCount);
+      if (typeof p.childrenCount === "number") return Math.max(0, p.childrenCount);
+      return 0;
+    }
+
+    function getHousingType(p){
+      var h = "";
+      if(!p) return "";
+      if (p.housing && p.housing.type) h = String(p.housing.type||"");
+      else if (p.housingType) h = String(p.housingType||"");
+      else if (p.profile && p.profile.housingType) h = String(p.profile.housingType||"");
+
+      h = h.toLowerCase().trim();
+      if (h.indexOf("villa") !== -1 || h.indexOf("hus") !== -1 || h.indexOf("småhus") !== -1 || h.indexOf("smahus") !== -1) return "villa";
+      if (h.indexOf("brf") !== -1 || h.indexOf("bostads") !== -1) return "brf";
+      if (h.indexOf("hyra") !== -1 || h.indexOf("hyr") !== -1) return "hyra";
+      return "";
+    }
+
+    function setStatus(s){
+      var el=document.getElementById("status");
+      if(el) el.textContent = s;
+    }
+    function setDbPill(s){
+      var el=document.getElementById("dbPill");
+      if(!el) return;
+      el.textContent = s;
+    }
+
+    function ymNow(){
+      var d=new Date();
+      var y=d.getFullYear();
+      var m=(d.getMonth()+1);
+      return y + "-" + (m<10?"0":"") + m;
+    }
+    function prevYm(ym){
+      ym = String(ym||"");
+      var parts = ym.split("-");
+      if (parts.length !== 2) return ymNow();
+      var y = parseInt(parts[0],10);
+      var m = parseInt(parts[1],10);
+      if (isNaN(y) || isNaN(m)) return ymNow();
+      m = m - 1;
+      if (m <= 0){ m = 12; y = y - 1; }
+      return y + "-" + (m<10?"0":"") + m;
+    }
+
+    // Aktiv månad: default = denna månad, men användaren kan välja "förra månaden"
+    var activeMonth = ymNow();
+
+    function monthKey(){ return activeMonth; }
+
+    function updateMonthLabel(){
+      var ml = document.getElementById("monthLabel");
+      if (ml) ml.textContent = activeMonth;
+    }
+
+    function n(v){
+      v = String(v==null?"":v).replace(/[^\d\-]/g,"");
+      var x = parseInt(v,10);
+      return isNaN(x)?0:x;
+    }
+    function fmt(v){ return (Math.round(v)||0).toLocaleString("sv-SE")+" kr"; }
+
+    function getToken(){
+      try{
+        if (window.ViddraCore){
+          if (typeof window.ViddraCore.getToken === "function"){
+            var t1 = window.ViddraCore.getToken();
+            if (t1) return String(t1);
+          }
+          if (typeof window.ViddraCore.getSessionToken === "function"){
+            var t2 = window.ViddraCore.getSessionToken();
+            if (t2) return String(t2);
+          }
+        }
+      }catch(e){}
+      return (
+        localStorage.getItem("viddra_session_token") ||
+        localStorage.getItem("viddra_token") ||
+        localStorage.getItem("token") ||
+        ""
+      );
+    }
+
+    function resultsLocalKey(monthKey){
+      return "viddra_results_month_" + monthKey;
+    }
+    function saveToLocal(monthKey, payload){
+      try{ localStorage.setItem(resultsLocalKey(monthKey), JSON.stringify(payload||{})); }catch(e){}
+    }
+    function loadFromLocal(monthKey){
+      try{
+        var s = localStorage.getItem(resultsLocalKey(monthKey));
+        if (!s) return null;
+        return JSON.parse(s) || null;
+      }catch(e){ return null; }
+    }
+
+    // PROFIL-styrning
+    var profile = readProfile();
+    var an = getAdultsAndNames(profile);
+    var kids = getKidsCount(profile);
+    var housingType = getHousingType(profile);
+
+    (function(){
+      var show = !!housingType;
+      var a1 = document.getElementById("navBoendeExtra");
+      var a2 = document.getElementById("navBoendeExtraMobile");
+      if (a1) a1.style.display = show ? "" : "none";
+      if (a2) a2.style.display = show ? "" : "none";
+    })();
+
+    // Dynamiska sektioner (UI-keys utan actual_)
+    function buildSections(){
+      var secs = [];
+
+      var incomeFields = [
+        {id:"income_salary_1", label:"Lön ("+an.name1+")"}
+      ];
+      if (an.adults >= 2) incomeFields.push({id:"income_salary_2", label:"Lön ("+an.name2+")"});
+      incomeFields.push({id:"income_maintenance_in", label:"Underhåll (in)"});
+      if (kids > 0) incomeFields.push({id:"income_child_allowance", label:"Barnbidrag"});
+      incomeFields.push({id:"income_sidejob", label:"Extrajobb"});
+      incomeFields.push({id:"income_other", label:"Övriga inkomster"});
+      secs.push({ key:"income", title:"Inkomster", fields: incomeFields });
+
+      var housingFields = [];
+      if (housingType === "hyra") housingFields.push({id:"housing_rent", label:"Hyra"});
+      else if (housingType === "brf") housingFields.push({id:"housing_fee", label:"Avgift (BRF)"});
+      else if (housingType === "villa") housingFields.push({id:"housing_mortgage", label:"Bolån"});
+
+      housingFields.push({id:"housing_electricity", label:"El"});
+      housingFields.push({id:"housing_heating", label:"Värme"});
+      housingFields.push({id:"housing_water", label:"Vatten + sopor"});
+      housingFields.push({id:"housing_internet", label:"Bredband"});
+      housingFields.push({id:"housing_alarm", label:"Larm"});
+      housingFields.push({id:"housing_insurance_home", label:"Hem/villaförsäkring"});
+      secs.push({ key:"housing", title:"Boende", fields: housingFields });
+
+      secs.push({ key:"food", title:"Mat", fields:[
+        {id:"food_groceries", label:"Matvaror"},
+        {id:"food_takeaway", label:"Utemat"}
+      ]});
+
+      secs.push({ key:"transport", title:"Transport", fields:[
+        {id:"transport_fuel", label:"Bränsle/laddning"},
+        {id:"transport_insurance", label:"Bilförsäkring"},
+        {id:"transport_loan", label:"Billån/leasing"},
+        {id:"transport_service", label:"Service/rep"},
+        {id:"transport_parking", label:"Parkering"},
+        {id:"transport_public", label:"Kollektivtrafik"},
+        {id:"transport_other", label:"Övrigt transport"}
+      ]});
+
+      secs.push({ key:"subscriptions", title:"Abonnemang & appar", fields:[
+        {id:"subs_mobile_1", label:"Mobil ("+an.name1+")"}
+      ].concat(an.adults>=2 ? [{id:"subs_mobile_2", label:"Mobil ("+an.name2+")"}] : []).concat([
+        {id:"subs_other", label:"Övriga abonnemang"}
+      ]),
+      custom: { type: "streaming", title: "Streaming (lägg till själv)" }});
+
+      secs.push({ key:"insurance", title:"Försäkringar", fields:[
+        {id:"ins_other", label:"Övriga försäkringar"}
+      ]});
+
+      if (kids > 0){
+        secs.push({ key:"kids", title:"Barn", fields:[
+          {id:"kids_costs", label:"Barnkostnader"},
+          {id:"kids_allowance", label:"Fickpengar"},
+          {id:"kids_maintenance_out", label:"Underhåll (ut)"}
+        ]});
+      }
+
+      secs.push({ key:"smallloans", title:"Smålån", fields:[], custom:{ type:"smallloans", title:"Smålån (lägg till själv)" } });
+
+      var savingFields = [
+        {id:"save_buffer", label:"Buffert"},
+        {id:"save_pension1", label:"Pensionsspar ("+an.name1+")"}
+      ];
+      if (an.adults >= 2) savingFields.push({id:"save_pension2", label:"Pensionsspar ("+an.name2+")"});
+      if (kids > 0) savingFields.push({id:"save_kids", label:"Barnspar"});
+      savingFields.push({id:"save_goal", label:"Målspar"});
+      secs.push({ key:"saving", title:"Sparande", fields: savingFields });
+
+      secs.push({ key:"other", title:"Övrigt", fields:[
+        {id:"health_costs", label:"Vård/tandvård"},
+        {id:"clothes", label:"Kläder"},
+        {id:"misc_other", label:"Övrigt"}
+      ]});
+
+      return secs;
+    }
+
+    var SECTIONS = buildSections();
+
+    var streamingItems = [{name:"", amount:0}];
+    var smallLoanItems = [{name:"", amount:0}];
+
+    function ensureAtLeastOneItem(arr){
+      if (!Array.isArray(arr) || !arr.length) return [{name:"", amount:0}];
+      return arr;
+    }
+
+    function renderCustomList(containerEl, type){
+      var arr = (type === "streaming") ? streamingItems : smallLoanItems;
+      arr = ensureAtLeastOneItem(arr);
+
+      if (type === "streaming") streamingItems = arr;
+      else smallLoanItems = arr;
+
+      containerEl.innerHTML = "";
+
+      for (var i=0;i<arr.length;i++){
+        (function(idx){
+          var row = document.createElement("div");
+          row.className = "customRow";
+
+          var nameInput = document.createElement("input");
+          nameInput.className = "name";
+          nameInput.type = "text";
+          nameInput.placeholder = (type === "streaming") ? "t.ex. Netflix/Spotify/Viaplay" : "t.ex. Klarna/Qliro/Resurs";
+          nameInput.value = arr[idx].name || "";
+          nameInput.style.width = "100%";
+          nameInput.style.padding = "10px 12px";
+          nameInput.style.border = "1px solid var(--line)";
+          nameInput.style.borderRadius = "12px";
+          nameInput.style.background = "rgba(255,255,255,.75)";
+          nameInput.style.outline = "none";
+
+          var amountInput = document.createElement("input");
+          amountInput.type = "text";
+          amountInput.inputMode = "numeric";
+          amountInput.value = (arr[idx].amount || 0);
+          amountInput.style.width = "100%";
+          amountInput.style.padding = "10px 12px";
+          amountInput.style.border = "1px solid var(--line)";
+          amountInput.style.borderRadius = "12px";
+          amountInput.style.background = "rgba(255,255,255,.75)";
+          amountInput.style.outline = "none";
+          amountInput.style.fontWeight = "700";
+          amountInput.style.textAlign = "right";
+
+          var removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.className = "iconBtn";
+          removeBtn.textContent = "–";
+
+          nameInput.addEventListener("input", function(){
+            arr[idx].name = String(nameInput.value || "");
+          });
+          amountInput.addEventListener("input", function(){
+            arr[idx].amount = n(amountInput.value);
+            recalc();
+          });
+          removeBtn.addEventListener("click", function(){
+            if (arr.length <= 1){
+              arr[0] = {name:"", amount:0};
+            } else {
+              arr.splice(idx,1);
+            }
+            renderCustomList(containerEl, type);
+            recalc();
+          });
+
+          row.appendChild(nameInput);
+          row.appendChild(amountInput);
+          row.appendChild(removeBtn);
+          containerEl.appendChild(row);
+        })(i);
+      }
+
+      var addRow = document.createElement("div");
+      addRow.className = "btnrow";
+      addRow.style.marginTop = "10px";
+
+      var addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.className = "subtleBtn";
+      addBtn.textContent = "Lägg till fler";
+      addBtn.addEventListener("click", function(){
+        arr.push({name:"", amount:0});
+        renderCustomList(containerEl, type);
+      });
+
+      addRow.appendChild(addBtn);
+      containerEl.appendChild(addRow);
+    }
+
+    function renderSections(){
+      var wrap = document.getElementById("sections");
+      wrap.innerHTML = "";
+
+      for (var i=0;i<SECTIONS.length;i++){
+        var sec = SECTIONS[i];
+
+        var secEl = document.createElement("div");
+        secEl.className = "sec";
+        secEl.innerHTML =
+          '<div class="secTitle"><h3>'+sec.title+'</h3><span>'+(sec.fields.length ? (sec.fields.length+' fält') : '')+'</span></div>' +
+          '<div class="fields" id="fields_'+sec.key+'"></div>';
+
+        wrap.appendChild(secEl);
+
+        var fwrap = secEl.querySelector("#fields_"+sec.key);
+
+        for (var j=0;j<sec.fields.length;j++){
+          var f = sec.fields[j];
+          var fEl = document.createElement("div");
+          fEl.className = "field";
+          fEl.innerHTML =
+            '<label for="'+f.id+'">'+f.label+'</label>' +
+            '<input id="'+f.id+'" inputmode="numeric" value="0" />';
+          fwrap.appendChild(fEl);
+        }
+
+        if (sec.custom && sec.custom.type){
+          var customBox = document.createElement("div");
+          customBox.className = "field";
+          customBox.style.gridColumn = "1 / -1";
+          customBox.innerHTML =
+            '<label style="margin-bottom:2px">'+sec.custom.title+'</label>' +
+            '<div class="muted">Skriv namn själv + belopp per månad.</div>' +
+            '<div id="custom_'+sec.key+'" style="margin-top:8px"></div>';
+          fwrap.appendChild(customBox);
+
+          var mount = customBox.querySelector("#custom_"+sec.key);
+          if (sec.custom.type === "streaming") renderCustomList(mount, "streaming");
+          if (sec.custom.type === "smallloans") renderCustomList(mount, "smallloans");
+        }
+      }
+    }
+
+    function isIncomeKey(k){ return String(k||"").indexOf("income_") === 0; }
+    function isSaveKey(k){ return String(k||"").indexOf("save_") === 0; }
+
+    function toActualKey(uiKey){
+      if (isIncomeKey(uiKey)) return uiKey;      // income_* stays
+      if (isSaveKey(uiKey)) return "actual_" + uiKey; // actual_save_*
+      return "actual_" + uiKey;                  // all other expense keys
+    }
+
+    function recalc(){
+      var sumIncome=0, sumCost=0, sumSavings=0;
+
+      for (var i=0;i<SECTIONS.length;i++){
+        var sec = SECTIONS[i];
+
+        for (var j=0;j<sec.fields.length;j++){
+          var id = sec.fields[j].id;
+          var el = document.getElementById(id);
+          if (!el) continue;
+          var v = n(el.value);
+
+          if (sec.key === "income") sumIncome += v;
+          else if (sec.key === "saving") sumSavings += v;
+          else sumCost += v;
+        }
+
+        if (sec.custom && sec.custom.type === "streaming"){
+          for (var s=0;s<streamingItems.length;s++){
+            sumCost += n(streamingItems[s].amount);
+          }
+        }
+        if (sec.custom && sec.custom.type === "smallloans"){
+          for (var l=0;l<smallLoanItems.length;l++){
+            sumCost += n(smallLoanItems[l].amount);
+          }
+        }
+      }
+
+      var left = sumIncome - sumCost - sumSavings;
+
+      document.getElementById("sumIncome").textContent = fmt(sumIncome);
+      document.getElementById("sumCost").textContent = fmt(sumCost);
+      document.getElementById("sumLeft").textContent = fmt(left);
+
+      var hint = document.getElementById("sumHint");
+      if (!hint) return;
+
+      var savingTxt = (sumSavings>0) ? (" Sparande: <b>"+fmt(sumSavings)+"</b>.") : "";
+      if (left >= 0){
+        hint.innerHTML = '<span class="ok">Bra!</span> Du går plus: <b>'+fmt(left)+'</b>.' + savingTxt;
+      } else {
+        hint.innerHTML = '<span class="bad">Varning!</span> Du går back: <b>'+fmt(Math.abs(left))+'</b>.' + savingTxt;
+      }
+    }
+
+    function sumListAmounts(arr){
+      var t = 0;
+      arr = Array.isArray(arr) ? arr : [];
+      for (var i=0;i<arr.length;i++) t += n(arr[i].amount);
+      return t;
+    }
+
+    function collectPayload(){
+      var payload = {};
+
+      for (var i=0;i<SECTIONS.length;i++){
+        var sec = SECTIONS[i];
+        for (var j=0;j<sec.fields.length;j++){
+          var uiKey = sec.fields[j].id;
+          var el = document.getElementById(uiKey);
+          if (!el) continue;
+          var v = n(el.value);
+
+          var k = toActualKey(uiKey);
+          payload[k] = v;
+        }
+      }
+
+      payload.streaming_items = (streamingItems || []).map(function(x){
+        return { name: String(x.name||""), amount: n(x.amount) };
+      });
+      payload.smallloan_items = (smallLoanItems || []).map(function(x){
+        return { name: String(x.name||""), amount: n(x.amount) };
+      });
+
+      payload["actual_subs_streaming_total"] = sumListAmounts(streamingItems);
+      payload["actual_loans_small_total"] = sumListAmounts(smallLoanItems);
+
+      var totalSpent = 0;
+      Object.keys(payload).forEach(function(k){
+        if (String(k).indexOf("actual_") === 0) totalSpent += n(payload[k]);
+      });
+      payload.total = totalSpent;
+
+      return payload;
+    }
+
+    function uiKeyFromPayloadKey(k){
+      k = String(k||"");
+      if (k.indexOf("income_") === 0) return k;
+      if (k.indexOf("actual_") === 0) return k.substring(7);
+      return k;
+    }
+
+    function applyPayload(p){
+      if (!p) return;
+
+      if (Array.isArray(p.streaming_items)){
+        streamingItems = p.streaming_items.map(function(x){
+          return { name: String((x && x.name) || ""), amount: n(x && x.amount) };
+        });
+      } else {
+        streamingItems = ensureAtLeastOneItem(streamingItems);
+      }
+
+      if (Array.isArray(p.smallloan_items)){
+        smallLoanItems = p.smallloan_items.map(function(x){
+          return { name: String((x && x.name) || ""), amount: n(x && x.amount) };
+        });
+      } else {
+        smallLoanItems = ensureAtLeastOneItem(smallLoanItems);
+      }
+
+      renderSections();
+
+      Object.keys(p).forEach(function(pk){
+        if (pk === "total") return;
+        if (pk === "spent_total") return;
+        if (pk === "actual_subs_streaming_total") return;
+        if (pk === "actual_loans_small_total") return;
+        if (pk === "streaming_items") return;
+        if (pk === "smallloan_items") return;
+
+        var uiKey = uiKeyFromPayloadKey(pk);
+        var el = document.getElementById(uiKey);
+        if (!el) return;
+        el.value = n(p[pk]);
+      });
+    }
+
+    function saveToDb(){
+      var token = getToken();
+      if (!token){
+        setStatus("Ingen session/token hittad. Gå till Start och skapa profil först.");
+        setDbPill("Saknas");
+        return;
+      }
+      var mk = monthKey();
+      setStatus("Sparar...");
+      setDbPill("…");
+
+      var payloadObj = collectPayload();
+      var payloadStr = JSON.stringify(payloadObj);
+
+      var form = new URLSearchParams();
+      form.append("token", token);
+      form.append("month_key", mk);
+      form.append("payload", payloadStr);
+
+      fetch("api/save_results_v2.php",{
+        method:"POST",
+        headers:{ "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8" },
+        body: form.toString()
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if (!j || !j.ok){
+          setStatus("Kunde inte spara. " + (j && j.error ? j.error : ""));
+          setDbPill("Fel");
+          return;
+        }
+
+        saveToLocal(mk, payloadObj);
+
+        setStatus("Sparat ✅ (månad: "+mk+", mode: "+(j.mode||"")+")");
+        setDbPill("OK");
+      }).catch(function(){
+        setStatus("Kunde inte spara (network).");
+        setDbPill("Fel");
+      });
+    }
+
+    function loadFromDb(){
+      var token = getToken();
+      var mk = monthKey();
+
+      var local = loadFromLocal(mk);
+      if (local){
+        applyPayload(local);
+        recalc();
+        setStatus("Hämtat ✅ (lokalt, månad: "+mk+")");
+        setDbPill("Lokalt");
+        return;
+      }
+
+      if (!token){
+        setStatus("Ingen session/token hittad och inget lokalt resultat. Gå till Start och skapa profil först.");
+        setDbPill("Saknas");
+        return;
+      }
+
+      setStatus("Hämtar...");
+      setDbPill("…");
+
+      fetch("api/get_results_summary_v2.php?token="+encodeURIComponent(token)+"&month_key="+encodeURIComponent(mk),{
+        method:"GET"
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if (!j || !j.ok){
+          setStatus("Kunde inte hämta. " + (j && j.error ? j.error : ""));
+          setDbPill("Fel");
+          return;
+        }
+
+        var payload = j.payload || null;
+        if (!payload || typeof payload !== "object"){
+          setStatus("Inget sparat resultat för "+mk+" ännu.");
+          setDbPill("Tomt");
+          return;
+        }
+
+        applyPayload(payload);
+        recalc();
+        saveToLocal(mk, payload);
+
+        var dbg = (j.debug && typeof j.debug.actual_keys_count !== "undefined") ? (" actual_keys: "+j.debug.actual_keys_count) : "";
+        setStatus("Hämtat ✅ (månad: "+mk+")" + dbg);
+        setDbPill("OK");
+      }).catch(function(){
+        setStatus("Kunde inte hämta (network).");
+        setDbPill("Fel");
+      });
+    }
+
+    function setAllZeros(){
+      for (var i=0;i<SECTIONS.length;i++){
+        var sec = SECTIONS[i];
+        for (var j=0;j<sec.fields.length;j++){
+          var id = sec.fields[j].id;
+          var el = document.getElementById(id);
+          if (!el) continue;
+          el.value = 0;
+        }
+      }
+      streamingItems = [{name:"", amount:0}];
+      smallLoanItems = [{name:"", amount:0}];
+      renderSections();
+      recalc();
+    }
+
+    updateMonthLabel();
+
+    renderSections();
+    recalc();
+
+    var saveBtn = document.getElementById("saveBtn");
+    var loadBtn = document.getElementById("loadBtn");
+    if (saveBtn) saveBtn.addEventListener("click", saveToDb);
+    if (loadBtn) loadBtn.addEventListener("click", loadFromDb);
+
+    var zeroBtn = document.getElementById("zeroBtn");
+    if (zeroBtn) zeroBtn.addEventListener("click", setAllZeros);
+
+    // Månadsknappar (begränsat: bara denna månad och förra månaden)
+    var prevMonthBtn = document.getElementById("prevMonthBtn");
+    var thisMonthBtn = document.getElementById("thisMonthBtn");
+
+    function setActiveMonth(newYm){
+      activeMonth = String(newYm||ymNow());
+      updateMonthLabel();
+    }
+
+    function loadActiveMonth(){
+      loadFromDb();
+    }
+
+    if (prevMonthBtn){
+      prevMonthBtn.addEventListener("click", function(){
+        setActiveMonth(prevYm(activeMonth));
+        loadActiveMonth();
+      });
+    }
+    if (thisMonthBtn){
+      thisMonthBtn.addEventListener("click", function(){
+        setActiveMonth(ymNow());
+        loadActiveMonth();
+      });
+    }
+
+    document.addEventListener("input", function(e){
+      if (e && e.target && e.target.tagName === "INPUT") recalc();
+    });
+
+    setStatus("Redo. Profil: " + an.name1 + (an.adults>=2 ? (" & " + an.name2) : "") + (kids>0 ? (", "+kids+" barn") : "") + (housingType ? (", boende: "+housingType) : ""));
+    setDbPill("—");
+
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Recept</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .hero{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.55)}
+    .hero img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:rgba(47,61,51,.06)}
+    .meta{color:var(--muted);margin-top:6px}
+    .desc{margin-top:10px}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    @media(max-width:900px){.cols{grid-template-columns:1fr}}
+    .list{margin:0;padding-left:18px}
+    .step p{margin:0 0 8px 0}
+
+    /* Rating */
+    .ratingBox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .stars{display:flex;gap:6px;align-items:center}
+    .star{
+      width:34px;height:34px;border-radius:10px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.55);
+      cursor:pointer; user-select:none;
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;
+    }
+    .star.on{background:rgba(255,255,255,.9);border-color:rgba(0,0,0,.2)}
+    .ratingText{color:var(--muted);font-size:13px}
+    .btnSmall{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.55);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-size:13px;
+    }
+
+    /* Weekplan */
+    .weekBox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+    select{
+      padding:10px 12px; border:1px solid var(--line);
+      border-radius:12px; background:rgba(255,255,255,.55);
+      outline:none;
+    }
+    .ok{color:var(--muted);font-size:13px}
+
+    /* ===== EXAKT samma mobilmeny-stil som resultat.html ===== */
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);padding:14px}
+    .mobileMenu a{display:block;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.55);text-decoration:none;color:var(--ink);font-weight:600;margin-top:10px}
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <!-- Header: samma upplägg som resultat.html -->
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand"><p class="name">Viddra</p><p class="tag">Recept</p></div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html" style="text-decoration:underline;opacity:1">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <button class="btn-secondary" onclick="history.back()">← Tillbaka</button>
+
+        <h1 id="title">Recept</h1>
+        <p id="meta" class="meta"></p>
+
+        <div class="hero" style="margin-top:12px;">
+          <img id="img" alt="">
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <p id="desc" class="desc"></p>
+
+          <div class="ratingBox">
+            <div class="stars" id="stars"></div>
+            <div class="ratingText" id="ratingText">Ditt betyg: —</div>
+            <button class="btnSmall" id="clearRating" type="button" style="display:none;">Ta bort betyg</button>
+          </div>
+
+          <div class="weekBox">
+            <select id="day">
+              <option value="0">Måndag</option>
+              <option value="1">Tisdag</option>
+              <option value="2">Onsdag</option>
+              <option value="3">Torsdag</option>
+              <option value="4">Fredag</option>
+              <option value="5">Lördag</option>
+              <option value="6">Söndag</option>
+            </select>
+            <button class="btnSmall" id="addWeek" type="button">Lägg till i Min vecka</button>
+            <span class="ok" id="saved"></span>
+          </div>
+
+          <div class="cols">
+            <div>
+              <h3 style="font-family:Fraunces,serif;margin:14px 0 8px 0;">Ingredienser</h3>
+              <ul id="ing" class="list"></ul>
+            </div>
+
+            <div>
+              <h3 style="font-family:Fraunces,serif;margin:14px 0 8px 0;">Gör så här</h3>
+              <div id="steps" class="step"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobilmeny overlay: samma som resultat.html -->
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Tips</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+  <!-- ✅ core så Boende-logiken blir identisk med andra sidor -->
+  <script src="assets/viddra-core.js"></script>
+  <script src="assets/recipes.js"></script>
+
+  <script>
+    (function(){
+      // Mobile menu (exakt som resultat.html)
+      var menuWrap = document.getElementById("menuWrap");
+      var openBtn = document.getElementById("openMenu");
+      var closeBtn = document.getElementById("closeMenu");
+      if (openBtn && closeBtn && menuWrap){
+        openBtn.onclick = function(){ menuWrap.style.display="flex"; };
+        closeBtn.onclick = function(){ menuWrap.style.display="none"; };
+        menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display="none"; };
+      }
+
+      // ===== Meny: visa "Boende" bara om profilen har boendetyp =====
+      function safeParse(s){ try { return JSON.parse(s); } catch(e){ return null; } }
+      function readProfile(){
+        if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+        return safeParse(localStorage.getItem("viddra_profile_v1") || "") || null;
+      }
+
+      function housingTag(p){
+        try{
+          if (window.ViddraCore && window.ViddraCore.isVilla && window.ViddraCore.isVilla(p)) return "villa";
+          if (window.ViddraCore && window.ViddraCore.isBrf && window.ViddraCore.isBrf(p)) return "brf";
+          if (window.ViddraCore && window.ViddraCore.isHyra && window.ViddraCore.isHyra(p)) return "hyra";
+        }catch(e){}
+
+        var t = "";
+        if (p){
+          if (p.housing && typeof p.housing === "object" && p.housing.type) t = String(p.housing.type || "");
+          else if (p.profile && p.profile.housingType) t = String(p.profile.housingType || "");
+          else if (p.housingType) t = String(p.housingType || "");
+          else if (typeof p.housing === "string") t = String(p.housing || "");
+          else if (p.boende) t = String(p.boende || "");
+        }
+        t = String(t || "").toLowerCase().trim();
+
+        if (!t) return "okand";
+        if (t.indexOf("radhus") >= 0) return "villa";
+        if (t.indexOf("villa") >= 0) return "villa";
+        if (t.indexOf("småhus") >= 0 || t.indexOf("smahus") >= 0) return "villa";
+        if (t === "hus") return "villa";
+
+        if (t.indexOf("brf") >= 0 || t.indexOf("bostads") >= 0) return "brf";
+        if (t.indexOf("hyra") >= 0 || t.indexOf("hyr") >= 0) return "hyra";
+        if (t.indexOf("hyres") >= 0) return "hyra";
+
+        return "okand";
+      }
+
+      (function(){
+        var p = readProfile();
+        var show = false;
+        if (p) {
+          var ht = housingTag(p);
+          show = (ht && ht !== "okand");
+        }
+        var a1 = document.getElementById("navBoendeExtra");
+        var a2 = document.getElementById("navBoendeExtraMobile");
+        if (a1) a1.style.display = show ? "" : "none";
+        if (a2) a2.style.display = show ? "" : "none";
+      })();
+
+      // Receptlogik (oförändrad)
+      var id = new URLSearchParams(location.search).get("id");
+      var recipes = (window.VIDDRA_RECIPES && window.VIDDRA_RECIPES.length) ? window.VIDDRA_RECIPES : [];
+      var r = null;
+
+      for (var i=0;i<recipes.length;i++){
+        if (recipes[i].id === id) { r = recipes[i]; break; }
+      }
+      if (!r) r = recipes[0] || { id:"", title:"Recept", time:0, cost:0, portions:4, desc:"", ingredients:[], steps:[] };
+
+      document.getElementById("title").textContent = r.title;
+      document.getElementById("meta").textContent = (r.time||0) + " min · ca " + (r.cost||0) + " kr/portion · " + (r.portions||4) + " portioner";
+      document.getElementById("desc").textContent = r.desc || "";
+
+      var img = document.getElementById("img");
+      img.alt = r.title;
+      if (window.VIDDRA_ATTACH_SMART_IMAGE) window.VIDDRA_ATTACH_SMART_IMAGE(img, r.id);
+      else if (r.image) img.src = r.image;
+
+      document.getElementById("ing").innerHTML = (r.ingredients || []).map(function(x){ return "<li>"+x+"</li>"; }).join("");
+      document.getElementById("steps").innerHTML = (r.steps || []).map(function(x,idx){ return '<p><b>'+(idx+1)+'.</b> '+x+'</p>'; }).join("");
+
+      // ===== Rating (localStorage) =====
+      var key = "viddra_rating_" + r.id;
+      var starsEl = document.getElementById("stars");
+      var ratingTextEl = document.getElementById("ratingText");
+      var clearBtn = document.getElementById("clearRating");
+
+      function getRating(){
+        var v = localStorage.getItem(key);
+        var n = parseInt(v, 10);
+        if (!n || n < 1 || n > 5) return 0;
+        return n;
+      }
+
+      function setRating(n){
+        if (n < 1 || n > 5) return;
+        localStorage.setItem(key, String(n));
+        renderStars();
+      }
+
+      function clearRating(){
+        localStorage.removeItem(key);
+        renderStars();
+      }
+
+      function renderStars(){
+        var current = getRating();
+        starsEl.innerHTML = "";
+
+        for (var s=1; s<=5; s++){
+          (function(val){
+            var btn = document.createElement("div");
+            btn.className = "star" + (current >= val ? " on" : "");
+            btn.textContent = "★";
+            btn.title = "Sätt betyg: " + val + "/5";
+            btn.onclick = function(){ setRating(val); };
+            starsEl.appendChild(btn);
+          })(s);
+        }
+
+        if (current){
+          ratingTextEl.textContent = "Ditt betyg: ★" + current + "/5";
+          clearBtn.style.display = "inline-block";
+        } else {
+          ratingTextEl.textContent = "Ditt betyg: —";
+          clearBtn.style.display = "none";
+        }
+      }
+
+      clearBtn.onclick = clearRating;
+      renderStars();
+
+      // ===== Weekplan (localStorage) =====
+      var addBtn = document.getElementById("addWeek");
+      var daySel = document.getElementById("day");
+      var savedEl = document.getElementById("saved");
+
+      // ✅ RÄTT KEY enligt din contract
+      var WEEK_KEY = "viddra_weekplan_v1";
+
+      function loadWeek(){
+        try{
+          var s = localStorage.getItem(WEEK_KEY);
+          if (!s) return {};
+          var obj = JSON.parse(s);
+          return obj && typeof obj === "object" ? obj : {};
+        }catch(e){ return {}; }
+      }
+      function saveWeek(plan){
+        localStorage.setItem(WEEK_KEY, JSON.stringify(plan));
+      }
+
+      addBtn.onclick = function(){
+        var day = daySel.value;
+        var plan = loadWeek();
+        plan[String(day)] = r.id;
+        saveWeek(plan);
+        savedEl.textContent = "Sparat ✅";
+        setTimeout(function(){ savedEl.textContent = ""; }, 1400);
+      };
+    })();
+  </script>
+</body>
+</html>

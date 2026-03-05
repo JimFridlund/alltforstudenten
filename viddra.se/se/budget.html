@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Budget</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);padding:14px}
+    .mobileMenu a{display:block;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.55);text-decoration:none;color:var(--ink);font-weight:600;margin-top:10px}
+
+    .hero{margin:14px 0;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.18);box-shadow:0 18px 40px rgba(0,0,0,.18)}
+    .hero img{width:100%;height:auto;display:block}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    @media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.55);
+      padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    }
+    .card h2{margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+
+    .row{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
+      padding:10px;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:rgba(255,255,255,.65);
+      margin-top:10px;
+    }
+    .left{font-weight:800}
+    .right{color:var(--muted)}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);
+      background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b
+    }
+  </style>
+
+  <script src="assets/viddra-core.js"></script>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+
+        <div class="brand">
+          <div class="name">Viddra</div>
+          <div class="tag">Budget</div>
+        </div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html" class="is-active">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="hero">
+        <img src="assets/my_hero.png" alt="" loading="lazy">
+      </div>
+
+      <div class="content">
+        <h1>Budgetöversikt</h1>
+        <p class="lead">Budget visar din plan. Resultat är facit. När du har 2–3 månader kan Viddra börja peka på vad som sticker ut.</p>
+
+        <div class="grid">
+          <div class="card">
+            <h2>Din budget i korthet</h2>
+            <div class="muted" id="note">—</div>
+
+            <div class="row">
+              <div class="left">Totala inkomster</div>
+              <div class="right" id="sumIncome">—</div>
+            </div>
+
+            <div class="row">
+              <div class="left">Totala utgifter</div>
+              <div class="right" id="sumCost">—</div>
+            </div>
+
+            <div class="row">
+              <div class="left">Kvar i budget</div>
+              <div class="right" id="sumLeft">—</div>
+            </div>
+
+            <div class="btnrow">
+              <a class="btn primary" href="resultat.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">Fyll i resultat →</a>
+              <a class="btn" href="fill_budget.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;">Ändra budget</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Topp 3 (budget)</h2>
+            <div class="muted">De tre största posterna i din budget just nu.</div>
+            <div id="top3" style="margin-top:10px;"></div>
+          </div>
+
+          <div class="card" id="housingInsightsCard" style="display:none;">
+            <h2>Boende-insikter</h2>
+            <div class="muted">Baserat på din Boende (extra). Visas bara för villa/radhus.</div>
+            <div id="housingInsights" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobileMenuWrap" id="menuWrap">
+      <div class="mobileMenu">
+        <div class="btnrow" style="justify-content:space-between;">
+          <span class="pill">Meny</span>
+          <button class="btn" id="closeMenu" type="button">Stäng</button>
+        </div>
+        <a href="index.html">Start</a>
+        <a href="fill_budget.html">Fyll i budget</a>
+        <a href="budget.html">Budget</a>
+        <a href="resultat.html">Resultat</a>
+        <a href="min_sida.html">Min sida</a>
+        <a href="recept.html">Recept</a>
+        <a href="tips.html">Viddra-råd</a>
+        <a href="bibliotek.html">Bibliotek</a>
+        <a href="sparande.html">Sparande</a>
+        <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+      </div>
+    </div>
+
+<script>
+(function(){
+  if (window.ViddraCore && window.ViddraCore.redirectToWwwIfNeeded && window.ViddraCore.redirectToWwwIfNeeded()) return;
+
+  var menuWrap = document.getElementById("menuWrap");
+  document.getElementById("openMenu").onclick = function(){ menuWrap.style.display="flex"; };
+  document.getElementById("closeMenu").onclick = function(){ menuWrap.style.display="none"; };
+
+  function safeParse(s){ try{return JSON.parse(s);}catch(e){return null;} }
+  function fmtKr(n){ if (typeof n !== "number" || isNaN(n)) n = 0; return n.toLocaleString("sv-SE") + " kr"; }
+
+  function readProfile(){
+    if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+    return safeParse(localStorage.getItem("viddra_profile_v1")||"") || null;
+  }
+  function getHousingType(p){
+    if(!p) return "";
+    if(p.housing && p.housing.type) return String(p.housing.type||"");
+    if(p.housingType) return String(p.housingType||"");
+    if(p.profile && p.profile.housingType) return String(p.profile.housingType||"");
+    return "";
+  }
+
+  (function(){
+    var p = readProfile();
+    var housing = getHousingType(p).trim();
+    var show = !!housing;
+    var a1 = document.getElementById("navBoendeExtra");
+    var a2 = document.getElementById("navBoendeExtraMobile");
+    if(a1) a1.style.display = show ? "" : "none";
+    if(a2) a2.style.display = show ? "" : "none";
+  })();
+
+  function toNumber(v){
+    if (v === null || typeof v === "undefined") return null;
+    if (typeof v === "number") return isNaN(v) ? null : v;
+    if (typeof v !== "string") return null;
+    var s = v.trim();
+    if (!s) return null;
+    if (/^\d{4}-\d{2}(-\d{2})?$/.test(s)) return null; // datum/period
+
+    var m = s.match(/-?\d[\d\s.,]*/);
+    if (!m) return null;
+    var t = m[0].replace(/\s+/g,"");
+
+    if (t.indexOf(",") !== -1){
+      var parts = t.split(",");
+      var last = parts[parts.length-1];
+      if (last.length === 1 || last.length === 2){
+        t = parts.slice(0,-1).join("") + "." + last;
+      } else {
+        t = parts.join("");
+      }
+    }
+    if (t.indexOf(".") !== -1){
+      var p2 = t.split(".");
+      var last2 = p2[p2.length-1];
+      if (!(last2.length === 1 || last2.length === 2)){
+        t = p2.join("");
+      }
+    }
+    if (!/^-?\d+(\.\d+)?$/.test(t)) return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
+  }
+
+  function isIncomeKey(key){
+    key = String(key||"").toLowerCase();
+    if (key.indexOf("income_") === 0) return true;
+    if (key.indexOf("income") !== -1) return true;
+    if (key.indexOf("inkomst") !== -1) return true;
+    if (key.indexOf("lon") !== -1) return true;
+    if (key.indexOf("lön") !== -1) return true;
+    if (key.indexOf("salary") !== -1) return true;
+    return false;
+  }
+  function isSavingsKey(key){
+    key = String(key||"").toLowerCase();
+    if (key.indexOf("save_") === 0) return true;
+    if (key.indexOf("saving_") === 0) return true;
+    if (key.indexOf("spar_") === 0) return true;
+    if (key.indexOf("savings_") === 0) return true;
+    if (key.indexOf("pension") !== -1) return true;
+    if (key.indexOf("pensions") !== -1) return true;
+    if (key.indexOf("buffert") !== -1) return true;
+    return false;
+  }
+  function isMetaKey(key){
+    key = String(key||"").toLowerCase();
+    return (
+      key === "v" || key === "version" || key === "month" || key === "month_key" ||
+      key === "updated_at" || key === "updatedat" || key === "createdat" || key === "created_at" ||
+      key === "total" || key === "total_spent" || key === "spent_total" ||
+      key === "ok" || key === "source" || key === "debug" || key === "by_category" ||
+      key === "meta" || key === "note"
+    );
+  }
+  function labelForKey(path){
+    var p = String(path||"").toLowerCase();
+    var map = {
+      "transport_loan": "Billån",
+      "transport_car_loan": "Billån",
+      "car_loan": "Billån",
+      "leasing": "Billån",
+      "transport_leasing": "Billån",
+      "housing_mortgage": "Bolån",
+      "housing_loan": "Bolån",
+      "bolan": "Bolån",
+      "boende_bolan": "Bolån",
+      "housing_rent": "Hyra/avgift",
+      "housing_fee": "Hyra/avgift",
+      "hyra": "Hyra/avgift",
+      "avgift": "Hyra/avgift",
+      "el": "El",
+      "electricity": "El",
+      "heat": "Värme",
+      "varme": "Värme",
+      "värme": "Värme"
+    };
+    if (map[p]) return map[p];
+    return String(path||"").replace(/_/g," ");
+  }
+
+  function flattenBudget(obj, prefix, depth, out){
+    if (!obj || typeof obj !== "object") return;
+    if (depth > 4) return;
+    var keys = Object.keys(obj);
+    for (var i=0;i<keys.length;i++){
+      var k = keys[i];
+      if (isMetaKey(k)) continue;
+      var v = obj[k];
+      var path = prefix ? (prefix + "_" + k) : k;
+
+      var n = toNumber(v);
+      if (n !== null){
+        out.push({ key: path, label: labelForKey(path), value: n });
+      } else if (v && typeof v === "object"){
+        flattenBudget(v, path, depth+1, out);
+      }
+    }
+  }
+
+  function sumLeaf(obj){
+    var all = [];
+    flattenBudget(obj, "", 0, all);
+    var sum = 0;
+    for (var i=0;i<all.length;i++) sum += all[i].value;
+    return { sum: sum, flat: all };
+  }
+
+  function computeBudgetTotals(b){
+    if (b && typeof b === "object"){
+      var incomeObj = null;
+      var costObj = null;
+
+      if (b.income && typeof b.income === "object") incomeObj = b.income;
+      if (!incomeObj && b.incomes && typeof b.incomes === "object") incomeObj = b.incomes;
+
+      if (b.cost && typeof b.cost === "object") costObj = b.cost;
+      if (!costObj && b.costs && typeof b.costs === "object") costObj = b.costs;
+      if (!costObj && b.expense && typeof b.expense === "object") costObj = b.expense;
+      if (!costObj && b.expenses && typeof b.expenses === "object") costObj = b.expenses;
+
+      if (incomeObj || costObj){
+        var inc = incomeObj ? sumLeaf(incomeObj) : {sum:0, flat:[]};
+        var cost = costObj ? sumLeaf(costObj) : {sum:0, flat:[]};
+        return {
+          income: Math.round(inc.sum),
+          cost: Math.round(cost.sum),
+          savings: 0,
+          flatIncome: inc.flat,
+          flatCost: cost.flat,
+          flatSavings: [],
+          mode: "split"
+        };
+      }
+    }
+
+    var all = [];
+    flattenBudget(b, "", 0, all);
+
+    var sumIncome = 0;
+    var sumCost = 0;
+    var sumSavings = 0;
+    var flatIncome = [];
+    var flatCost = [];
+    var flatSavings = [];
+
+    for (var i=0;i<all.length;i++){
+      var item = all[i];
+      if (isIncomeKey(item.key)){
+        sumIncome += item.value;
+        flatIncome.push(item);
+      } else if (isSavingsKey(item.key)){
+        sumSavings += item.value;
+        flatSavings.push(item);
+      } else {
+        sumCost += item.value;
+        flatCost.push(item);
+      }
+    }
+
+    return {
+      income: Math.round(sumIncome),
+      cost: Math.round(sumCost),
+      savings: Math.round(sumSavings),
+      flatIncome: flatIncome,
+      flatCost: flatCost,
+      flatSavings: flatSavings,
+      mode: "flat"
+    };
+  }
+
+  // ✅ NYTT: läs alla kandidater och välj den som uppenbart är “riktiga budgeten”
+  function listBudgetCandidates(){
+    var out = [];
+
+    function pushKey(key){
+      if (!key) return;
+      var raw = localStorage.getItem(key);
+      if (!raw) return;
+      var obj = safeParse(raw);
+      if (!obj || typeof obj !== "object") return;
+
+      var totals = computeBudgetTotals(obj);
+      var counted = (totals.flatIncome.length + totals.flatCost.length + (totals.flatSavings?totals.flatSavings.length:0));
+      out.push({
+        key: key,
+        data: obj,
+        totals: totals,
+        counted: counted,
+        score: (totals.cost > 0 ? 1000000 : 0) + (counted*1000) + totals.cost + totals.income
+      });
+    }
+
+    // kända keys först
+    pushKey("viddra_budget_values_v1");
+    pushKey("viddra_budget_v1");
+
+    // månadsspecifika
+    for (var i=0;i<localStorage.length;i++){
+      var k = localStorage.key(i);
+      if (k && k.indexOf("viddra_budget_month_") === 0){
+        pushKey(k);
+      }
+    }
+
+    return out;
+  }
+
+  var cands = listBudgetCandidates();
+  cands.sort(function(a,b){ return b.score - a.score; });
+
+  var chosen = cands.length ? cands[0] : null;
+
+  var totals = chosen ? chosen.totals : {income:0,cost:0,savings:0,flatIncome:[],flatCost:[],flatSavings:[],mode:""};
+
+  document.getElementById("sumIncome").textContent = totals.income.toLocaleString("sv-SE")+" kr";
+  document.getElementById("sumCost").textContent = totals.cost.toLocaleString("sv-SE")+" kr";
+  document.getElementById("sumLeft").textContent = (totals.income - totals.cost - (totals.savings||0)).toLocaleString("sv-SE")+" kr";
+
+  // Top 3 från kostnader
+  var cats = [];
+  for (var i=0;i<totals.flatCost.length;i++){
+    var it = totals.flatCost[i];
+    var v = Math.round(it.value||0);
+    if (!isNaN(v) && v > 0) cats.push({ k: it.label, v: v });
+  }
+  cats = cats.sort(function(a,b){ return b.v - a.v; }).slice(0,3);
+
+  var top3 = document.getElementById("top3");
+  top3.innerHTML = "";
+  if (!cats.length){
+    top3.innerHTML = '<div class="row"><div class="left">—</div><div class="right">Fyll i budget först</div></div>';
+  } else {
+    cats.forEach(function(x){
+      var div = document.createElement("div");
+      div.className = "row";
+      div.innerHTML = '<div class="left">'+x.k+'</div><div class="right">'+x.v.toLocaleString("sv-SE")+' kr</div>';
+      top3.appendChild(div);
+    });
+  }
+
+  var note = document.getElementById("note");
+  if (chosen){
+    note.textContent =
+      "Budget laddad ✅ (lokalt, key: " + chosen.key +
+      ", räknade fält: " + chosen.counted +
+      ", läge: " + (totals.mode||"") +
+      "). Sparande: " + (totals.savings||0).toLocaleString("sv-SE") + " kr.";
+  } else {
+    note.textContent = "Ingen budget hittades lokalt ännu. Gå till “Fyll i budget” och spara.";
+  }
+
+  // Boende-insikter (villa/radhus)
+  function readHousingExtra(){ return safeParse(localStorage.getItem("viddra_housing_extra_v1")||"") || null; }
+  function readNumber(obj, keys){
+    if(!obj) return null;
+    for(var i=0;i<keys.length;i++){
+      var k = keys[i];
+      if (obj.hasOwnProperty(k)){
+        var vv = obj[k];
+        if (vv === "" || vv === null || typeof vv === "undefined") continue;
+        var nn = toNumber(String(vv));
+        if (nn !== null) return nn;
+      }
+    }
+    return null;
+  }
+
+  (function(){
+    var profile = readProfile();
+    var housingType = getHousingType(profile).toLowerCase();
+    var extra = readHousingExtra();
+    if (!extra) return;
+    if (housingType !== "villa" && housingType !== "radhus") return;
+
+    var el = readNumber(extra, ["el","electricity","power_monthly","el_monthly","monthly_electricity"]);
+    var varme = readNumber(extra, ["varme","värme","heat","heating_monthly","varme_monthly","monthly_heat"]);
+    var vatten = readNumber(extra, ["vatten","water","waste_monthly","sopor","water_monthly","vatten_monthly","monthly_water"]);
+    var underhall = readNumber(extra, ["underhall","underhåll","maintenance","maintenance_monthly","house_fund","husfond","underhall_monthly"]);
+
+    var any = (el||0) + (varme||0) + (vatten||0) + (underhall||0);
+    if (!any) return;
+
+    var card = document.getElementById("housingInsightsCard");
+    var wrap = document.getElementById("housingInsights");
+    wrap.innerHTML = "";
+
+    function addRow(label, val){
+      var div = document.createElement("div");
+      div.className = "row";
+      div.innerHTML = '<div class="left">'+label+'</div><div class="right">'+fmtKr(Math.round(val||0))+'</div>';
+      wrap.appendChild(div);
+    }
+
+    if (el) addRow("El (kr/mån)", el);
+    if (varme) addRow("Värme (kr/mån)", varme);
+    if (vatten) addRow("Vatten+sopor (kr/mån)", vatten);
+    if (underhall !== null) addRow("Underhåll/husfond (kr/mån)", underhall);
+
+    if (underhall === 0){
+      var warn = document.createElement("div");
+      warn.className = "row";
+      warn.innerHTML = '<div class="left">Varning</div><div class="right">Underhåll är 0 kr/mån – villa brukar behöva en husfond.</div>';
+      wrap.appendChild(warn);
+    }
+
+    card.style.display = "";
+  })();
+
+})();
+</script>
+
+  </div><!-- /shell -->
+</body>
+</html>

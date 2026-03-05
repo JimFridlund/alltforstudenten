@@ -1,0 +1,25 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$lang['db_invalid_connection_str'] = 'Kan inte ansluta till databasen med angivna inställningar.';
+$lang['db_unable_to_select'] = 'Kan inte välja angiven databas: %s';
+$lang['db_unable_to_create'] = 'Kan inte skapa angiven databas: %s';
+$lang['db_invalid_query'] = 'Den SQL-fråga som skickades är ogiltig.';
+$lang['db_must_set_table'] = 'Du måste ange vilken tabell som ska användas i din fråga.';
+$lang['db_must_use_set'] = 'Du måste använda metoden "set" för att uppdatera en post.';
+$lang['db_must_use_index'] = 'Du måste ange ett index för batch-uppdateringar.';
+$lang['db_batch_missing_index'] = 'En eller flera rader saknar angivet index.';
+$lang['db_must_use_where'] = 'Uppdateringar kräver en "where"-klausul.';
+$lang['db_del_must_use_where'] = 'Raderingar kräver en "where"-klausul.';
+$lang['db_field_param_missing'] = 'För att hämta fält krävs tabellnamnet som parameter.';
+$lang['db_unsupported_function'] = 'Denna funktion stöds inte av databasen du använder.';
+$lang['db_transaction_failure'] = 'Transaktionen misslyckades: genomför rollback.';
+$lang['db_unable_to_drop'] = 'Kan inte ta bort angiven databas.';
+$lang['db_unsuported_feature'] = 'Funktionen stöds inte av din databasplattform.';
+$lang['db_unsuported_compression'] = 'Komprimeringsformatet stöds inte av din server.';
+$lang['db_filepath_error'] = 'Kunde inte skriva data till den angivna filvägen.';
+$lang['db_invalid_cache_path'] = 'Cache-sökvägen du angav är ogiltig eller skrivskyddad.';
+$lang['db_table_name_required'] = 'Tabellnamn krävs.';
+$lang['db_column_name_required'] = 'Kolumnnamn krävs.';
+$lang['db_column_definition_required'] = 'Kolumndefinition krävs.';
+$lang['db_unable_to_set_charset'] = 'Kunde inte ställa in teckenuppsättning: %s';
+$lang['db_error_heading'] = 'Ett databasfel uppstod';

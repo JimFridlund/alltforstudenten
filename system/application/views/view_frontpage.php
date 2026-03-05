@@ -1,76 +1,207 @@
-
-
 <?php $this->load->view('_header'); ?>
-	
-<div class="wide_box searchbox">
-	<p class="search_heading">Sök på skola eller kommun, eller välj ditt län i listan</p>
-	<div class="search_container">
-		<?php echo form_open('sok');?>
-		<input type="text" class="fritext" name="s_value" value="Skola eller kommun" />
-		<input type="submit" class="submit" value="Sök" title="Sök" />
-		</form>
-	</div>
-	
-	<div class="list_container">
-		<div class="alignleft">Inget län valt</div>
-		<div class="list_button" title="Välj ditt län">Välj län</div>
-		
-		<div class="lan_container">
-			<?php if($lan > 0): ?>
-			<?php $i = 0; ?>
-			<div>
-			<?php foreach($lan as $data): ?>
-			<div class="lan_box"><a href="<?php echo base_url() ?>visa/<?php echo $data->permalink; ?>" title="<?php echo $data->title; ?>"><?php echo $data->title; ?></a></div>
-			<?php endforeach;?>
-			</div>
-			<?php else :?>
-			<?php endif; ?>
-		</div>
-	</div>
+
+<style>
+
+.hero{
+background:url('<?php echo base_url(); ?>public/images/hero_students.jpg') center/cover no-repeat;
+border-radius:18px;
+padding:90px 40px;
+color:white;
+text-align:center;
+position:relative;
+margin-bottom:40px;
+}
+
+.hero:before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.35);
+border-radius:18px;
+}
+
+.hero-inner{
+position:relative;
+z-index:2;
+max-width:760px;
+margin:auto;
+}
+
+.hero h1{
+font-family:Fraunces;
+font-size:60px;
+margin:0;
+}
+
+.hero p{
+font-size:20px;
+margin-top:14px;
+}
+
+.search-box{
+margin-top:28px;
+display:flex;
+justify-content:center;
+gap:10px;
+}
+
+.search-box input{
+padding:16px;
+font-size:16px;
+width:360px;
+border-radius:10px;
+border:none;
+}
+
+.search-box button{
+padding:16px 26px;
+background:#0b2a4a;
+color:white;
+border:none;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* SEO BOXAR */
+
+.start-grid{
+margin-top:50px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.start-card{
+background:white;
+padding:24px;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+text-decoration:none;
+color:#0b2a4a;
+font-weight:600;
+font-size:18px;
+}
+
+.start-card:hover{
+box-shadow:0 8px 22px rgba(0,0,0,0.12);
+}
+
+.start-info{
+margin-top:60px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:40px;
+}
+
+.start-info h2{
+font-family:Fraunces;
+}
+
+@media(max-width:768px){
+
+.hero{
+padding:60px 20px;
+}
+
+.hero h1{
+font-size:38px;
+}
+
+.hero p{
+font-size:16px;
+}
+
+.search-box{
+flex-direction:column;
+}
+
+.search-box input{
+width:100%;
+}
+
+.search-box button{
+width:100%;
+}
+
+.start-info{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+
+<section class="hero">
+
+<div class="hero-inner">
+
+<h1>Allt inför din student</h1>
+
+<p>Checklistor, datum och tips för din stora dag</p>
+
+<form action="/sok" method="get" class="search-box">
+
+<input
+type="text"
+name="q"
+placeholder="Sök på skola eller kommun"
+required
+>
+
+<button type="submit">Sök</button>
+
+</form>
+
 </div>
 
-<div class="wide_box">
-	<img src="<?php echo base_url() ?>public/images/temp_img_big.jpg" alt="" />
+</section>
+
+
+<section class="start-grid">
+
+<a class="start-card" href="/balen/frisor">Frisör till studentbalen</a>
+
+<a class="start-card" href="/balen/klanning">Balklänning</a>
+
+<a class="start-card" href="/balen/smink">Smink till balen</a>
+
+<a class="start-card" href="/balen/kostym">Kostym / Smoking</a>
+
+<a class="start-card" href="/balen/fotograf">Fotograf till balen</a>
+
+<a class="start-card" href="/balen/limousine">Limousine till balen</a>
+
+</section>
+
+
+<section class="start-info">
+
+<div>
+
+<h2>AlltFörStudenten</h2>
+
+<p>
+Checklistor, inspiration och lokala guider inför studenten.
+Här hittar du företag, studentflak, bal-kläder och fotografer
+i din stad.
+</p>
+
 </div>
 
-<div class="wide_box2">
-	Vad ska du göra efter studenten? Sök bland <a href="http://www.studeravidare.se">högskolor</a> och utbildningar på <a href="http://www.studeravidare.se">studeravidare.se</a>.
+<div>
+
+<h2>Så använder du sidan</h2>
+
+<p>
+Sök på din kommun eller ditt gymnasium för att hitta
+allt inför studenten där du bor.
+</p>
+
 </div>
 
-
-<div class="infoboxes">
-	<div class="box">
-		<h2>Studenten, datum och firande</h2>
-		<p>Firandet av studenten skiljer sig mycket på olika håll i Sverige. Ofta arrangeras baler och man äter fina middagar hemma. På avslutningsdagen sjungs Studentsången, därefter åker studenterna genom orten på flak, traktorer, lastbilar och tjusiga bilar. Det finns idag drygt 1000 gymnasieskolor i Sverige och i början av juni varje år så tar drygt 100 000 gymnasieelever studenten! Datum för studenten 2018 varierar runt om i landet, det vanligaste är mellan 1 juni och 10 juni. Balen arrangeras i flesta fall före  studenten-dagen.</p>
-		
-		<img src="<?php echo base_url() ?>public/images/sjung.jpg" alt="" />
-	</div>
-	<div class="box">
-		<h2>Varför denna studentmössa?</h2>
-		<p>Att ta studenten härstammar från tiden då man efter gymnasieutbildning avslutade studierna med en studentexamen. Det vanliga var då att killarna som tagit studenten bar sina studentmössor över sommaren tills de ryckte in i lumpen. Studentexamen som den såg ut då avskaffades 1968.  Vad som hände sedan var att hela studentfirandet lades i malpåse, mer eller mindre under hela 70-talet. I samband med att man gjorde om gymnasieskolan till inriktningar (idag program) som är treåriga utbildningar så fick det hela en ordentlig uppsving igen.</p>
-		
-		<img src="<?php echo base_url() ?>public/images/mossa.jpg" alt="studentmössa" />
-	</div>
-	<div class="box right">
-		<h2>Din checklista</h2>
-		<p>För att hitta din checklista för studenten och balen 2018 kan du enkel söka på din gymnasieskola eller klicka dig vidare genom att välja län. Här får du sedan information om vad som behövs för en lyckad student och bal. Frågor som &quot;Vem fixar studentflaket&quot; och &quot;Är fracken och eller balklänningen införskaffad?&quot; försöker vi besvara här. Andra saker som är viktiga att tänka på inför den stora dagen finns också listade. Detta är en bra hjälp till de ca 110 000 elever som  tar studenten i Sverige varje år.</p>
-		
-		
-		<img src="<?php echo base_url() ?>public/images/studentflak.jpg" alt="" />
-	</div>
-</div>
+</section>
 
 
-
-<script type="text/javascript">
-$(document).ready(function() {
-	$(".list_container").click(function() {
-	   $('.lan_container').slideToggle('fast', function() {
-
-		});
-		$(".list_button").toggleClass('open');
-	});
-});
-</script>
-	
 <?php $this->load->view('_footer'); ?>

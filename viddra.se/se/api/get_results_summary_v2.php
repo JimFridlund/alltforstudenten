@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Fyll i din budget</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    .mobileMenuWrap{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;background:rgba(0,0,0,.35);z-index:60;padding:14px}
+    .mobileMenu{width:min(360px,100%);background:var(--panel);border-radius:18px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.25);padding:12px}
+    .mobileMenu a{display:block;padding:10px 12px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}
+    .mobileMenu a:hover{border-color:var(--line);background:rgba(255,255,255,.45)}
+
+    /* Active link (NO pill/oval, no height change) */
+    .nav a.is-active{font-weight:800;opacity:1;text-decoration:none}
+
+    .hero{margin-top:12px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.55)}
+    .hero img{display:block;width:100%;height:auto}
+
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .muted{color:var(--muted);font-size:13px}
+    .tiny{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    .section{border:1px solid var(--line);background:rgba(255,255,255,.45);border-radius:16px;margin-top:10px;overflow:hidden}
+    .sectionHead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;background:rgba(255,255,255,.35)}
+    .sectionHead .title{font-weight:700}
+    .sectionHead .sum{color:var(--muted);font-weight:600}
+    .sectionBody{padding:10px 12px;display:grid;gap:10px}
+
+    .item{display:grid;grid-template-columns:1fr 180px;gap:10px;align-items:start}
+    @media(max-width:520px){.item{grid-template-columns:1fr 140px}}
+    .item .label{font-weight:700}
+    .item .help{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.35}
+
+    input[type="number"], input[type="month"]{
+      width:100%;padding:10px 12px;border:1px solid var(--line);
+      border-radius:12px;background:rgba(255,255,255,.60);outline:none;font-size:15px;
+      text-align:right;
+    }
+    input[type="month"]{text-align:left}
+
+    .kpiBox{border:1px solid var(--line);background:rgba(255,255,255,.55);border-radius:18px;padding:14px}
+    .kpiBox .big{font-family:Fraunces,serif;font-size:28px;margin-top:4px}
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand"><p class="name">Viddra</p><p class="tag">Fyll i budget</p></div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html" class="is-active">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <h1>Fyll i din budget</h1>
+        <p class="lead">Det här är din gissning/plan. Du kan alltid justera senare.</p>
+
+        <div class="hero">
+          <img src="assets/hero_fill_budget.png" alt="" onerror="this.closest('.hero').style.display='none'">
+        </div>
+
+        <div class="grid">
+          <div class="card">
+
+            <div class="btnrow">
+              <span class="pill" id="pFamily">—</span>
+              <span class="pill" id="pKids">—</span>
+              <span class="pill" id="pHouse">—</span>
+              <span class="pill" id="pMonth">—</span>
+            </div>
+
+            <div class="section" style="margin-top:12px;">
+              <div class="sectionHead">
+                <div class="title">Intäkter</div>
+                <div class="sum"><span id="sum_income">0</span> kr</div>
+              </div>
+              <div class="sectionBody" id="body_income"></div>
+            </div>
+
+            <div class="section">
+              <div class="sectionHead"><div class="title">Boende</div><div class="sum"><span id="sum_housing">0</span> kr</div></div>
+              <div class="sectionBody" id="body_housing"></div>
+            </div>
+
+            <div class="section">
+              <div class="sectionHead"><div class="title">Mat</div><div class="sum"><span id="sum_food">0</span> kr</div></div>
+              <div class="sectionBody" id="body_food"></div>
+            </div>
+
+            <div class="section">
+              <div class="sectionHead"><div class="title">Transport</div><div class="sum"><span id="sum_transport">0</span> kr</div></div>
+              <div class="sectionBody" id="body_transport"></div>
+            </div>
+
+            <div class="section">
+              <div class="sectionHead"><div class="title">Sparande</div><div class="sum"><span id="sum_savings">0</span> kr</div></div>
+              <div class="sectionBody" id="body_savings"></div>
+            </div>
+
+            <div class="btnrow" style="margin-top:12px;">
+              <button class="btn primary" id="save" type="button">Spara budget</button>
+              <button class="btn" id="resetBudget" type="button">Nollställ budget</button>
+              <a class="btn" href="budget.html" style="text-decoration:none;">Gå till budget</a>
+            </div>
+
+          </div>
+
+          <div>
+            <div class="kpiBox">
+              <div class="muted">Din budget</div>
+              <div class="big"><span id="kpiTotal">0</span> kr</div>
+              <div class="muted">Summa utgifter per månad (Boende + Mat + Transport). Sparande visas separat.</div>
+
+              <div class="btnrow" style="margin-top:10px;">
+                <span class="pill" id="kpiHousingPill">Boende: 0 kr</span>
+                <span class="pill" id="kpiFoodPill">Mat: 0 kr</span>
+                <span class="pill" id="kpiTransportPill">Transport: 0 kr</span>
+              </div>
+
+              <div class="tiny" id="debugTiny"></div>
+            </div>
+
+            <div class="card" style="margin-top:12px;">
+              <h2 style="font-family:Fraunces,serif;margin:0 0 6px 0;">Hur jag tänker (GW)</h2>
+              <div class="muted">
+                Budgeten är din plan. Resultat är facit. När vi har 2–3 månader kan vi börja säga exakt vad som sticker ut.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    // Mobile menu
+    var menuWrap = document.getElementById("menuWrap");
+    var openMenu = document.getElementById("openMenu");
+    var closeMenu = document.getElementById("closeMenu");
+    if (menuWrap && openMenu && closeMenu) {
+      openMenu.onclick = function(){ menuWrap.style.display = "flex"; };
+      closeMenu.onclick = function(){ menuWrap.style.display = "none"; };
+      menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display = "none"; };
+    }
+
+    // Ensure token
+    (function ensureToken(){
+      var t = localStorage.getItem("viddra_token");
+      if (!t){
+        t = "v_" + Math.random().toString(36).slice(2,10);
+        localStorage.setItem("viddra_token", t);
+      }
+    })();
+
+    function ymNow(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0'); }
+    var MONTH = ymNow();
+    document.getElementById("pMonth").textContent = "Månad: " + MONTH;
+
+    function toNum(v){
+      var n = parseInt(String(v||"").replace(/[^\d-]/g,""),10);
+      if (isNaN(n) || n<0) n=0;
+      return n;
+    }
+
+    function safeLower(s){
+      s = String(s||"").trim().toLowerCase();
+      s = s.replace(/\s+/g,' ');
+      s = s.replace(/å/g,'a').replace(/ä/g,'a').replace(/ö/g,'o');
+      return s;
+    }
+
+    function readProfile(){
+      var s = localStorage.getItem("viddra_profile_v1");
+      if (!s) return null;
+      try{ return JSON.parse(s) || null; }catch(e){ return null; }
+    }
+
+    function readOnboarding(){
+      var s = localStorage.getItem("viddra_onboarding_v1") || localStorage.getItem("viddra_onboarding");
+      if (!s) return {};
+      try{ return JSON.parse(s) || {}; }catch(e){ return {}; }
+    }
+
+    function readAdults(){
+      var p = readProfile();
+      if (p && Array.isArray(p.adults) && p.adults.length) return Math.min(2, Math.max(1, p.adults.length));
+      var o = readOnboarding();
+      var c = parseInt(o.adults || o.adultCount || o.vuxna || "1", 10);
+      if (!isNaN(c) && c >= 1 && c <= 2) return c;
+      return 1;
+    }
+
+    function readNames(){
+      var p = readProfile();
+      if (p && Array.isArray(p.adults) && p.adults.length){
+        var n1 = (p.adults[0] && p.adults[0].name) ? p.adults[0].name : "Vuxen 1";
+        var n2 = (p.adults[1] && p.adults[1].name) ? p.adults[1].name : "Vuxen 2";
+        return {name1:String(n1), name2:String(n2)};
+      }
+      var o = readOnboarding();
+      var name1 = o.name1 || o.adult1Name || (o.adult1 && o.adult1.name) || o.firstName || o.namn1 || "Vuxen 1";
+      var name2 = o.name2 || o.adult2Name || (o.adult2 && o.adult2.name) || o.secondName || o.namn2 || "Vuxen 2";
+      return {name1:String(name1), name2:String(name2)};
+    }
+
+    function extractDateCandidates(arr){
+      var out = [];
+      for (var i=0;i<arr.length;i++){
+        var v = arr[i];
+        if (!v) continue;
+        if (typeof v === "string"){
+          var s = v.trim();
+          var mIso = s.match(/(\d{4})-(\d{2})-(\d{2})/);
+          if (mIso) out.push(mIso[1]+mIso[2]+mIso[3]);
+          var m8 = s.match(/\b(\d{8})\b/);
+          if (m8) out.push(m8[1]);
+          var m6 = s.match(/\b(\d{6})\b/);
+          if (m6) out.push(m6[1]+"01");
+        } else if (typeof v === "number"){
+          var s2 = String(v);
+          if (s2.length === 8) out.push(s2);
+          if (s2.length === 6) out.push(s2+"01");
+        } else if (typeof v === "object"){
+          if (v.birth) out = out.concat(extractDateCandidates([v.birth]));
+          if (v.born) out = out.concat(extractDateCandidates([v.born]));
+          if (v.dob) out = out.concat(extractDateCandidates([v.dob]));
+          if (v.date) out = out.concat(extractDateCandidates([v.date]));
+        }
+      }
+      return out;
+    }
+
+    function readKids(){
+      var p = readProfile();
+      if (p && Array.isArray(p.children)) return p.children.length;
+      if (p && Array.isArray(p.kids)) return p.kids.length;
+      var o = readOnboarding();
+      var births = [];
+      if (o.births && Array.isArray(o.births)) births = births.concat(extractDateCandidates(o.births));
+      if (o.children_births && Array.isArray(o.children_births)) births = births.concat(extractDateCandidates(o.children_births));
+      if (o.children && Array.isArray(o.children)) births = births.concat(extractDateCandidates(o.children));
+      if (births.length) return births.length;
+      var c = parseInt(o.kids || o.childrenCount || o.barn || "0", 10);
+      if (!isNaN(c) && c >= 0 && c <= 12) return c;
+      return 0;
+    }
+
+    function readCars(){
+      var p = readProfile();
+      if (p && typeof p.cars !== "undefined") return Math.max(0, Math.min(3, parseInt(p.cars,10)||0));
+      if (p && Array.isArray(p.vehicles)) return Math.min(3, Math.max(0, p.vehicles.length));
+      var o = readOnboarding();
+      var c = parseInt(o.cars || o.carCount || o.bilar || "0", 10);
+      if (!isNaN(c) && c >= 0 && c <= 3) return c;
+      return 0;
+    }
+
+    function readPets(){
+      var p = readProfile();
+      if (p && typeof p.pets !== "undefined") return !!p.pets;
+      if (p && Array.isArray(p.petsList)) return p.petsList.length > 0;
+      var o = readOnboarding();
+      var v = o.pets || o.husdjur || o.hasPets;
+      if (typeof v === "boolean") return v;
+      var s = safeLower(v);
+      if (s === "1" || s === "true" || s === "ja" || s === "yes") return true;
+      return false;
+    }
+
+    function readSecondHome(){
+      var o = readOnboarding();
+      var v = o.second_home || o.secondHome || o.semesterbostad;
+      if (typeof v === "boolean") return v;
+      var s = safeLower(v);
+      if (s === "1" || s === "true" || s === "ja") return true;
+      return false;
+    }
+
+    function readHousing(){
+      var p = readProfile();
+      var h = "";
+      if (p && p.housing && p.housing.type) h = p.housing.type;
+      if (!h && p && p.housingType) h = p.housingType;
+      if (!h){
+        var o = readOnboarding();
+        h = o.housing || o.housingType || o.boende || "";
+      }
+      h = safeLower(h);
+      if (h.indexOf("villa") !== -1 || h.indexOf("hus") !== -1) return "Villa";
+      if (h.indexOf("brf") !== -1 || h.indexOf("bostads") !== -1) return "Bostadsrätt";
+      if (h.indexOf("hyra") !== -1 || h.indexOf("hyr") !== -1) return "Hyresrätt";
+      return "Boende";
+    }
+
+    var adults = readAdults();
+    var names = readNames();
+    var kids = readKids();
+    var cars = readCars();
+    var hasPets = readPets();
+    var hasSecondHome = readSecondHome();
+    var housingLabel = readHousing();
+
+    var fam = (adults>=2) ? (names.name1+" & "+names.name2) : names.name1;
+    document.getElementById("pFamily").textContent = fam;
+    document.getElementById("pKids").textContent = (kids>0 ? (kids+" barn") : "Inga barn");
+    document.getElementById("pHouse").textContent = housingLabel;
+
+    (function(){
+      var show = true;
+      var a1 = document.getElementById("navBoendeExtra");
+      var a2 = document.getElementById("navBoendeExtraMobile");
+      if(a1) a1.style.display = show ? "" : "none";
+      if(a2) a2.style.display = show ? "" : "none";
+    })();
+
+    var MODEL = { income:[], housing:[], food:[], transport:[], savings:[] };
+
+    function add(section, key, label, help){
+      MODEL[section].push({ key:key, label:label, help:help||"" });
+    }
+
+    add("income","income_salary_1","Lön ("+names.name1+")","Netto efter skatt.");
+    if (adults >= 2) add("income","income_salary_2","Lön ("+names.name2+")","Netto efter skatt.");
+    add("income","income_maintenance_in","Underhåll (in)","Om du får underhåll.");
+    if (kids > 0) add("income","income_child_allowance","Barnbidrag","Totalt per månad.");
+    add("income","income_sidejob","Extrajobb","Om du har sidointäkt.");
+    add("income","income_other","Övriga inkomster","Ex. ersättningar, bidrag.");
+
+    if (housingLabel === "Hyresrätt") add("housing","housing_rent","Hyra","Hyra per månad.");
+    if (housingLabel === "Bostadsrätt") add("housing","housing_fee","Avgift (BRF)","Avgift per månad.");
+    if (housingLabel === "Villa" || housingLabel === "Bostadsrätt") {
+      add("housing","housing_mortgage","Bolån (månadsbelopp)","Summa per månad (ränta+amortering om du vill).");
+      add("housing","housing_interest","Ränta (del)","Om du vill separera räntan.");
+      add("housing","housing_amort","Amortering (del)","Om du vill separera amorteringen.");
+    }
+    add("housing","housing_electricity","El","Elkostnad per månad.");
+    add("housing","housing_heating","Värme","Om separat (t.ex. fjärrvärme).");
+    add("housing","housing_water","Vatten & sopor","Om du har det separat.");
+    add("housing","housing_internet","Bredband","Bredband/TV om du har det här.");
+    add("housing","housing_alarm","Larm","Om ni har larm.");
+    add("housing","housing_insurance_home","Hemförsäkring","Hem/villa-hem.");
+
+    add("food","food_groceries","Mat (butik)","Livsmedel, storhandling.");
+    add("food","food_takeaway","Hämtmat/utemat","Allt som inte är “butik”.");
+    if (hasPets){
+      add("food","pets_food","Husdjur – foder","Mat till djuren.");
+      add("food","pets_supplies","Husdjur – tillbehör","Sand/leksaker osv.");
+    }
+
+    if (cars >= 1){
+      add("transport","transport_fuel","Bränsle","Diesel/bensin/laddning.");
+      add("transport","transport_insurance","Bilförsäkring","Per månad.");
+      add("transport","transport_loan","Billån","Om ni har billån.");
+      add("transport","transport_service","Service/rep","Snitt per månad.");
+      add("transport","transport_parking","Parkering","P-plats/garage.");
+    }
+    add("transport","transport_public","Kollektivtrafik","Buss/tåg/spårvagn.");
+    add("transport","transport_other","Övrigt transport","Taxi, hyrbil, etc.");
+
+    add("savings","save_buffer","Buffert","Sparande som bara är “trygghet”.");
+    add("savings","save_pension1","Pensionsspar ("+names.name1+")","Om du sparar privat.");
+    if (adults >= 2) add("savings","save_pension2","Pensionsspar ("+names.name2+")","Om ni sparar privat.");
+    add("savings","save_kids","Barnspar","Om ni sparar till barnen.");
+    add("savings","save_goal","Målspar","Ex. resa, ny bil, renovering.");
+
+    if (hasSecondHome){
+      add("housing","second_home_note","Semesterbostad","(Info) Resultat-sidan fångar detaljerna – här håller vi budgeten enkel.");
+    }
+
+    // ✅ Standardiserade keys
+    var LS_KEY_MONTH = "viddra_budget_month_" + MONTH;       // valfri historik
+    var LS_KEY_CANON = "viddra_budget_values_v1";            // canonical framåt
+    var LS_KEY_LEGACY_CANON = "viddra_budget_v1";            // legacy (läs bara)
+
+    function canonToFlat(c){
+      if (!c || typeof c !== "object") return null;
+      var out = {};
+      var secKeys = ["income","housing","food","transport","savings"];
+      var any = false;
+
+      for (var i=0;i<secKeys.length;i++){
+        var sk = secKeys[i];
+        if (!c[sk] || typeof c[sk] !== "object") continue;
+        Object.keys(c[sk]).forEach(function(k){
+          out[k] = toNum(c[sk][k]);
+          any = true;
+        });
+      }
+      return any ? out : null;
+    }
+
+    function flatToCanon(obj){
+      obj = obj || {};
+      var canon = {
+        income:{}, housing:{}, food:{}, transport:{}, savings:{},
+        _meta:{ version:1, month: MONTH, updated_at: (new Date()).toISOString() }
+      };
+      function put(section, key){
+        if (typeof obj[key] === "undefined") return;
+        canon[section][key] = toNum(obj[key]);
+      }
+      ["income","housing","food","transport","savings"].forEach(function(sec){
+        MODEL[sec].forEach(function(f){
+          if (f.key === "second_home_note") return;
+          put(sec, f.key);
+        });
+      });
+      return canon;
+    }
+
+    function safeJson(key){
+      var s = localStorage.getItem(key);
+      if (!s) return null;
+      try{ return JSON.parse(s) || null; }catch(e){ return null; }
+    }
+
+    function readSaved(){
+      // 1) månadsnyckel (om du redan sparat denna månad)
+      var monthObj = safeJson(LS_KEY_MONTH);
+      if (monthObj && typeof monthObj === "object") return monthObj;
+
+      // 2) canonical key (det vi vill framåt)
+      var canonObj = safeJson(LS_KEY_CANON);
+      if (canonObj && typeof canonObj === "object"){
+        var flat = canonToFlat(canonObj);
+        if (flat) return flat;
+      }
+
+      // 3) legacy key (bakåtkomp)
+      var legacy = safeJson(LS_KEY_LEGACY_CANON);
+      if (legacy && typeof legacy === "object"){
+        var flat2 = canonToFlat(legacy);
+        if (flat2) return flat2;
+      }
+
+      return {};
+    }
+
+    function writeSaved(obj){
+      // 1) flat per månad (för ev framtida historik)
+      localStorage.setItem(LS_KEY_MONTH, JSON.stringify(obj||{}));
+
+      // 2) canonical (ALLTID)
+      var canon = flatToCanon(obj||{});
+      localStorage.setItem(LS_KEY_CANON, JSON.stringify(canon));
+
+      // 3) skriv INTE legacy längre (det skapar bara dubletter)
+    }
+
+    var saved = readSaved();
+
+    function renderSection(section, mountId){
+      var mount = document.getElementById(mountId);
+      mount.innerHTML = "";
+      MODEL[section].forEach(function(f){
+        if (f.key === "second_home_note"){
+          var note = document.createElement("div");
+          note.className = "muted";
+          note.style.padding = "6px 0";
+          note.textContent = "Semesterbostad: (budget förenklad här – detaljer i Resultat).";
+          mount.appendChild(note);
+          return;
+        }
+
+        var wrap = document.createElement("div");
+        wrap.className = "item";
+        var left = document.createElement("div");
+        var lab = document.createElement("div");
+        lab.className = "label";
+        lab.textContent = f.label;
+        var help = document.createElement("div");
+        help.className = "help";
+        help.textContent = f.help || "";
+        left.appendChild(lab);
+        if (f.help) left.appendChild(help);
+
+        var input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.step = "50";
+        input.inputMode = "numeric";
+        input.value = (typeof saved[f.key] !== "undefined") ? saved[f.key] : 0;
+        input.setAttribute("data-key", f.key);
+        input.addEventListener("input", function(){
+          saved[f.key] = toNum(input.value);
+          recalc();
+        });
+
+        wrap.appendChild(left);
+        wrap.appendChild(input);
+        mount.appendChild(wrap);
+      });
+    }
+
+    renderSection("income","body_income");
+    renderSection("housing","body_housing");
+    renderSection("food","body_food");
+    renderSection("transport","body_transport");
+    renderSection("savings","body_savings");
+
+    function sumKeys(keys){
+      var s = 0;
+      keys.forEach(function(k){ s += toNum(saved[k]); });
+      return s;
+    }
+
+    function sumSection(section){
+      var keys = MODEL[section].map(function(f){ return f.key; }).filter(function(k){ return k !== "second_home_note"; });
+      return sumKeys(keys);
+    }
+
+    function recalc(){
+      var sIncome = sumSection("income");
+      var sHousing = sumSection("housing");
+      var sFood = sumSection("food");
+      var sTransport = sumSection("transport");
+      var sSavings = sumSection("savings");
+
+      document.getElementById("sum_income").textContent = sIncome.toLocaleString("sv-SE");
+      document.getElementById("sum_housing").textContent = sHousing.toLocaleString("sv-SE");
+      document.getElementById("sum_food").textContent = sFood.toLocaleString("sv-SE");
+      document.getElementById("sum_transport").textContent = sTransport.toLocaleString("sv-SE");
+      document.getElementById("sum_savings").textContent = sSavings.toLocaleString("sv-SE");
+
+      var total = sHousing + sFood + sTransport;
+      document.getElementById("kpiTotal").textContent = total.toLocaleString("sv-SE");
+      document.getElementById("kpiHousingPill").textContent = "Boende: " + sHousing.toLocaleString("sv-SE") + " kr";
+      document.getElementById("kpiFoodPill").textContent = "Mat: " + sFood.toLocaleString("sv-SE") + " kr";
+      document.getElementById("kpiTransportPill").textContent = "Transport: " + sTransport.toLocaleString("sv-SE") + " kr";
+
+      var dbg = [];
+      dbg.push("debug: housing="+housingLabel);
+      dbg.push("adults="+adults);
+      dbg.push("kids="+kids);
+      dbg.push("cars="+cars);
+      dbg.push("pets="+(hasPets?1:0));
+      dbg.push("second_home="+(hasSecondHome?1:0));
+      dbg.push("save-> "+LS_KEY_CANON);
+      document.getElementById("debugTiny").textContent = dbg.join(" | ");
+    }
+
+    recalc();
+
+    // Save
+    var saveBtn = document.getElementById("save");
+    saveBtn.addEventListener("click", function(){
+      try{
+        writeSaved(saved);
+        saveBtn.textContent = "Sparat ✅";
+        setTimeout(function(){ saveBtn.textContent = "Spara budget"; }, 1200);
+      }catch(e){
+        alert("Kunde inte spara i webbläsaren (localStorage).");
+      }
+    });
+
+    // Reset (rensa budget-nycklar för att undvika dubbla införanden)
+    var resetBtn = document.getElementById("resetBudget");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function(){
+        var ok = confirm("Vill du nollställa budgeten? Detta tar bort sparade budgetvärden i webbläsaren.");
+        if (!ok) return;
+
+        try{
+          // Ta bort kända budget-nycklar + alla månadsnycklar
+          var toRemoveExact = {
+            "viddra_budget_values_v1": true,
+            "viddra_budget": true,
+            "viddra_budget_v1": true,
+            "viddra_budget_meta_v1": true
+          };
+
+          var keys = [];
+          try { keys = Object.keys(localStorage); } catch(e) { keys = []; }
+
+          keys.forEach(function(k){
+            if (toRemoveExact[k]) { localStorage.removeItem(k); return; }
+            if (/^viddra_budget_month_/i.test(k)) { localStorage.removeItem(k); return; }
+            if (/^viddra_budget_meta_v1_/i.test(k)) { localStorage.removeItem(k); return; }
+          });
+
+          // Nollställ i minnet + UI
+          saved = {};
+          var inputs = document.querySelectorAll('input[data-key]');
+          for (var i=0;i<inputs.length;i++){
+            inputs[i].value = 0;
+            var kk = inputs[i].getAttribute("data-key");
+            if (kk) saved[kk] = 0;
+          }
+          recalc();
+
+          resetBtn.textContent = "Nollställt ✅";
+          setTimeout(function(){ resetBtn.textContent = "Nollställ budget"; }, 1400);
+        }catch(e2){
+          alert("Kunde inte nollställa budgeten (localStorage).");
+        }
+      });
+    }
+
+  })();
+  </script>
+</body>
+</html>

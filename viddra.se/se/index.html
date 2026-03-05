@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Onboarding</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#6f7f68;
+      --panel:#f6f1eb;
+      --ink:#1f1f1f;
+      --muted:#6b6b6b;
+      --line:rgba(0,0,0,.08);
+      --shadow:0 18px 40px rgba(0,0,0,.18);
+      --btn:#2f3d33;
+      --btn2:#e9e2da;
+      --dot:#ddd6cd;
+      --dotA:#2f3d33;
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      padding:28px 18px;
+    }
+    .shell{
+      max-width:1280px;
+      margin:0 auto;
+      background:var(--panel);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.15);
+    }
+    .topbar{height:14px;background:#242424;opacity:.85;}
+    .frame{
+      display:grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap:22px;
+      padding:22px;
+    }
+    .left{padding:10px 10px 18px 10px;}
+    .brandrow{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 10px 14px 10px;
+      border-bottom:1px solid var(--line);
+    }
+    .logo{
+      width:36px;height:36px;border-radius:10px;flex:0 0 auto;
+      background:#2f3d33;display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand{display:flex;flex-direction:column;gap:2px;min-width:0;}
+    .brand .name{font-family:Fraunces,serif;font-weight:600;font-size:18px;line-height:1.1;margin:0;}
+    .brand .tag{font-size:13px;color:var(--muted);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .stepmeta{margin-left:auto;text-align:right;font-size:13px;color:var(--muted);}
+    .dots{display:flex;gap:8px;align-items:center;padding:14px 10px 2px 10px;}
+    .dot{
+      width:22px;height:22px;border-radius:999px;
+      background:var(--dot);color:#6a6157;
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;border:1px solid rgba(0,0,0,.05);
+      user-select:none;
+    }
+    .dot.active{background:var(--dotA);color:#fff;border-color:rgba(255,255,255,.15);}
+    .content{padding:14px 10px 0 10px;}
+    h1{
+      font-family:Fraunces,serif;font-weight:600;
+      font-size:46px;line-height:1.02;margin:12px 0 10px 0;
+    }
+    .lead{margin:0 0 16px 0;color:var(--muted);font-size:15px;}
+    .card{
+      margin-top:18px;background:rgba(255,255,255,.55);
+      border:1px solid var(--line);border-radius:16px;padding:16px;
+    }
+    label.small{font-size:13px;color:#5c534a;display:block;margin-bottom:8px;}
+    select,input[type="text"],input[type="number"]{
+      width:100%;padding:12px 12px;border-radius:12px;
+      border:1px solid rgba(0,0,0,.10);background:#fff;outline:none;font-size:15px;
+    }
+    select:focus,input:focus{border-color:rgba(47,61,51,.45);box-shadow:0 0 0 3px rgba(47,61,51,.10)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .hint{font-size:13px;color:var(--muted);margin-top:8px;}
+    .actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;}
+    .actions .leftlink{font-size:14px;color:#2f3d33;text-decoration:none;font-weight:500;opacity:.9;}
+    .actions .btns{display:flex;gap:10px;align-items:center;}
+    button{
+      appearance:none;border:0;border-radius:14px;
+      padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer;
+    }
+    .btn-secondary{background:var(--btn2);border:1px solid rgba(0,0,0,.10);color:#2b2b2b;}
+    .btn-primary{background:var(--btn);color:#fff;box-shadow:0 8px 18px rgba(47,61,51,.18);}
+    .btn-primary:disabled{opacity:.55;cursor:not-allowed}
+    .footnote{margin:16px 10px 0 10px;font-size:12.5px;color:var(--muted);line-height:1.4;}
+    .right{
+      border-radius:24px;overflow:hidden;background:#e9e2da;
+      border:1px solid rgba(0,0,0,.06);position:relative;min-height:620px;
+    }
+    .right .imgwrap{position:absolute;inset:0;padding:14px;}
+    .right img{
+      width:100%;height:100%;
+      object-fit:cover;border-radius:20px;display:block;
+    }
+    .step{display:none}
+    .step.active{display:block}
+    .pillgroup{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+    .pill{
+      display:flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:14px;
+      border:1px solid rgba(0,0,0,.10);background:#fff;
+      cursor:pointer;user-select:none;font-weight:600;font-size:14px;
+    }
+    .pill input{display:none}
+    .pill.active{border-color:rgba(47,61,51,.45);box-shadow:0 0 0 3px rgba(47,61,51,.10);}
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    @media (max-width: 980px){
+      body{padding:18px 12px}
+      .frame{grid-template-columns:1fr;gap:16px}
+      .right{min-height:320px}
+      h1{font-size:36px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="left">
+        <div class="brandrow">
+          <div class="logo" title="Viddra">
+            <img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'; this.parentElement.textContent='';">
+          </div>
+          <div class="brand">
+            <p class="name">Viddra</p>
+            <p class="tag">Sätt ramarna för din budget</p>
+          </div>
+          <div class="stepmeta" id="stepmeta">Steg 1 av 9</div>
+        </div>
+
+        <div class="dots" id="dots"></div>
+
+        <div class="content">
+          <section class="step active" data-step="1" data-img="step1_kitchen.png">
+            <h1>Hur många vuxna?</h1>
+            <p class="lead">Vi börjar med det enklaste. Du kan alltid ändra senare.</p>
+
+            <div class="card">
+              <label class="small">Antal vuxna</label>
+              <select id="adultCount">
+                <option value="1">1 vuxen</option>
+                <option value="2">2 vuxna</option>
+              </select>
+
+              <div class="divider"></div>
+
+              <label class="small">Vuxna i hushållet</label>
+              <div id="adultNames" class="row"></div>
+
+              <p class="hint">Vi använder detta för att visa inkomster per vuxen i budgeten.</p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" disabled>Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+
+            <div class="footnote">
+              * Sparas lokalt i webbläsaren (localStorage). När allt är klart skickas du vidare till “Fyll i budget”.
+            </div>
+          </section>
+
+          <section class="step" data-step="2" data-img="step2_kids.png">
+            <h1>Har ni barn?</h1>
+            <p class="lead">Om ja – fyll i barnens uppgifter. Ålder (ååmmdd) styr bl.a. barnbidrag och senare tips.</p>
+
+            <div class="card">
+              <label class="small">Har ni barn?</label>
+              <div class="pillgroup" role="group" aria-label="Har ni barn?">
+                <label class="pill"><input type="radio" name="hasKids" value="yes"> Ja</label>
+                <label class="pill"><input type="radio" name="hasKids" value="no"> Nej</label>
+              </div>
+
+              <div id="kidsBlock" style="display:none; margin-top:14px;">
+                <div class="row">
+                  <div>
+                    <label class="small">Antal barn</label>
+                    <select id="kidCount">
+                      <option value="1">1 barn</option>
+                      <option value="2">2 barn</option>
+                      <option value="3">3 barn</option>
+                      <option value="4">4 barn</option>
+                      <option value="5">5 barn</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="small">Format</label>
+                    <input type="text" value="ååmmdd" readonly>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div id="kidFields"></div>
+                <p class="hint">Exempel: 200118 (18 jan 2020). Skriv alltid sex siffror.</p>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step" data-step="3" data-img="step3_dogs.png">
+            <h1>Har ni husdjur?</h1>
+            <p class="lead">Vi använder detta för att kunna ge bättre råd och tips senare.</p>
+
+            <div class="card">
+              <label class="small">Husdjur</label>
+              <div class="pillgroup" role="group" aria-label="Har ni husdjur?">
+                <label class="pill"><input type="radio" name="hasPets" value="yes"> Ja</label>
+                <label class="pill"><input type="radio" name="hasPets" value="no"> Nej</label>
+              </div>
+              <p class="hint">Vi hoppar över följdfrågor här – det räcker med ja eller nej.</p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step" data-step="4" data-img="step8_smallloans.png">
+            <h1>Smålån &amp; krediter</h1>
+            <p class="lead">Det här hjälper oss att ge bättre råd senare. Vi gör det enkelt: bara ja eller nej.</p>
+
+            <div class="card">
+              <label class="small">Har ni smålån eller krediter?</label>
+              <div class="pillgroup" role="group" aria-label="Smålån eller krediter?">
+                <label class="pill"><input type="radio" name="hasSmallLoans" value="yes"> Ja</label>
+                <label class="pill"><input type="radio" name="hasSmallLoans" value="no"> Nej</label>
+              </div>
+              <p class="hint">Sen kan Viddra ge dig en “läxa” att kolla låneavin för detaljer (ränta/amortering) – men inte nu.</p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step" data-step="5" data-img="step4_villa.png">
+            <h1>Vilket område stämmer för ert boende?</h1>
+            <p class="lead">Det styr vilka rader som visas i budgeten (hyra/avgift/bolån).</p>
+
+            <div class="card">
+              <label class="small">Boendeform</label>
+              <div class="pillgroup" role="group" aria-label="Boendeform">
+                <label class="pill"><input type="radio" name="housingType" value="hyresratt"> Hyresrätt</label>
+                <label class="pill"><input type="radio" name="housingType" value="bostadsratt"> Bostadsrätt</label>
+                <label class="pill"><input type="radio" name="housingType" value="villa"> Villa / radhus</label>
+              </div>
+              <p class="hint">Du kan ändra senare. Budgeten anpassar sig efter ditt val.</p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step" data-step="6" data-img="step5_heating.png">
+            <h1>Hur värmer ni upp bostaden?</h1>
+            <p class="lead">Det hjälper oss att föreslå smarta förbättringar och jämförelser senare.</p>
+
+            <div class="card">
+              <label class="small">Primär uppvärmning</label>
+              <select id="heatingPrimary">
+                <option value="fjarvarme">Fjärrvärme</option>
+                <option value="varmepump">Värmepump</option>
+                <option value="direktverkande_el">Direktverkande el</option>
+                <option value="vattenburen_el_olja">Vattenburen el / olja</option>
+                <option value="pellets_ved">Pellets / ved</option>
+              </select>
+
+              <div style="margin-top:12px;">
+                <label class="small">Extra / komplement (valfritt)</label>
+                <input id="heatingExtra" type="text" placeholder="t.ex. kamin ibland">
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="step" data-step="7" data-img="step6_car.png">
+            <h1>Har ni bil?</h1>
+            <p class="lead">Om ja – hur många? Detta skapar rätt rader i budgeten.</p>
+
+            <div class="card">
+              <label class="small">Bil</label>
+              <div class="pillgroup" role="group" aria-label="Har ni bil?">
+                <label class="pill"><input type="radio" name="hasCar" value="yes"> Ja</label>
+                <label class="pill"><input type="radio" name="hasCar" value="no"> Nej</label>
+              </div>
+
+              <div id="carCountBlock" style="display:none;margin-top:14px;">
+                <label class="small">Hur många?</label>
+                <select id="carCount">
+                  <option value="1">1 bil</option>
+                  <option value="2">2 bilar</option>
+                  <option value="3">3 bilar</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- NEW STEP 8: Payday -->
+          <section class="step" data-step="8" data-img="step9_payday.png">
+            <h1>Vilken dag får ni lön?</h1>
+            <p class="lead">
+              Viddra kan räkna din “månad” från lönedag till lönedag.
+              Det gör Resultat mer rättvist och enklare.
+            </p>
+
+            <div class="card">
+              <label class="small">Lönedag (1–28)</label>
+              <input id="paydayDay" type="number" min="1" max="28" step="1" value="25" inputmode="numeric">
+
+              <p class="hint">
+                Vanligast är 25. Vi begränsar till 1–28 för att slippa problem med månader som saknar 29–31.
+              </p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="nextStep()">Nästa</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Former step 8 is now step 9 -->
+          <section class="step" data-step="9" data-img="step7_cottage.png">
+            <h1>Har ni semesterbostad?</h1>
+            <p class="lead">Om ni har semesterbostad visar vi en egen rad i budgeten. Om inte – vill ni ha ett?</p>
+
+            <div class="card">
+              <label class="small">Semesterbostad</label>
+              <div class="pillgroup" role="group" aria-label="Har ni semesterbostad?">
+                <label class="pill"><input type="radio" name="hasCottage" value="yes"> Ja</label>
+                <label class="pill"><input type="radio" name="hasCottage" value="no"> Nej</label>
+              </div>
+
+              <div id="wantCottageBlock" style="display:none;margin-top:14px;">
+                <label class="small">Finns önskemål om att ha en?</label>
+                <div class="pillgroup" role="group" aria-label="Vill ni ha semesterbostad?">
+                  <label class="pill"><input type="radio" name="wantsCottage" value="yes"> Ja</label>
+                  <label class="pill"><input type="radio" name="wantsCottage" value="no"> Nej</label>
+                </div>
+
+                <div id="goalHelpBlock" style="display:none;margin-top:14px;">
+                  <label class="small">Vill ni ha hjälp att sätta upp mål?</label>
+                  <div class="pillgroup" role="group" aria-label="Hjälp med mål?">
+                    <label class="pill"><input type="radio" name="goalHelp" value="yes"> Ja</label>
+                    <label class="pill"><input type="radio" name="goalHelp" value="no"> Nej</label>
+                  </div>
+                </div>
+              </div>
+
+              <p class="hint" style="margin-top:12px;">När du klickar “Fyll i budget” sparar vi allt lokalt och skickar dig vidare.</p>
+            </div>
+
+            <div class="actions">
+              <a class="leftlink" href="javascript:void(0)" onclick="togglePreview()">Förhandsgranska</a>
+              <div class="btns">
+                <button class="btn-secondary" onclick="prevStep()">Tillbaka</button>
+                <button class="btn-primary" onclick="finish()">Fyll i budget</button>
+              </div>
+            </div>
+          </section>
+
+          <div id="preview" style="display:none; margin-top:16px;">
+            <div class="card">
+              <label class="small">Förhandsgranskning (JSON)</label>
+              <pre id="previewJson" style="margin:0; white-space:pre-wrap; font-size:12.5px; color:#2b2b2b;"></pre>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="right" aria-hidden="true">
+        <div class="imgwrap">
+          <img id="heroImg" src="step1_kitchen.png" alt="Viddra" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core helpers (NEW) -->
+  <script src="assets/viddra-core.js"></script>
+
+  <script>
+(function(){
+  if (window.ViddraCore && window.ViddraCore.redirectToWwwIfNeeded && window.ViddraCore.redirectToWwwIfNeeded()) {
+    return;
+  }
+
+  if (window.ViddraCore && window.ViddraCore.ensureToken) {
+    window.ViddraCore.ensureToken();
+  }
+
+  const TOTAL_STEPS = 9;
+  let currentStep = 1;
+
+  function $(sel){ return document.querySelector(sel); }
+  function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+
+  function renderDots(){
+    const dots = $("#dots");
+    dots.innerHTML = "";
+    for(let i=1;i<=TOTAL_STEPS;i++){
+      const d = document.createElement("div");
+      d.className = "dot" + (i===currentStep ? " active" : "");
+      d.textContent = i;
+      dots.appendChild(d);
+    }
+    $("#stepmeta").textContent = `Steg ${currentStep} av ${TOTAL_STEPS}`;
+  }
+
+  function showStep(n){
+    currentStep = Math.max(1, Math.min(TOTAL_STEPS, n));
+    $all(".step").forEach(s => s.classList.remove("active"));
+    const el = document.querySelector(`.step[data-step="${currentStep}"]`);
+    if(el) el.classList.add("active");
+    const img = el?.getAttribute("data-img") || "step1_kitchen.png";
+    $("#heroImg").src = img;
+    renderDots();
+    $("#preview").style.display = "none";
+  }
+
+  function nextStep(){ showStep(currentStep + 1); }
+  function prevStep(){ showStep(currentStep - 1); }
+
+  function getState(){
+    const adultCount = parseInt($("#adultCount").value, 10) || 1;
+    const adults = [];
+    for(let i=0;i<adultCount;i++){
+      const inp = document.querySelector(`#adultName_${i}`);
+      adults.push({ name: (inp?.value || "").trim() });
+    }
+
+    const hasKids = document.querySelector('input[name="hasKids"]:checked')?.value || "";
+    const children = [];
+    if(hasKids === "yes"){
+      const kcount = parseInt($("#kidCount").value, 10) || 1;
+      for(let i=0;i<kcount;i++){
+        const name = (document.querySelector(`#kidName_${i}`)?.value || "").trim();
+        const birth = (document.querySelector(`#kidBirth_${i}`)?.value || "").trim();
+        children.push({ name, birthYYMMDD: birth });
+      }
+    }
+
+    const hasPets = document.querySelector('input[name="hasPets"]:checked')?.value || "";
+    const hasSmallLoans = document.querySelector('input[name="hasSmallLoans"]:checked')?.value || "";
+    const housingType = document.querySelector('input[name="housingType"]:checked')?.value || "";
+
+    const heatingPrimary = $("#heatingPrimary")?.value || "";
+    const heatingExtra = ($("#heatingExtra")?.value || "").trim();
+
+    const hasCar = document.querySelector('input[name="hasCar"]:checked')?.value || "";
+    const carCount = (hasCar === "yes") ? (parseInt($("#carCount")?.value || "1", 10) || 1) : 0;
+
+    const paydayDay = parseInt($("#paydayDay")?.value || "25", 10) || 25;
+
+    const hasCottage = document.querySelector('input[name="hasCottage"]:checked')?.value || "";
+    const wantsCottage = document.querySelector('input[name="wantsCottage"]:checked')?.value || "";
+    const goalHelp = document.querySelector('input[name="goalHelp"]:checked')?.value || "";
+
+    return {
+      adults,
+      children,
+      flags:{
+        hasKids, hasPets, hasSmallLoans, hasCar, hasCottage, wantsCottage, goalHelp
+      },
+      housing:{ type: housingType },
+      heating:{ primary: heatingPrimary, extra: heatingExtra },
+      car:{ count: carCount },
+      paydayDay: paydayDay
+    };
+  }
+
+  function togglePreview(){
+    const box = $("#preview");
+    const isOpen = box.style.display !== "none";
+    if(isOpen){ box.style.display = "none"; return; }
+    const data = getState();
+    $("#previewJson").textContent = JSON.stringify(data, null, 2);
+    box.style.display = "block";
+  }
+
+  function normalizeBirthToken(tok){
+    tok = String(tok || "").trim();
+    const iso = tok.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) return iso[1] + iso[2] + iso[3];
+    if (tok.match(/^\d{8}$/)) return tok;
+    if (tok.match(/^\d{6}$/)) {
+      const yy = parseInt(tok.slice(0,2),10);
+      const yyyy = (yy <= 29) ? (2000 + yy) : (1900 + yy);
+      return String(yyyy) + tok.slice(2);
+    }
+    return "";
+  }
+
+  function looksLikeRealDate_yyyymmdd(s){
+    if (!s || !String(s).match(/^\d{8}$/)) return false;
+    const y = parseInt(s.slice(0,4),10);
+    const m = parseInt(s.slice(4,6),10);
+    const d = parseInt(s.slice(6,8),10);
+    if (y < 1900 || y > 2030) return false;
+    if (m < 1 || m > 12) return false;
+    if (d < 1 || d > 31) return false;
+    return true;
+  }
+
+  function clampPaydayDay(n){
+    n = parseInt(n, 10);
+    if (isNaN(n)) n = 25;
+    if (n < 1) n = 1;
+    if (n > 28) n = 28;
+    return n;
+  }
+
+  function finish(){
+    const data = getState();
+
+    const contract = {
+      adults: Array.isArray(data.adults) ? data.adults.length : 1,
+      adult1Name: (data.adults?.[0]?.name || "").trim(),
+      adult2Name: (data.adults?.[1]?.name || "").trim(),
+      childrenBirthdates: Array.isArray(data.children) ? data.children.map(c => (c.birthYYMMDD || "").trim()).filter(Boolean) : [],
+      hasPets: (data.flags?.hasPets === "yes"),
+      hasCar: (data.flags?.hasCar === "yes"),
+      carCount: (data.flags?.hasCar === "yes") ? (parseInt(data.car?.count || 1, 10) || 1) : 0,
+      hasCottage: (data.flags?.hasCottage === "yes"),
+      housing: (data.housing?.type || "").trim(),
+      hasSmallloans: (data.flags?.hasSmallLoans === "yes")
+    };
+
+    const USER_KEY = "viddra_user_id";
+    if(!localStorage.getItem(USER_KEY)){
+      const uuid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() :
+        "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          const v = c === "x" ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      localStorage.setItem(USER_KEY, uuid);
+    }
+
+    localStorage.setItem("viddra_onboarding_v1", JSON.stringify(contract));
+
+    const kids = [];
+    try {
+      (data.children || []).forEach(c => {
+        const nm = String(c?.name || "").trim();
+        const raw = String(c?.birthYYMMDD || "").trim();
+        const norm = normalizeBirthToken(raw);
+        if (looksLikeRealDate_yyyymmdd(norm)) {
+          kids.push({ name: nm, birth: norm });
+        }
+      });
+    } catch (e) {}
+
+    const payday_day = clampPaydayDay(data.paydayDay);
+
+    const prof = {
+      v: 1,
+      createdAt: new Date().toISOString(),
+      payday_day: payday_day,
+      adults: [
+        { name: contract.adult1Name || "Vuxen 1" }
+      ],
+      children: kids,
+      housingType: contract.housing || "",
+      flags: {
+        hasPets: !!contract.hasPets,
+        hasCar: !!contract.hasCar,
+        hasSmallLoans: !!contract.hasSmallloans,
+        hasCottage: !!contract.hasCottage
+      },
+      car: { count: contract.carCount || 0 },
+      heating: {
+        primary: $("#heatingPrimary")?.value || "",
+        extra: ($("#heatingExtra")?.value || "").trim()
+      }
+    };
+
+    if (contract.adults >= 2) {
+      prof.adults.push({ name: contract.adult2Name || "Vuxen 2" });
+    }
+
+    // TOKEN (KRITISKT)
+    // Resultat/Min sida sparar/hämtar i DB via token. Vi sätter alltid token här.
+    try {
+      var t = localStorage.getItem("viddra_token") || localStorage.getItem("viddra_session_token");
+
+      // Om core kan skapa token: använd den
+      if (!t && window.ViddraCore && typeof window.ViddraCore.ensureToken === "function") {
+        t = window.ViddraCore.ensureToken();
+      }
+
+      // Sista fallback: skapa en enkel token
+      if (!t) {
+        t = "t_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
+      }
+
+      localStorage.setItem("viddra_token", t);
+      localStorage.setItem("viddra_session_token", t);
+      prof.token = t;
+    } catch (e) {}
+
+    localStorage.setItem("viddra_profile_v1", JSON.stringify(prof));
+
+    // Compatibility keys
+    try {
+      const adultsArr = [];
+      if (contract.adults >= 1) adultsArr.push({ name: contract.adult1Name || "Vuxen 1" });
+      if (contract.adults >= 2) adultsArr.push({ name: contract.adult2Name || "Vuxen 2" });
+      localStorage.setItem("viddra_adults", JSON.stringify(adultsArr));
+      localStorage.setItem("viddra_children", JSON.stringify(contract.children || []));
+      localStorage.setItem("viddra_hasSmallLoans", contract.hasSmallLoans ? "1" : "0");
+      localStorage.setItem("viddra_housingType", contract.housingType || "");
+      localStorage.setItem("viddra_payday_day", String(payday_day));
+    } catch (e) {}
+
+    localStorage.removeItem("viddra_onboarding");
+
+    window.location.href = "fill_budget.html";
+  }
+
+  function setPillGroupActive(groupName){
+    const inputs = $all(`input[name="${groupName}"]`);
+    inputs.forEach(inp => {
+      const label = inp.closest(".pill");
+      if(!label) return;
+      label.classList.toggle("active", inp.checked);
+    });
+  }
+
+  function wirePillGroup(groupName, onChange){
+    $all(`input[name="${groupName}"]`).forEach(inp => {
+      inp.addEventListener("change", () => {
+        setPillGroupActive(groupName);
+        if(onChange) onChange();
+      });
+    });
+  }
+
+  function renderAdultNames(){
+    const count = parseInt($("#adultCount").value, 10) || 1;
+    const wrap = $("#adultNames");
+    wrap.innerHTML = "";
+    wrap.className = (count === 1) ? "" : "row";
+    for(let i=0;i<count;i++){
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <label class="small">Förnamn vuxen ${i+1}</label>
+        <input type="text" id="adultName_${i}" placeholder="Fyll i förnamn" autocomplete="given-name" />
+      `;
+      wrap.appendChild(div);
+    }
+  }
+
+  function renderKidFields(){
+    const count = parseInt($("#kidCount").value, 10) || 1;
+    const wrap = $("#kidFields");
+    wrap.innerHTML = "";
+    for(let i=0;i<count;i++){
+      const row = document.createElement("div");
+      row.className = "row";
+      row.style.marginBottom = "10px";
+      row.innerHTML = `
+        <div>
+          <label class="small">Barn ${i+1} – namn</label>
+          <input type="text" id="kidName_${i}" placeholder="Fyll i förnamn" />
+        </div>
+        <div>
+          <label class="small">Barn ${i+1} – född (ååmmdd)</label>
+          <input type="text" id="kidBirth_${i}" inputmode="numeric" placeholder="t.ex. 200118" maxlength="6" />
+        </div>
+      `;
+      wrap.appendChild(row);
+    }
+  }
+
+  (function init(){
+    renderAdultNames();
+    $("#adultCount").addEventListener("change", renderAdultNames);
+
+    wirePillGroup("hasKids", () => {
+      const val = document.querySelector('input[name="hasKids"]:checked')?.value;
+      $("#kidsBlock").style.display = (val === "yes") ? "block" : "none";
+    });
+    wirePillGroup("hasPets");
+    wirePillGroup("hasSmallLoans");
+    wirePillGroup("housingType");
+    wirePillGroup("hasCar", () => {
+      const val = document.querySelector('input[name="hasCar"]:checked')?.value;
+      $("#carCountBlock").style.display = (val === "yes") ? "block" : "none";
+    });
+    wirePillGroup("hasCottage", () => {
+      const val = document.querySelector('input[name="hasCottage"]:checked')?.value;
+      $("#wantCottageBlock").style.display = (val === "no") ? "block" : "none";
+      if(val === "yes"){
+        $all('input[name="wantsCottage"]').forEach(i=>i.checked=false);
+        $all('input[name="goalHelp"]').forEach(i=>i.checked=false);
+        setPillGroupActive("wantsCottage");
+        setPillGroupActive("goalHelp");
+        $("#goalHelpBlock").style.display = "none";
+      }
+    });
+    wirePillGroup("wantsCottage", () => {
+      const val = document.querySelector('input[name="wantsCottage"]:checked')?.value;
+      $("#goalHelpBlock").style.display = (val === "yes") ? "block" : "none";
+      if(val !== "yes"){
+        $all('input[name="goalHelp"]').forEach(i=>i.checked=false);
+        setPillGroupActive("goalHelp");
+      }
+    });
+    wirePillGroup("goalHelp");
+
+    $("#kidCount").addEventListener("change", renderKidFields);
+    renderKidFields();
+
+    // defaults
+    document.querySelector('input[name="hasKids"][value="no"]').checked = true;
+    document.querySelector('input[name="hasPets"][value="no"]').checked = true;
+    document.querySelector('input[name="hasSmallLoans"][value="no"]').checked = true;
+    document.querySelector('input[name="hasCar"][value="no"]').checked = true;
+    document.querySelector('input[name="housingType"][value="villa"]').checked = true;
+
+    ["hasKids","hasPets","hasSmallLoans","hasCar","housingType","hasCottage","wantsCottage","goalHelp"].forEach(setPillGroupActive);
+
+    // payday default
+    try { $("#paydayDay").value = "25"; } catch(e){}
+
+    renderDots();
+    showStep(1);
+  })();
+
+  window.nextStep = nextStep;
+  window.prevStep = prevStep;
+  window.finish = finish;
+  window.togglePreview = togglePreview;
+
+})();
+  </script>
+</body>
+</html>

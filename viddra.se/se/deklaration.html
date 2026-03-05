@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Deklaration</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    /* Mobilmeny */
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    /* Active link (NO pill/oval, no height change) */
+    .nav a.is-active{font-weight:800;opacity:1;text-decoration:none}
+
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);overflow:hidden}
+    .mobileMenu .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+    .mobileMenu .head b{font-size:16px}
+    .mobileMenu .links{display:grid;gap:8px;padding:12px}
+    .mobileMenu a{display:flex;align-items:center;justify-content:space-between;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.65);text-decoration:none;color:var(--ink);font-weight:600}
+    .mobileMenu .close{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:700}
+
+    /* HERO (samma stil som övriga sidor) */
+    .hero{
+      margin: 14px 0 18px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.18);
+    }
+    .hero img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    /* Deklarationslayout */
+    .decl-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:start;
+      margin-top:14px;
+    }
+    @media(max-width:980px){
+      .decl-grid{grid-template-columns:1fr}
+    }
+
+    .paper{
+      border-radius:22px;
+      background:rgba(255,255,255,.72);
+      border:1px solid var(--line);
+      box-shadow:0 18px 40px rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+
+    .paperHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 16px 12px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.55);
+    }
+    .paperHead .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .paperHead .title b{
+      font-size:18px;
+    }
+    .paperHead .title span{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .paperHead .persona{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      text-align:right;
+      max-width: 52%;
+    }
+    .paperHead .persona b{
+      font-size:13px;
+    }
+    .paperHead .persona span{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.25;
+    }
+
+    .ctaProfile{
+      margin:14px 16px 0;
+      padding:12px 12px;
+      border:1px dashed rgba(0,0,0,.22);
+      border-radius:16px;
+      background:rgba(246,241,232,.65);
+    }
+    .ctaProfile b{display:block;margin-bottom:4px}
+    .ctaProfile .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .ctaProfile a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.75);
+      text-decoration:none;
+      color:var(--ink);
+      font-weight:700;
+    }
+
+    .declRows{
+      padding:12px 10px 14px;
+      display:grid;
+      gap:8px;
+    }
+
+    .declRow{
+      display:grid;
+      grid-template-columns: 70px 1fr 120px;
+      gap:10px;
+      align-items:center;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.75);
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .08s ease;
+    }
+    .declRow:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.10);
+    }
+
+    .declRow .box{
+      font-weight:800;
+      font-size:14px;
+      color:var(--accent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:64px;
+      height:34px;
+      border-radius:12px;
+      background:rgba(32,50,37,.08);
+      border:1px solid rgba(32,50,37,.14);
+    }
+
+    .declRow .name{
+      font-weight:800;
+      line-height:1.2;
+    }
+    .declRow .sub{
+      margin-top:2px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.25;
+    }
+
+    .declRow .badge{
+      justify-self:end;
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(246,241,232,.65);
+      font-weight:700;
+      color:var(--ink);
+      white-space:nowrap;
+    }
+
+    .declRow.relevant .badge{
+      background:rgba(185,214,248,.55);
+      border-color:rgba(9,50,96,.18);
+    }
+
+    .side{
+      display:grid;
+      gap:14px;
+    }
+
+    .card{
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.62);
+      box-shadow:0 18px 40px rgba(0,0,0,.10);
+      padding:14px;
+    }
+    .card h2{
+      margin:0 0 8px 0;
+      font-family:Fraunces,serif;
+      font-size:18px;
+    }
+
+    /* Paper-styling used in this page (existing) */
+    .paperBody{padding:14px 16px 16px}
+    .section{margin-top:14px}
+    .section:first-child{margin-top:0}
+    .section h2{margin:0 0 6px 0;font-family:Fraunces,serif;font-size:18px}
+    .hint{margin:0 0 10px 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .rows{display:grid;gap:10px}
+    .row{
+      display:grid;
+      grid-template-columns: 92px 1fr 160px;
+      gap:10px;
+      align-items:center;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.75);
+      cursor:pointer;
+    }
+    @media(max-width:520px){
+      .row{grid-template-columns: 84px 1fr}
+      .amount{grid-column: 1 / -1}
+    }
+    .row.isActive{outline:3px solid rgba(185,214,248,.65)}
+    .code .lbl{font-size:12px;color:var(--muted);line-height:1.1}
+    .code .val{font-weight:800;color:var(--ink)}
+    .desc{font-weight:700;line-height:1.2}
+    .amount{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      justify-content:flex-end;
+    }
+    .amount .kr{color:var(--muted);font-size:12px}
+    .amount input{
+      width:100%;
+      max-width:120px;
+      padding:10px 10px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,.65);
+      outline:none;
+      text-align:right;
+    }
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+    .small{margin:10px 0 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .blockRow{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
+      padding:12px 12px;border-radius:16px;border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.75);cursor:pointer;
+    }
+    .blockRow.isActive{outline:3px solid rgba(185,214,248,.65)}
+    .blockRow .left{display:flex;flex-direction:column;gap:6px}
+    .topline{display:flex;gap:10px;align-items:center}
+    .blockTag{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(246,241,232,.65)}
+    .blockRow .name{margin:0;font-weight:800}
+    .blockRow .sub{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+    .chev{color:var(--muted);font-weight:700;white-space:nowrap}
+
+    .tipsPanel{
+      border-radius:22px;border:1px solid var(--line);
+      background:rgba(255,255,255,.62);
+      box-shadow:0 18px 40px rgba(0,0,0,.10);
+      padding:14px;
+    }
+    .tipsPanel h2{margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px}
+    .tipsPanel p{margin:0 0 12px 0;color:var(--muted);font-size:13px;line-height:1.45}
+    .tipCard{
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.70);
+      border-radius:18px;
+      overflow:hidden;
+      margin-top:10px;
+    }
+    .tipTop{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 12px;border-bottom:1px solid rgba(0,0,0,.06);
+      cursor:pointer;
+    }
+    .tipTop .t{font-weight:800}
+    .tipTop .s{color:var(--muted);font-size:13px}
+    .tipBody{display:none;padding:12px;color:var(--muted);font-size:13px;line-height:1.5}
+    .tipBody ul{margin:0 0 0 18px}
+    .checklist{display:grid;gap:10px}
+    .check{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start}
+    .check input{margin-top:3px}
+    .check .txt{font-size:13px;color:var(--muted);line-height:1.45}
+    .check .txt b{color:var(--ink)}
+    .okPill{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.65);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      color:#2b2b2b;
+      margin-top:10px;
+      width:fit-content;
+    }
+
+    /* ✅ Lightbox / Modal (mobiltips) */
+    .tipModalWrap{
+      position:fixed; inset:0;
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      background:rgba(0,0,0,.38);
+      z-index:80;
+      padding:14px;
+    }
+    .tipModal{
+      width:min(720px, 100%);
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(246,241,232,.98);
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
+      overflow:hidden;
+      max-height:86vh;
+      display:flex;
+      flex-direction:column;
+    }
+    .tipModalHead{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.6);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .tipModalHead .mt{
+      font-family:Fraunces,serif;
+      font-size:18px;
+      margin:0;
+      line-height:1.15;
+    }
+    .tipModalHead .ms{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+      line-height:1.35;
+    }
+    .tipModalBody{
+      padding:12px;
+      overflow:auto;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+    .tipModalBody ul{margin:8px 0 0 18px}
+    .tipModalBody li{margin:6px 0}
+    .tipModalBtns{
+      display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
+      padding:12px;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.6);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+
+        <div class="brand">
+          <div class="name">Viddra</div>
+          <div class="tag">Deklaration</div>
+        </div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="content">
+        <h1>Deklaration</h1>
+        <p class="lead">
+          Papperskänsla + tydliga tips. På mobil öppnas tipsen som en lightbox när du trycker på en ruta.
+        </p>
+
+        <div class="hero">
+          <img src="assets/deklaration_hero.png" alt="" loading="lazy" onerror="this.closest('.hero').style.display='none'">
+        </div>
+
+        <div class="decl-grid">
+          <!-- VÄNSTER: “PAPPER” -->
+          <div class="paper">
+            <div class="paperHead">
+              <div class="title">
+                <b>Översikt</b>
+                <span>Ruta-för-ruta, med tips</span>
+              </div>
+              <div class="meta">
+                <span class="pill" id="profilePill">Profil: —</span>
+                <span class="pill">
+                  Skatteår:
+                  <select id="yearSel" style="border:1px solid var(--line);border-radius:10px;padding:6px 8px;background:rgba(255,255,255,.65);">
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+
+            <div class="paperBody">
+              <div class="section">
+                <h2>1) Inkomster</h2>
+                <p class="hint">Vanligast: tjänst + kapital. (Näringsverksamhet/K10 blir egna bilagor.)</p>
+
+                <div class="rows">
+                  <div class="row" data-tip="tjanst">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">1.1</div></div>
+                    <div class="desc">Inkomst av tjänst (lön, pension, förmåner)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_1_1"></div>
+                  </div>
+
+                  <div class="row" data-tip="formaner">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">1.2</div></div>
+                    <div class="desc">Förmåner (t.ex. bilförmån) om ej redan korrekt förifyllt</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_1_2"></div>
+                  </div>
+
+                  <div class="row" data-tip="kapital_ink">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">7.1</div></div>
+                    <div class="desc">Kapitalinkomster (ränta, utdelning m.m.)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_7_1"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h2>2) Avdrag</h2>
+                <p class="hint">Här finns ofta pengar att hämta – och risk för fel ruta.</p>
+
+                <div class="rows">
+                  <div class="row" data-tip="rante">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">8.1</div></div>
+                    <div class="desc">Ränteutgifter (bolån, privatlån, kredit)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_8_1"></div>
+                  </div>
+
+                  <div class="row" data-tip="resor">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">2.1</div></div>
+                    <div class="desc">Resor till och från arbetet</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_2_1"></div>
+                  </div>
+
+                  <div class="row" data-tip="dubbel">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">2.2</div></div>
+                    <div class="desc">Dubbel bosättning / tillfälligt arbete (om villkor uppfylls)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_2_2"></div>
+                  </div>
+
+                  <div class="row" data-tip="rot_rut">
+                    <div class="code"><div class="lbl">Ruta</div><div class="val">—</div></div>
+                    <div class="desc">ROT/RUT (oftast redan förifyllt)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" placeholder="0" id="r_rot_rut"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h2>3) Vanliga bilagor (block)</h2>
+                <p class="hint">Klicka på ett block för tips. (Flöden kan byggas senare.)</p>
+
+                <div class="rows">
+                  <div class="blockRow" data-tip="k4">
+                    <div class="left">
+                      <div class="topline">
+                        <span class="blockTag">K4</span>
+                        <p class="name">Värdepapper / fonder / aktier</p>
+                      </div>
+                      <p class="sub">Sålt aktier/fonder? Då är det ofta K4 (vinster/förluster).</p>
+                    </div>
+                    <div class="chev">Visa tips →</div>
+                  </div>
+
+                  <div class="blockRow" data-tip="k5k6">
+                    <div class="left">
+                      <div class="topline">
+                        <span class="blockTag">K5/K6</span>
+                        <p class="name">Bostadsförsäljning</p>
+                      </div>
+                      <p class="sub">Sålt villa/bostadsrätt? Här missas ofta förbättringsutgifter.</p>
+                    </div>
+                    <div class="chev">Visa tips →</div>
+                  </div>
+
+                  <div class="blockRow" data-tip="uthyrning">
+                    <div class="left">
+                      <div class="topline">
+                        <span class="blockTag">Uthyrning</span>
+                        <p class="name">Uthyrning bostad/rum</p>
+                      </div>
+                      <p class="sub">Hyresintäkter kan behöva tas upp (med schablon/avdrag).</p>
+                    </div>
+                    <div class="chev">Visa tips →</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h2>4) Summering (demo)</h2>
+                <p class="hint">Enkel demo: inkomster minus avdrag. (Inte “slutskatt”.)</p>
+
+                <div class="rows">
+                  <div class="row">
+                    <div class="code"><div class="lbl">Fält</div><div class="val">Summa</div></div>
+                    <div class="desc">Inkomster minus avdrag (enkel)</div>
+                    <div class="amount"><span class="kr">kr</span><input inputmode="numeric" id="sum_simple" readonly></div>
+                  </div>
+                </div>
+
+                <div class="btnrow">
+                  <button class="btn primary" id="calc" type="button">Räkna demo-summa</button>
+                  <button class="btn" id="reset" type="button">Nollställ</button>
+                </div>
+
+                <p class="small">
+                  Nästa steg (sen): koppla tipsen mot din profil + ditt resultat.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- HÖGER: Tips + checklista (desktop) -->
+          <aside class="tipsPanel">
+            <h2>Viddra tips</h2>
+            <p>På mobil öppnas tips som en lightbox. På desktop visas de här och highlightas.</p>
+
+            <!-- Default -->
+            <div class="tipCard" id="tipDefault">
+              <div class="tipTop" style="cursor:default">
+                <div>
+                  <div class="t">Välj en ruta</div>
+                  <div class="s">Klicka på en rad i “pappret”</div>
+                </div>
+                <div class="s">•</div>
+              </div>
+              <div class="tipBody" style="display:block">
+                <ul>
+                  <li>Viddra hjälper dig hitta vad som brukar missas – inte ersätta Skatteverket.</li>
+                  <li>Fokusera på: räntor (även småkrediter), resor, bostadsförsäljning, värdepapper.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Tips-kort (visas ett i taget) -->
+            <div class="tipCard" data-tipcard="tjanst" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">1.1 Inkomst av tjänst</div><div class="s">Ofta förifyllt</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Kontroll:</b> att alla arbetsgivare/pensionsutbetalare finns med och att beloppen stämmer mot årsbesked.</li>
+                  <li><b>Vanlig miss:</b> jobbbyte, flera utbetalare, retroaktiva ersättningar.</li>
+                  <li><b>Regler & info:</b> <a href="https://www.skatteverket.se/privat/deklaration" target="_blank" rel="noopener">Skatteverket (deklaration – privat)</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="formaner" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">1.2 Förmåner</div><div class="s">Bil, kost, osv</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Här handlar det oftast om kontroll</b> (inte avdrag): bilförmån, kostförmån m.m.</li>
+                  <li><b>Check:</b> att förmånsvärdet ser rimligt ut och är kopplat till rätt person.</li>
+                  <li><b>Regler & beräkning:</b> <a href="https://www.skatteverket.se/privat/skatter/arbeteochinkomst/formaner/bilforman.4.7459477810df5bccdd4800012339.html" target="_blank" rel="noopener">Skatteverket – bilförmån</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="kapital_ink" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">7.1 Kapitalinkomster</div><div class="s">Ränta/utdelning</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Kapitalinkomster</b> kan vara ränta, utdelning m.m. och är ofta förifyllt från bank/broker.</li>
+                  <li><b>Sålt aktier/fonder?</b> Då är det ofta <b>K4</b> som gäller (se blocket K4).</li>
+                  <li><b>Regler & info:</b> <a href="https://www.skatteverket.se/privat/skatter/vardepapper.4.6a6688231259309ff1f800029104.html" target="_blank" rel="noopener">Skatteverket – värdepapper</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="rante" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">8.1 Ränteutgifter</div><div class="s">Bolån + smålån</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Du kan ofta dra av:</b> ränta på <b>bolån</b>, <b>privatlån</b> och <b>krediter/avbetalningar</b>.</li>
+                  <li><b>Vanlig miss:</b> räntor från kreditkort/delbetalning/små krediter (t.ex. Klarna/Qliro/Resurs).</li>
+                  <li><b>Check:</b> årsbesked från alla kreditgivare + eventuell fördelning mellan två personer.</li>
+                  <li><b>Regler & exempel:</b> <a href="https://www.skatteverket.se/privat/deklaration/avdragforprivatpersoner/avdragforranteutgifter.106.1b39a64a1919eabb488b87.html" target="_blank" rel="noopener">Skatteverket – ränteutgifter</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="resor" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">2.1 Resor till/från jobbet</div><div class="s">Villkor krävs</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Du kan ibland dra av</b> resor mellan bostad och arbete – <b>om villkoren är uppfyllda</b>.</li>
+                  <li><b>Gör så här:</b> räkna enligt Skatteverkets modell och spara underlag (dagar, avstånd, biljetter).</li>
+                  <li><b>Regler:</b> <a href="https://www.skatteverket.se/privat/skatter/bilochtrafik/avdragforresortillochfranarbetet.4.3810a01c150939e893f25603.html" target="_blank" rel="noopener">Skatteverket – resor till/från arbetet</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="dubbel" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">2.2 Dubbel bosättning</div><div class="s">Dokumentera</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Du kan ibland dra av</b> ökade boendekostnader vid <b>dubbel bosättning</b> – men villkor måste vara uppfyllda.</li>
+                  <li><b>Nyckelkrav:</b> övernattning + avstånd (50 km) + behållen bostad på gamla orten.</li>
+                  <li><b>Regler:</b> <a href="https://www.skatteverket.se/privat/etjansterochblanketter/svarpavanligafragor/avdrag/dubbelbosattning/vilkareglergallerforavdragfordubbelbosattningvidanstallningisverige.5.10010ec103545f243e80001831.html" target="_blank" rel="noopener">Skatteverket – dubbel bosättning</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="rot_rut" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">ROT/RUT</div><div class="s">Förifyllt – men kolla</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>ROT/RUT är ofta förifyllt</b> – men kontrollera att det hamnat på rätt person (om ni är två) och rätt år.</li>
+                  <li><b>Tips:</b> om belopp saknas: kolla faktura/utförarens uppgifter och att du har skatt att reducera mot.</li>
+                  <li><b>Regler:</b> <a href="https://www.skatteverket.se/privat/fastigheterochbostad/rotarbeteochrutarbete.4.2e56d4ba1202f95012080002966.html" target="_blank" rel="noopener">Skatteverket – ROT och RUT</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="k4" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">K4 Värdepapper</div><div class="s">Sålt aktier/fonder?</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>K4</b> gäller oftast när du sålt/inlöst <b>aktier, fonder, ETF:er, obligationer</b> m.m.</li>
+                  <li><b>Vanlig miss:</b> fel omkostnadsbelopp/anskaffningsvärde eller missat courtage.</li>
+                  <li><b>Regler:</b> <a href="https://www.skatteverket.se/privat/skatter/vardepapper.4.6a6688231259309ff1f800029104.html" target="_blank" rel="noopener">Skatteverket – värdepapper (K4)</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="k5k6" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">K5/K6 Bostadsförsäljning</div><div class="s">Missas ofta</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Sålt bostad?</b> Då är det ofta <b>K5 (småhus)</b> eller <b>K6 (bostadsrätt)</b>.</li>
+                  <li><b>Du kan ofta dra av:</b> mäklararvode och vissa försäljningskostnader.</li>
+                  <li><b>Vanlig miss:</b> förbättringsutgifter (renovering/nybyggnad) – kräver att reglerna uppfylls och att du har underlag.</li>
+                  <li><b>Regler:</b> <a href="https://www.skatteverket.se/privat/fastigheterochbostad/forsaljningavbostad.4.76a43be412206334b89800042922.html" target="_blank" rel="noopener">Skatteverket – försäljning av bostad</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tipCard" data-tipcard="uthyrning" style="display:none">
+              <div class="tipTop">
+                <div><div class="t">Uthyrning</div><div class="s">Intäkter + avdrag</div></div>
+                <div class="s">▼</div>
+              </div>
+              <div class="tipBody">
+<ul>
+                  <li><b>Uthyrning</b> kan vara skattepliktig, men du har ofta <b>schablonavdrag</b> och ibland ytterligare avdrag beroende på bostadstyp.</li>
+                  <li><b>Tips:</b> spara underlag (period, hyra, avgifter). Viddra kan senare räkna detta åt dig.</li>
+                  <li><b>Regler & beräkning:</b> <a href="https://www.skatteverket.se/privat/fastigheterochbostad/inkomsterfranbostad/hyrautprivatbostadbostadsrattsmahusochhyresratt.4.233f91f71260075abe8800033479.html" target="_blank" rel="noopener">Skatteverket – hyr ut bostad</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Checklist -->
+            <div class="tipCard" style="margin-top:12px;">
+              <div class="tipTop" style="cursor:default">
+                <div>
+                  <div class="t">Före du skickar in</div>
+                  <div class="s">snabb checklista</div>
+                </div>
+                <div class="s">✓</div>
+              </div>
+              <div class="tipBody" style="display:block">
+                <div class="checklist" id="checklist">
+                  <label class="check"><input type="checkbox" data-c="c1"><div class="txt"><b>Räntor:</b> kollat även smålån/kreditkort/avbetalning (inte bara bolån).</div></label>
+                  <label class="check"><input type="checkbox" data-c="c2"><div class="txt"><b>Resor:</b> om du tänker göra avdrag – har du underlag (dagar/avstånd/biljetter)?</div></label>
+                  <label class="check"><input type="checkbox" data-c="c3"><div class="txt"><b>ROT/RUT:</b> står det på rätt person (om ni är två) och rätt år?</div></label>
+                  <label class="check"><input type="checkbox" data-c="c4"><div class="txt"><b>Sålt bostad:</b> mäklararvode + förbättringsutgifter + kvitton/underlag samlade.</div></label>
+                  <label class="check"><input type="checkbox" data-c="c5"><div class="txt"><b>Sålt aktier/fonder:</b> K4 är komplett (antal, anskaffningskostnad, courtage).</div></label>
+                  <label class="check"><input type="checkbox" data-c="c6"><div class="txt"><b>Uthyrning:</b> intäkter/period dokumenterade (om du hyrt ut).</div></label>
+                  <label class="check"><input type="checkbox" data-c="c7"><div class="txt"><b>Stämmer uppgifter:</b> lön/pension/ersättningar ser rimliga ut mot årsbesked.</div></label>
+                </div>
+                <div class="okPill" id="okPill">0/7 klara</div>
+                <div class="small" style="margin-top:8px;">
+                  Obs: Viddra är en hjälptjänst. Vid osäkerhet: dubbelkolla med Skatteverkets info.
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Tips Lightbox -->
+  <div class="tipModalWrap" id="tipModalWrap" aria-hidden="true">
+    <div class="tipModal" role="dialog" aria-modal="true" aria-labelledby="tipModalTitle">
+      <div class="tipModalHead">
+        <div>
+          <p class="mt" id="tipModalTitle">Tips</p>
+          <div class="ms" id="tipModalSub">—</div>
+        </div>
+        <button class="btn" id="tipModalClose" type="button">Stäng</button>
+      </div>
+      <div class="tipModalBody" id="tipModalBody"></div>
+      <div class="tipModalBtns">
+        <button class="btn primary" id="tipModalOk" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobilmeny overlay -->
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+    </div>
+  </div>
+
+  <script src="assets/viddra-core.js"></script>
+  <script>
+    (function(){
+      // Mobile menu
+      var menuWrap = document.getElementById("menuWrap");
+      var openBtn = document.getElementById("openMenu");
+      var closeBtn = document.getElementById("closeMenu");
+      if (openBtn && closeBtn && menuWrap){
+        openBtn.onclick = function(){ menuWrap.style.display="flex"; };
+        closeBtn.onclick = function(){ menuWrap.style.display="none"; };
+        menuWrap.onclick = function(e){ if (e.target === menuWrap) menuWrap.style.display="none"; };
+      }
+
+      function safeParse(s){ try { return JSON.parse(s); } catch(e){ return null; } }
+      function readProfile(){
+        if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+        return safeParse(localStorage.getItem("viddra_profile_v1") || "") || null;
+      }
+
+      function housingTag(p){
+        if (window.ViddraCore && window.ViddraCore.isVilla && window.ViddraCore.isVilla(p)) return "villa";
+        if (window.ViddraCore && window.ViddraCore.isBrf && window.ViddraCore.isBrf(p)) return "brf";
+        if (window.ViddraCore && window.ViddraCore.isHyra && window.ViddraCore.isHyra(p)) return "hyra";
+        var t = (p && (p.housing || p.boende || p.housingType)) ? String(p.housing || p.boende || p.housingType).toLowerCase() : "";
+        if (t.indexOf("villa") >= 0) return "villa";
+        if (t.indexOf("brf") >= 0) return "brf";
+        if (t.indexOf("hyra") >= 0) return "hyra";
+        return "okand";
+      }
+
+      // Meny: visa "Boende" bara om profilen har boendetyp
+      (function(){
+        var p = readProfile();
+        var show = false;
+        if (p) {
+          var ht = housingTag(p);
+          show = (ht && ht !== "okand");
+        }
+        var a1 = document.getElementById("navBoendeExtra");
+        var a2 = document.getElementById("navBoendeExtraMobile");
+        if (a1) a1.style.display = show ? "" : "none";
+        if (a2) a2.style.display = show ? "" : "none";
+      })();
+
+      function profileText(p){
+        if (!p) return "—";
+        var adults = 1, kids = 0, home = "";
+        if (Array.isArray(p.adults) && p.adults.length) adults = Math.min(2, Math.max(1, p.adults.length));
+        if (Array.isArray(p.children)) kids = p.children.length;
+        if (p.housing && p.housing.type) home = p.housing.type;
+        if (!home && (p.housingType || p.boende || p.housing)) home = (p.housingType || p.boende || p.housing);
+        return adults + " vuxna · " + kids + " barn" + (home ? (" · " + home) : "");
+      }
+      var pill = document.getElementById("profilePill");
+      var p = readProfile();
+      if (pill) pill.textContent = "Profil: " + profileText(p);
+
+      // År-väljare (UI)
+      var yearSel = document.getElementById("yearSel");
+      if (yearSel){
+        var savedYear = localStorage.getItem("viddra_decl_year") || yearSel.value;
+        yearSel.value = savedYear;
+        yearSel.onchange = function(){ localStorage.setItem("viddra_decl_year", yearSel.value); };
+      }
+
+      // Checklist persist
+      var CHECK_KEY = "viddra_decl_check_v1";
+      function loadCheck(){
+        var obj = safeParse(localStorage.getItem(CHECK_KEY) || "{}") || {};
+        var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input[type="checkbox"][data-c]'));
+        boxes.forEach(function(b){
+          var k = b.getAttribute("data-c");
+          b.checked = !!obj[k];
+          b.onchange = function(){
+            obj[k] = !!b.checked;
+            localStorage.setItem(CHECK_KEY, JSON.stringify(obj));
+            updateOk();
+          };
+        });
+        updateOk();
+      }
+      function updateOk(){
+        var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input[type="checkbox"][data-c]'));
+        var done = 0;
+        boxes.forEach(function(b){ if (b.checked) done++; });
+        var pill = document.getElementById("okPill");
+        if (pill) pill.textContent = done + "/" + boxes.length + " klara";
+      }
+      loadCheck();
+
+      // Tips system
+      var tipCards = Array.prototype.slice.call(document.querySelectorAll(".tipCard[data-tipcard]"));
+      var defaultCard = document.getElementById("tipDefault");
+
+      function hideAllTips(){
+        tipCards.forEach(function(c){
+          c.style.display = "none";
+          c.classList.remove("active");
+        });
+      }
+
+      function setDesktopTip(key){
+        if (defaultCard) defaultCard.style.display = "none";
+        hideAllTips();
+
+        var found = null;
+        tipCards.forEach(function(c){
+          if (c.getAttribute("data-tipcard") === key) found = c;
+        });
+        if (!found) {
+          if (defaultCard) defaultCard.style.display = "block";
+          return;
+        }
+        found.style.display = "block";
+        found.classList.add("active");
+
+        // expand body by default on desktop
+        var body = found.querySelector(".tipBody");
+        if (body) body.style.display = "block";
+      }
+
+      function bindTipToggles(){
+        tipCards.forEach(function(card){
+          var top = card.querySelector(".tipTop");
+          var body = card.querySelector(".tipBody");
+          if (!top || !body) return;
+          top.onclick = function(){
+            body.style.display = (body.style.display === "block") ? "none" : "block";
+          };
+        });
+      }
+      bindTipToggles();
+
+      // ✅ Lightbox (mobil)
+      var tipModalWrap = document.getElementById("tipModalWrap");
+      var tipModalClose = document.getElementById("tipModalClose");
+      var tipModalOk = document.getElementById("tipModalOk");
+      var tipModalTitle = document.getElementById("tipModalTitle");
+      var tipModalSub = document.getElementById("tipModalSub");
+      var tipModalBody = document.getElementById("tipModalBody");
+      var lastFocusEl = null;
+
+      function isMobileTipsMode(){
+        return window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
+      }
+
+      function openTipModalFromCard(card){
+        if (!card) return;
+        lastFocusEl = document.activeElement;
+
+        var t = card.querySelector(".tipTop .t");
+        var s = card.querySelector(".tipTop .s");
+        tipModalTitle.textContent = t ? t.textContent : "Tips";
+        tipModalSub.textContent = s ? s.textContent : "";
+
+        var body = card.querySelector(".tipBody");
+        tipModalBody.innerHTML = body ? body.innerHTML : "<p>Inga detaljer.</p>";
+
+        tipModalWrap.style.display = "flex";
+        tipModalWrap.setAttribute("aria-hidden", "false");
+
+        setTimeout(function(){ tipModalClose.focus(); }, 0);
+      }
+
+      function closeTipModal(){
+        tipModalWrap.style.display = "none";
+        tipModalWrap.setAttribute("aria-hidden", "true");
+        tipModalBody.innerHTML = "";
+        if (lastFocusEl && lastFocusEl.focus) lastFocusEl.focus();
+      }
+
+      if (tipModalClose) tipModalClose.onclick = closeTipModal;
+      if (tipModalOk) tipModalOk.onclick = closeTipModal;
+      if (tipModalWrap){
+        tipModalWrap.onclick = function(e){
+          if (e.target === tipModalWrap) closeTipModal();
+        };
+      }
+      document.addEventListener("keydown", function(e){
+        if (e.key === "Escape" && tipModalWrap && tipModalWrap.style.display === "flex") closeTipModal();
+      });
+
+      function findTipCard(key){
+        var found = null;
+        tipCards.forEach(function(c){
+          if (c.getAttribute("data-tipcard") === key) found = c;
+        });
+        return found;
+      }
+
+      // Click handlers for rows/blocks
+      var rows = Array.prototype.slice.call(document.querySelectorAll(".row[data-tip]"));
+      var blocks = Array.prototype.slice.call(document.querySelectorAll(".blockRow[data-tip]"));
+
+      function clearActive(){
+        rows.forEach(function(x){ x.classList.remove("isActive"); });
+        blocks.forEach(function(x){ x.classList.remove("isActive"); });
+      }
+
+      function handleTipSelect(key, el){
+        clearActive();
+        if (el) el.classList.add("isActive");
+
+        var card = findTipCard(key);
+        if (isMobileTipsMode()){
+          openTipModalFromCard(card || defaultCard);
+        } else {
+          setDesktopTip(key);
+        }
+      }
+
+      rows.forEach(function(r){
+        r.style.cursor = "pointer";
+        r.addEventListener("click", function(e){
+          if (e.target && e.target.tagName && String(e.target.tagName).toLowerCase() === "input") return;
+          handleTipSelect(r.getAttribute("data-tip"), r);
+        });
+      });
+      blocks.forEach(function(b){
+        b.addEventListener("click", function(){
+          handleTipSelect(b.getAttribute("data-tip"), b);
+        });
+      });
+
+      // Demo-summa
+      function n(v){
+        v = String(v||"").replace(/[^\d\-]/g,"");
+        var x = parseInt(v, 10);
+        return isNaN(x) ? 0 : x;
+      }
+      function setVal(id, val){
+        var el = document.getElementById(id);
+        if (el) el.value = String(val);
+      }
+      var calc = document.getElementById("calc");
+      var reset = document.getElementById("reset");
+
+      if (calc){
+        calc.onclick = function(){
+          var income = n(document.getElementById("r_1_1").value) + n(document.getElementById("r_1_2").value) + n(document.getElementById("r_7_1").value);
+          var deduct = n(document.getElementById("r_8_1").value) + n(document.getElementById("r_2_1").value) + n(document.getElementById("r_2_2").value) + n(document.getElementById("r_rot_rut").value);
+          setVal("sum_simple", (income - deduct));
+        };
+      }
+
+      if (reset){
+        reset.onclick = function(){
+          ["r_1_1","r_1_2","r_7_1","r_8_1","r_2_1","r_2_2","r_rot_rut","sum_simple"].forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) el.value = "";
+          });
+          clearActive();
+          hideAllTips();
+          if (defaultCard) defaultCard.style.display = "block";
+        };
+      }
+
+      window.addEventListener("resize", function(){
+        if (!isMobileTipsMode() && tipModalWrap && tipModalWrap.style.display === "flex") {
+          closeTipModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

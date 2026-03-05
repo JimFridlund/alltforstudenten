@@ -71,7 +71,7 @@ class Visa extends Controller {
 					// Till view
 					$data['page_title'] = $kommun[0]->title;
 					$data['skola'] = $this->region_model->get_schools($kommun_id);
-					$data['ads'] = $this->ads_model->get_ads_to($kommun_id);
+					$data['ads'] = $this->ads_model->get_ads_to($kommun_id, "studenten");
 					$data['markers'] = "";
 					$data['kommun_lati'] = $kommun[0]->lati;
 					$data['kommun_long'] = $kommun[0]->longi;

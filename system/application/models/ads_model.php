@@ -1,128 +1,111 @@
-<?php if (!defined('BASEPATH')) exit('No direct access allowed.');
-/**
- * @package Studenten 2011
- * @copyright 2010, iDenta labs
- * @author Kristoffer Lidman
- */
-class Ads_model extends Model 
+<?php
+class Ads_model extends Model
 {
 	function Ads_model()
 	{
 		parent::Model();
 	}
-	
-	// Hämta annonser i detta län
-    function get_ads_to($region_id)
+
+	function get_ads_to($region_id = 0, $type = "")
 	{
-		// Hämta kategorier
-		$this->db->select('id');
-		$this->db->select('title as category_title');
-		$this->db->order_by('sort_order', "desc");
-		$query = $this->db->get('list_categories');
-		$main_array = array();
-		
-		foreach($query->result() as $row) {
-			
-			// Hämta företag i denna kategori
-			$company = $this->_get_company($region_id, $row->id);
-			
-			
-			
-			// Bygg ihop arrayen
-			$main_array[] = array(
-				'category_title' => $row->category_title, 
-				'company_id' => $company['company_id'],
-				'sort_id' => "-".$company['sort_id_ad'],
-				
-				//För att aktivera efter standard
-				//'sort_id' => "-".$company['company_id'],
-				
-				'company_title' => $company['company_title'],
-				'text_info' => $company['text_info'],
-				'logo' => $company['logo'],
-				'tel' => $company['tel'], 
-				'seller' => $company['seller'], 
-				'date_expire' => $company['date_expire'], 
-				'www' => $company['www'],
-				'lati' => $company['lati'],
-				'email' => $company['email'],
-				'orderid' => $company['orderid'],
-				'date_added' => $company['date_added'],
-				'boka_text' => $company['boka_text'],
-				'sort_id_ad' => "-".$company['sort_id_ad']
-				
-			
-			);
+		if(empty($type) OR empty($region_id)) return FALSE;
+
+		if($type == "studenten") {
+			$sql_cat = "SELECT id, title FROM list_categories ORDER BY sort_order ASC";
+		} else {
+			$sql_cat = "SELECT id, title FROM bal_categories ORDER BY sort_order ASC";
 		}
 
-		// Skicka tillbaka en sorterad array
-		return $this->_array_sort($main_array, 'sort_id', SORT_DESC);
+		$query = $this->db->query($sql_cat);
+
+		if($query->num_rows() > 0) {
+			foreach($query->result_array() as $data) {
+
+				$category_id = $data['id'];
+
+				$ad = $this->_get_company($region_id, $type, $category_id);
+
+				$result[] = array(
+					'category_title' => $data['title'],
+					'category_id' => $data['id'],
+					'company_title' => $ad[0],
+					'company_id' => $ad[1],
+					'logo' => $ad[2],
+					'tel' => $ad[3],
+					'www' => $ad[4],
+					'text_info' => $ad[5],
+					'sort_id_ad' => $ad[6],
+					'orderid' => $ad[7],
+					'seller' => $ad[8],
+					'boka_text' => $ad[9],
+					'date_expire' => $ad[10]
+				);
+			}
+		}
+
+		return $result;
 	}
-	
-	// Hämta företag
-	function _get_company($region_id, $category_id)
-	{
-		/*
-		$this->db->select('tel, www, logo, lati');
-		$this->db->select('id as company_id');
-		$this->db->select('title as company_title');
-		$this->db->where('region', $region_id);
-		$this->db->where('category', $category_id);
-		$this->db->limit(1);
-		$query = $this->db->get('list_ads');
-		*/
 
-		$this->db->select('list_ads.tel, list_ads.boka_text, list_ads.sort_id_ad, list_ads.orderid, list_ads.date_added, list_ads.date_expire, list_ads.seller, list_ads.email, list_ads.www, list_ads.logo, list_ads.lati, list_ads.text_info');
-		$this->db->select('list_ads.id as company_id');
-		$this->db->select('list_ads.title as company_title');
-		$this->db->from('list_ads');
-		$this->db->where('list_ads.category', $category_id);
-		$this->db->where('ads_relations.region_id', $region_id);
-		$this->db->join('ads_relations', 'ads_relations.ad_id = list_ads.id');
-		$this->db->order_by('list_ads.date_added', "asc");
-		$this->db->limit(1);
-		$query = $this->db->get();
-		
-		if ($query->num_rows() > 0)
-		{
-			$array = $query->result_array();
-			return $array[0];
+	function _get_company($region_id = 0, $type = "", $category_id = 0)
+	{
+		if($type == "studenten") {
+
+			// NYTT: koppla via ads_categories istället för list_ads.category
+			$sql = "
+				SELECT
+					a.id,
+					a.title,
+					a.logo,
+					a.adress,
+					a.postnr,
+					a.ort,
+					a.tel,
+					a.www,
+					a.text_info,
+					a.sort_id_ad,
+					a.orderid,
+					a.seller,
+					a.boka_text,
+					a.date_expire
+				FROM list_ads a
+				INNER JOIN ads_relations r ON r.ad_id = a.id
+				INNER JOIN ads_categories ac ON ac.ad_id = a.id
+				WHERE r.region_id = ?
+				  AND ac.category_id = ?
+				ORDER BY a.sort_id_ad DESC
+				LIMIT 1
+			";
+			$query = $this->db->query($sql, array((int)$region_id, (int)$category_id));
+
+		} else {
+
+			$sql_check = "SELECT id, title, logo, adress, postnr, ort, tel, www, text_info, sort_id_ad, orderid, seller, boka_text, date_expire
+						  FROM bal_ads
+						  WHERE id_region = '$region_id' AND category = '$category_id'
+						  ORDER BY sort_id_ad DESC
+						  LIMIT 1";
+			$query = $this->db->query($sql_check);
 		}
-	}
-	
-	// Sortera array
-	function _array_sort($array, $on, $order=SORT_ASC)
-	{
-		$new_array = array();
-		$sortable_array = array();
 
-		if (count($array) > 0) {
-			foreach ($array as $k => $v) {
-				if (is_array($v)) {
-					foreach ($v as $k2 => $v2) {
-						if ($k2 == $on) {
-							$sortable_array[$k] = $v2;
-						}
-					}
-				} else {
-					$sortable_array[$k] = $v;
-				}
-			}
+		$company = ""; $id = ""; $logo = ""; $tel = ""; $www = ""; $text_info = ""; $sort_id_ad = ""; $orderid = ""; $seller = ""; $boka_text = ""; $date_expire = "";
 
-			switch ($order) {
-				case SORT_ASC:
-					asort($sortable_array);
-				break;
-				case SORT_DESC:
-					arsort($sortable_array);
-				break;
-			}
-
-			foreach ($sortable_array as $k => $v) {
-				$new_array[$k] = $array[$k];
+		if($query->num_rows() > 0) {
+			foreach($query->result() as $ad) {
+				$id = $ad->id;
+				$company = $ad->title;
+				$logo = $ad->logo;
+				$tel = $ad->tel;
+				$www = $ad->www;
+				$text_info = $ad->text_info;
+				$sort_id_ad = $ad->sort_id_ad;
+				$orderid = $ad->orderid;
+				$seller = $ad->seller;
+				$boka_text = $ad->boka_text;
+				$date_expire = isset($ad->date_expire) ? $ad->date_expire : "";
 			}
 		}
 
-		return $new_array;
+		return array($company, $id, $logo, $tel, $www, $text_info, $sort_id_ad, $orderid, $seller, $boka_text, $date_expire);
 	}
 }
+?>

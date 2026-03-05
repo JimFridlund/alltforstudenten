@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Min sida</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);padding:14px}
+    .mobileMenu a{display:block;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.55);text-decoration:none;color:var(--ink);font-weight:600;margin-top:10px}
+
+    .hero{margin:14px 0;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.18);box-shadow:0 18px 40px rgba(0,0,0,.18)}
+    .hero img{width:100%;height:auto;display:block}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    @media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.55);
+      padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    }
+    .card h2{margin:0 0 8px 0;font-family:Fraunces,serif;font-size:18px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+
+    .row{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
+      padding:10px;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:rgba(255,255,255,.65);
+      margin-top:10px;
+    }
+    .left{font-weight:800}
+    .right{color:var(--muted)}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:14px;padding:10px 12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--btn);color:#fff;border-color:rgba(255,255,255,.12)}
+
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);
+      background:rgba(255,255,255,.65);border-radius:999px;padding:8px 12px;font-size:13px;color:#2b2b2b
+    }
+  </style>
+
+  <script src="assets/viddra-core.js"></script>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+
+        <div class="brand">
+          <div class="name">Viddra</div>
+          <div class="tag">Min sida</div>
+        </div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html" class="is-active">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" id="navBoendeExtra" style="display:none">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="hero">
+        <img src="assets/my_hero.png" alt="" loading="lazy">
+      </div>
+
+      <div class="content">
+        <h1>Min sida</h1>
+        <p class="lead">Här får du en snabb överblick, trend och smarta råd.</p>
+
+        <div class="grid">
+          <div class="card">
+            <h2>Den här månaden</h2>
+            <div class="muted">Summering (baserat på Resultat). Sparande räknas separat.</div>
+
+            <div class="row">
+              <div class="left">Inkomst</div>
+              <div class="right" id="sumIncome">—</div>
+            </div>
+            <div class="row">
+              <div class="left">Utgifter</div>
+              <div class="right" id="sumCost">—</div>
+            </div>
+            <div class="row">
+              <div class="left">Kvar</div>
+              <div class="right" id="sumLeft">—</div>
+            </div>
+
+            <div class="btnrow">
+              <a class="btn primary" href="resultat.html" style="text-decoration:none;">Fyll i resultat</a>
+              <a class="btn" href="budget.html" style="text-decoration:none;">Se budget</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Trend</h2>
+            <div class="muted" id="trendText">—</div>
+          </div>
+
+          <div class="card">
+            <h2>Boende-smart</h2>
+            <div class="muted" id="housingSmart">—</div>
+          </div>
+
+          <div class="card">
+            <h2>Veckoplan</h2>
+            <div class="muted" id="weekplanText">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobileMenuWrap" id="menuWrap">
+      <div class="mobileMenu">
+        <div class="btnrow" style="justify-content:space-between;">
+          <span class="pill">Meny</span>
+          <button class="btn" id="closeMenu" type="button">Stäng</button>
+        </div>
+        <a href="index.html">Start</a>
+        <a href="fill_budget.html">Fyll i budget</a>
+        <a href="budget.html">Budget</a>
+        <a href="resultat.html">Resultat</a>
+        <a href="min_sida.html">Min sida</a>
+        <a href="recept.html">Recept</a>
+        <a href="tips.html">Viddra-råd</a>
+        <a href="bibliotek.html">Bibliotek</a>
+        <a href="sparande.html">Sparande</a>
+        <a href="boende_extra.html" id="navBoendeExtraMobile" style="display:none">Boende</a>
+      </div>
+    </div>
+
+<script>
+(function(){
+  if (window.ViddraCore && window.ViddraCore.redirectToWwwIfNeeded && window.ViddraCore.redirectToWwwIfNeeded()) return;
+
+  var menuWrap = document.getElementById("menuWrap");
+  document.getElementById("openMenu").onclick = function(){ menuWrap.style.display="flex"; };
+  document.getElementById("closeMenu").onclick = function(){ menuWrap.style.display="none"; };
+
+  // Show "Boende" only when onboarding profile has housing type
+  function safeParse(s){ try{return JSON.parse(s);}catch(e){return null;} }
+  function readProfile(){
+    if (window.ViddraCore && window.ViddraCore.readProfile) return window.ViddraCore.readProfile();
+    return safeParse(localStorage.getItem("viddra_profile_v1")||"") || null;
+  }
+  function getHousingType(p){
+    if(!p) return "";
+    if(p.housing && p.housing.type) return String(p.housing.type||"");
+    if(p.housingType) return String(p.housingType||"");
+    if(p.profile && p.profile.housingType) return String(p.profile.housingType||"");
+    return "";
+  }
+
+  // Boende-smart (villa / brf / hyra) + boende_extra
+  function normHousingTag(raw){
+    var t = String(raw||"").toLowerCase().trim();
+    if(!t) return "";
+    if(t.indexOf("villa")!==-1 || t.indexOf("hus")!==-1) return "villa";
+    if(t.indexOf("brf")!==-1 || t.indexOf("bostads")!==-1) return "brf";
+    if(t.indexOf("hyra")!==-1 || t.indexOf("hyr")!==-1) return "hyra";
+    return t;
+  }
+
+  (function(){
+    var p = readProfile();
+    var housing = getHousingType(p).trim();
+    var show = !!housing;
+    var a1 = document.getElementById("navBoendeExtra");
+    var a2 = document.getElementById("navBoendeExtraMobile");
+    if(a1) a1.style.display = show ? "" : "none";
+    if(a2) a2.style.display = show ? "" : "none";
+  })();
+
+  function n(v){
+    if (v===null || typeof v==="undefined") return 0;
+    if (typeof v==="number") return isNaN(v)?0:v;
+    v = String(v).trim();
+    if (!v) return 0;
+    if (/^\d{4}-\d{2}(-\d{2})?$/.test(v)) return 0;
+    var m = v.match(/-?\d[\d\s\.,]*/);
+    if(!m) return 0;
+    var t = m[0].replace(/\s+/g,"");
+    if (t.indexOf(",")!==-1){
+      var parts=t.split(",");
+      var last=parts[parts.length-1];
+      if (last.length===1 || last.length===2) t = parts.slice(0,-1).join("") + "." + last;
+      else t = parts.join("");
+    }
+    if (t.indexOf(".")!==-1){
+      var p2=t.split(".");
+      var last2=p2[p2.length-1];
+      if (!(last2.length===1 || last2.length===2)) t = p2.join("");
+    }
+    var x = parseFloat(t);
+    return isNaN(x)?0:x;
+  }
+  function fmt(v){ return (Math.round(v)||0).toLocaleString("sv-SE")+" kr"; }
+
+  function ymNow(){
+    var d=new Date();
+    var y=d.getFullYear();
+    var m=(d.getMonth()+1);
+    return y + "-" + (m<10?"0":"") + m;
+  }
+
+  var sumIncome=0, sumCost=0, sumSavings=0;
+
+  function applySums(){
+    var left = sumIncome - sumCost - sumSavings;
+    document.getElementById("sumIncome").textContent = fmt(sumIncome);
+    document.getElementById("sumCost").textContent = fmt(sumCost);
+    document.getElementById("sumLeft").textContent = fmt(left);
+  }
+
+  function monthKey(){ return ymNow(); }
+
+  function getToken(){
+    try{
+      if (window.ViddraCore){
+        if (typeof window.ViddraCore.getToken === "function"){
+          var t1 = window.ViddraCore.getToken();
+          if (t1) return String(t1);
+        }
+        if (typeof window.ViddraCore.getSessionToken === "function"){
+          var t2 = window.ViddraCore.getSessionToken();
+          if (t2) return String(t2);
+        }
+      }
+    }catch(e){}
+    return (
+      localStorage.getItem("viddra_session_token") ||
+      localStorage.getItem("viddra_token") ||
+      localStorage.getItem("token") ||
+      ""
+    );
+  }
+
+  function resultsLocalKey(monthKey){
+    return "viddra_results_month_" + monthKey;
+  }
+
+  function computeFromPayload(obj){
+    sumIncome = 0; sumCost = 0; sumSavings = 0;
+
+    if (!obj || typeof obj !== "object") { applySums(); return; }
+
+    Object.keys(obj).forEach(function(k){
+      if (k === "total" || k === "spent_total" || k === "month" || k === "month_key" || k === "version") return;
+
+      var v = n(obj[k]);
+
+      if (String(k).indexOf("income_") === 0){
+        sumIncome += v;
+        return;
+      }
+
+      if (String(k).indexOf("actual_save_") === 0 || String(k).indexOf("save_") === 0){
+        sumSavings += v;
+        return;
+      }
+
+      if (String(k).indexOf("actual_") === 0){
+        sumCost += v;
+        return;
+      }
+    });
+
+    applySums();
+  }
+
+  function readLocalFallback(){
+    try{
+      var mk = monthKey();
+      var raw = localStorage.getItem(resultsLocalKey(mk));
+      if (!raw){
+        applySums();
+        return;
+      }
+      var obj = JSON.parse(raw);
+      computeFromPayload(obj);
+    }catch(e){
+      applySums();
+    }
+  }
+
+  function fetchSummary(){
+    var token = getToken();
+    if (!token){
+      readLocalFallback();
+      return;
+    }
+
+    var mk = monthKey();
+    var url = "api/get_results_summary_v2.php?token=" + encodeURIComponent(token) + "&month_key=" + encodeURIComponent(mk);
+
+    fetch(url, { method:"GET" })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if (!j || !j.ok){
+          readLocalFallback();
+          return;
+        }
+
+        if (j.totals && typeof j.totals === "object"){
+          sumIncome = n(j.totals.income);
+          sumCost = n(j.totals.cost);
+          sumSavings = n(j.totals.savings);
+          applySums();
+          return;
+        }
+
+        if (j.payload && typeof j.payload === "object"){
+          computeFromPayload(j.payload);
+          return;
+        }
+
+        sumIncome = n(j.income_total);
+        sumCost = n(j.cost_total || j.total_spent || j.total);
+        sumSavings = n(j.savings_total);
+        applySums();
+      })
+      .catch(function(){
+        readLocalFallback();
+      });
+  }
+
+  // Kör hämtning
+  fetchSummary();
+
+  // Trend (lightweight)
+  var trend = "Fyll i 2 månader för trend";
+  document.getElementById("trendText").textContent = trend;
+
+  // Weekplan
+  function getWeekPlan(){
+    try{ return JSON.parse(localStorage.getItem("viddra_weekplan_v1")||"[]"); }catch(e){ return []; }
+  }
+  (function(){
+    var wp = getWeekPlan();
+    document.getElementById("weekplanText").textContent = (wp && wp.length) ? ("Du har "+wp.length+" recept i veckoplanen.") : "Ingen veckoplan ännu.";
+  })();
+
+  // Housing-smart text (simple)
+  (function(){
+    var p = readProfile();
+    var tag = normHousingTag(getHousingType(p));
+    var extra = safeParse(localStorage.getItem("viddra_housing_extra_v1")||"") || null;
+
+    var t = "Fyll i Boende (extra) för smarta tips.";
+    if (tag === "hyra") t = "Hyra: håll koll på hyreshöjningar och bredband/TV.";
+    if (tag === "brf") t = "BRF: jämför avgift, ränta och kommande underhåll.";
+    if (tag === "villa") t = "Villa: el/värme/vatten/underhåll är dina stora hävstänger.";
+
+    if (extra && (tag === "villa" || tag === "brf" || tag === "hyra")) {
+      t = t + " (Boende-extra ifyllt ✅)";
+    }
+    document.getElementById("housingSmart").textContent = t;
+  })();
+
+})();
+</script>
+
+  </div><!-- /shell -->
+</body>
+</html>

@@ -1,0 +1,174 @@
+/* ======================================
+   BACKEND REFRESH – V3 (Tight layout)
+   Endast estetik. Ingen logik ändras.
+   ====================================== */
+
+body { 
+  background:#f5f7fa;
+  margin:0;
+}
+
+/* Wrapper */
+#wrapper{
+  max-width: 1100px;
+  width: 95%;
+  margin: 20px auto 40px auto;
+}
+
+/* Tvåkolumn */
+#left{ width: 72%; float:left; }
+#right{ width: 26%; float:right; }
+
+/* Mobil */
+@media (max-width: 920px){
+  #left, #right{ float:none; width:100%; }
+}
+
+/* Boxar */
+.left_box, .right_box{
+  background:#fff;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  margin-bottom:14px;
+  border:none;
+}
+
+/* Rubrik */
+.left_box h1{
+  font-size:26px;
+  margin:0 0 12px;
+  padding-bottom:10px;
+  border-bottom:2px solid #edf1f6;
+}
+
+/* Introtext */
+.left_box p{
+  margin:0 0 14px;
+  color:#5b6472;
+}
+
+/* Meny */
+#right h5{
+  margin:0 0 10px;
+  font-size:14px;
+  font-weight:800;
+  color:#1f2a37;
+}
+
+#right ul.menu{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+#right ul.menu li{
+  margin:6px 0;
+}
+
+#right ul.menu li img{ display:none; }
+
+#right ul.menu li a{
+  display:block;
+  padding:10px 12px;
+  background:#f1f4f8;
+  border-radius:10px;
+  font-weight:700;
+  color:#1f2a37;
+  text-decoration:none;
+  transition:0.15s ease;
+}
+
+#right ul.menu li a:hover{
+  background:#e6edf6;
+}
+
+#right ul.menu li.active a{
+  background:#0f4c81;
+  color:#fff;
+}
+
+/* Lägg till annons */
+#right a.right_button{
+  display:block;
+  margin-top:12px;
+  padding:12px;
+  text-align:center;
+  background:#f5c542;
+  border-radius:12px;
+  font-weight:900;
+  color:#132033;
+  text-decoration:none;
+  box-shadow:0 6px 16px rgba(0,0,0,0.06);
+}
+
+/* Dashboard rows */
+.dashboard_item{
+  height:auto !important;
+  padding:10px;
+  border-bottom:1px solid #edf1f6;
+}
+
+.dashboard_item.alt{ background:#fafbfd; }
+
+/* Formulär */
+#left dl{ margin-bottom:16px; }
+
+#left dl dt{
+  width:220px;
+  font-weight:800;
+  color:#334155;
+}
+
+#left dl dd{
+  width: calc(100% - 240px);
+}
+
+@media (max-width: 920px){
+  #left dl dt, #left dl dd{
+    width:100%;
+    float:none;
+  }
+}
+
+#left dl dd input,
+#left dl dd select,
+#left dl dd textarea{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #d9dee5;
+  border-radius:10px;
+  font-size:14px;
+  background:#fff;
+}
+
+#left dl dd input:focus,
+#left dl dd select:focus,
+#left dl dd textarea:focus{
+  outline:none;
+  border-color:#5094B9;
+  box-shadow:0 0 0 2px rgba(80,148,185,0.15);
+}
+
+/* Knappar */
+input[type=submit], button{
+  background:#0f4c81;
+  border:none;
+  padding:10px 18px;
+  border-radius:10px;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+/* Clear floats så footer hamnar rätt */
+main.page:after{
+  content:"";
+  display:block;
+  clear:both;
+}
+
+.siteFooter{
+  clear:both;
+  margin-top:20px;
+}

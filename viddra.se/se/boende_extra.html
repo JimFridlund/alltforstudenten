@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Boende (extra)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .nav{display:flex;gap:18px;flex-wrap:wrap}
+    .hamb{display:none}
+    @media(max-width:920px){.nav{display:none}.hamb{display:flex;gap:10px;align-items:center;margin-left:auto}}
+    .hamb button{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600}
+    .mobileMenuWrap{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:14px;z-index:60}
+    .mobileMenu{width:min(720px,100%);border-radius:18px;border:1px solid rgba(255,255,255,.18);background:rgba(246,241,232,.97);box-shadow:0 18px 50px rgba(0,0,0,.25);padding:14px}
+    .mobileMenu a{display:block;padding:12px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.55);text-decoration:none;color:var(--ink);font-weight:600;margin-top:10px}
+
+    .pill{display:inline-block;border:1px solid var(--line);background:rgba(255,255,255,.55);border-radius:999px;padding:6px 10px;font-size:13px;color:var(--muted)}
+    .muted{color:var(--muted);font-size:13px;line-height:1.45}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:700}
+    .btn.primary{background:rgba(32,50,37,.92);color:#fff;border-color:rgba(32,50,37,.92)}
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.55);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      margin-top:12px;
+    }
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+    .field{
+      border:1px solid rgba(0,0,0,.08);
+      background:rgba(255,255,255,.55);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .field label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .field input,.field select,.field textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.75);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+      font:inherit;
+    }
+    .field textarea{min-height:92px;resize:vertical}
+
+    .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .row2{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .row2 .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+    /* Standard: samma hero-beteende som andra sidor */
+    .hero{
+      margin-top:12px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,.08);
+      box-shadow:0 12px 40px rgba(0,0,0,.08);
+      background:#eee;
+    }
+    .hero img{
+      width:100%;
+      height:320px;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* ✅ Desktop: gör hero till 4:3 (mobil lämnas som tidigare) */
+    @media(min-width:901px){
+      .hero{ aspect-ratio: 4 / 3; }
+      .hero img{ height:100%; }
+    }
+
+    @media(max-width:900px){
+      .hero img{height:240px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar"></div>
+
+    <div class="frame">
+      <div class="brandrow">
+        <div class="logo"><img src="assets/logo.png" alt="Viddra" onerror="this.style.display='none'"></div>
+        <div class="brand"><p class="name">Viddra</p><p class="tag">Boende (extra)</p></div>
+
+        <div class="nav">
+          <a href="index.html">Start</a>
+          <a href="fill_budget.html">Fyll i budget</a>
+          <a href="budget.html">Budget</a>
+          <a href="resultat.html">Resultat</a>
+          <a href="min_sida.html">Min sida</a>
+          <a href="recept.html">Recept</a>
+          <a href="tips.html">Viddra-råd</a>
+          <a href="bibliotek.html">Bibliotek</a>
+          <a href="sparande.html">Sparande</a>
+          <a href="boende_extra.html" style="text-decoration:underline;opacity:1">Boende</a>
+        </div>
+
+        <div class="hamb"><button id="openMenu" type="button">☰ Meny</button></div>
+      </div>
+
+      <div class="hero">
+        <img src="assets/boende_hero.png" alt="" loading="lazy">
+      </div>
+
+      <div class="content">
+        <h1>Boende (extra)</h1>
+        <p class="lead">Extra frågor som gör Viddras råd smartare.</p>
+
+        <div class="card">
+          <div class="row2">
+            <div class="left">
+              <span class="pill" id="pHousing">Boende: —</span>
+              <span class="pill" id="pProfile">Profil: —</span>
+              <span class="pill" id="pSaved">Sparat: —</span>
+            </div>
+            <div class="btnrow" style="margin:0">
+              <button class="btn" id="btnReset" type="button">Nollställ</button>
+              <button class="btn primary" id="btnSave" type="button">Spara</button>
+            </div>
+          </div>
+          <p class="muted" style="margin-top:10px">Detta används i <b>Budget</b>, <b>Min sida</b> och <b>Deklaration</b> för mer relevanta tips.</p>
+        </div>
+
+        <div class="card" id="cardGate" style="display:none">
+          <p class="muted" id="gateText" style="margin:0"></p>
+        </div>
+
+        <div id="formWrap" style="display:none">
+          <div class="grid2">
+            <div class="card">
+              <h2 style="margin:0 0 8px 0">Månadskostnader</h2>
+              <p class="muted" style="margin:0 0 12px 0">Fyll i ungefärligt per månad. Lämna tomt om du inte vet.</p>
+
+              <div class="grid2" style="margin-top:0">
+                <div class="field">
+                  <label for="el">El (kr/mån)</label>
+                  <input id="el" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 1200">
+                  <div class="hint">Elhandel + elnät om du vill slå ihop.</div>
+                </div>
+
+                <div class="field" id="fVarme">
+                  <label for="varme">Värme (kr/mån)</label>
+                  <input id="varme" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 1500">
+                  <div class="hint">Fjärrvärme / pellets / värmepump (ungefärligt).</div>
+                </div>
+
+                <div class="field" id="fVattenSopor">
+                  <label for="vattensopor">Vatten + sopor (kr/mån)</label>
+                  <input id="vattensopor" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 700">
+                </div>
+
+                <div class="field" id="fBredbandTV">
+                  <label for="bredbandtv">Bredband/TV (kr/mån)</label>
+                  <input id="bredbandtv" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 499">
+                </div>
+
+                <div class="field" id="fUnderhall">
+                  <label for="underhall">Underhåll / husfond (kr/mån)</label>
+                  <input id="underhall" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 1000">
+                  <div class="hint">För villa/radhus: lägg gärna något här (även om du inte renoverar just nu).</div>
+                </div>
+
+                <div class="field" id="fAvgift">
+                  <label for="avgift">Avgift (BRF) (kr/mån)</label>
+                  <input id="avgift" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 4200">
+                </div>
+
+                <div class="field" id="fHyra">
+                  <label for="hyra">Hyra (kr/mån)</label>
+                  <input id="hyra" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 9500">
+                </div>
+
+                <div class="field" id="fBolLan">
+                  <label for="bollån">Bolån (räntekostnad) (kr/mån)</label>
+                  <input id="bollån" type="number" inputmode="numeric" min="0" step="1" placeholder="t.ex. 6200">
+                  <div class="hint">Räntekostnad, inte amortering.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 style="margin:0 0 8px 0">Planer / läge</h2>
+              <p class="muted" style="margin:0 0 12px 0">Används för smartare tips i Deklaration och Boende-råd.</p>
+
+              <div class="field">
+                <label for="solceller">Solceller</label>
+                <select id="solceller">
+                  <option value="">Välj…</option>
+                  <option value="yes">Ja</option>
+                  <option value="no">Nej</option>
+                  <option value="maybe">Kanske / planerar</option>
+                </select>
+              </div>
+
+              <div class="field" style="margin-top:10px">
+                <label for="laddbox">Laddbox</label>
+                <select id="laddbox">
+                  <option value="">Välj…</option>
+                  <option value="yes">Ja</option>
+                  <option value="no">Nej</option>
+                  <option value="maybe">Kanske / planerar</option>
+                </select>
+              </div>
+
+              <div class="field" style="margin-top:10px">
+                <label for="renovering">Renovering (12 mån)</label>
+                <select id="renovering">
+                  <option value="">Välj…</option>
+                  <option value="no">Nej</option>
+                  <option value="maybe">Kanske</option>
+                  <option value="yes">Ja</option>
+                </select>
+                <div class="hint">Om ja/kanske kan Deklaration visa ROT/RUT-tips.</div>
+              </div>
+
+              <div class="field" style="margin-top:10px">
+                <label for="note">Anteckning (valfritt)</label>
+                <textarea id="note" placeholder="t.ex. ‘Elpriset varierar mycket’"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h2 style="margin:0 0 8px 0">Så används detta</h2>
+          <ul class="muted" style="margin:0;padding-left:18px">
+            <li><b>Budget</b>: Boende-insikter om el/värme/vatten/underhåll.</li>
+            <li><b>Min sida</b>: Boende-smart i listan med råd.</li>
+            <li><b>Deklaration</b>: ROT/RUT/boende-relevanta tips.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobileMenuWrap" id="menuWrap">
+    <div class="mobileMenu">
+      <div class="btnrow" style="justify-content:space-between;">
+        <span class="pill">Meny</span>
+        <button class="btn" id="closeMenu" type="button">Stäng</button>
+      </div>
+      <a href="index.html">Start</a>
+      <a href="fill_budget.html">Fyll i budget</a>
+      <a href="budget.html">Budget</a>
+      <a href="resultat.html">Resultat</a>
+      <a href="min_sida.html">Min sida</a>
+      <a href="recept.html">Recept</a>
+      <a href="tips.html">Viddra-råd</a>
+      <a href="bibliotek.html">Bibliotek</a>
+      <a href="sparande.html">Sparande</a>
+      <a href="boende_extra.html">Boende</a>
+    </div>
+  </div>
+
+  <script src="assets/viddra-core.js"></script>
+  <script>
+    (function(){
+      var wrap = document.getElementById('menuWrap');
+      var open = document.getElementById('openMenu');
+      var close = document.getElementById('closeMenu');
+      if(open) open.addEventListener('click', function(){ wrap.style.display='flex'; });
+      if(close) close.addEventListener('click', function(){ wrap.style.display='none'; });
+      if(wrap) wrap.addEventListener('click', function(e){ if(e.target===wrap) wrap.style.display='none'; });
+
+      var KEY_PROFILE = 'viddra_profile_v1';
+      var KEY_HOUSING_EXTRA = 'viddra_housing_extra_v1';
+
+      function parseJSON(s, fallback){
+        try { return JSON.parse(s); } catch(e){ return fallback; }
+      }
+      function getProfile(){
+        return parseJSON(localStorage.getItem(KEY_PROFILE) || '{}', {});
+      }
+      function getExtra(){
+        return parseJSON(localStorage.getItem(KEY_HOUSING_EXTRA) || '{}', {});
+      }
+      function setExtra(obj){
+        localStorage.setItem(KEY_HOUSING_EXTRA, JSON.stringify(obj || {}));
+      }
+
+      var pHousing = document.getElementById('pHousing');
+      var pProfile = document.getElementById('pProfile');
+      var pSaved = document.getElementById('pSaved');
+      var gate = document.getElementById('cardGate');
+      var gateText = document.getElementById('gateText');
+      var formWrap = document.getElementById('formWrap');
+
+      var el = document.getElementById('el');
+      var varme = document.getElementById('varme');
+      var vattensopor = document.getElementById('vattensopor');
+      var bredbandtv = document.getElementById('bredbandtv');
+      var underhall = document.getElementById('underhall');
+      var avgift = document.getElementById('avgift');
+      var hyra = document.getElementById('hyra');
+      var bollån = document.getElementById('bollån');
+      var solceller = document.getElementById('solceller');
+      var laddbox = document.getElementById('laddbox');
+      var renovering = document.getElementById('renovering');
+      var note = document.getElementById('note');
+
+      var fVarme = document.getElementById('fVarme');
+      var fVattenSopor = document.getElementById('fVattenSopor');
+      var fBredbandTV = document.getElementById('fBredbandTV');
+      var fUnderhall = document.getElementById('fUnderhall');
+      var fAvgift = document.getElementById('fAvgift');
+      var fHyra = document.getElementById('fHyra');
+      var fBolLan = document.getElementById('fBolLan');
+
+      function housingLabel(h){
+        if(!h) return '—';
+        if(h==='villa') return 'Villa/radhus';
+        if(h==='brf') return 'Bostadsrätt';
+        if(h==='hyra') return 'Hyresrätt';
+        return h;
+      }
+
+      function renderGate(){
+        var profile = getProfile();
+        var housing = (profile && profile.housing) ? String(profile.housing) : '';
+        pHousing.textContent = 'Boende: ' + housingLabel(housing);
+
+        var adults = (profile && profile.adults) ? profile.adults : null;
+        var adultCount = 0;
+        if(Array.isArray(adults)) adultCount = adults.length;
+        else if(typeof adults === 'number') adultCount = adults;
+
+        pProfile.textContent = 'Profil: ' + (adultCount ? (adultCount + ' vuxna') : '—');
+
+        var extra = getExtra();
+        var saved = !!(extra && extra.updatedAt);
+        pSaved.textContent = 'Sparat: ' + (saved ? '✅' : '—');
+
+        if(!profile || (!profile.createdAt && !profile.version && !profile.adult1Name && !profile.adults)){
+          gate.style.display = '';
+          gateText.textContent = 'Du behöver först fylla i din profil på Start (index).';
+          formWrap.style.display = 'none';
+          return;
+        }
+
+        gate.style.display = 'none';
+        formWrap.style.display = '';
+
+        if(fVarme) fVarme.style.display = '';
+        if(fVattenSopor) fVattenSopor.style.display = '';
+        if(fBredbandTV) fBredbandTV.style.display = '';
+
+        if(fAvgift) fAvgift.style.display = 'none';
+        if(fHyra) fHyra.style.display = 'none';
+        if(fBolLan) fBolLan.style.display = 'none';
+        if(fUnderhall) fUnderhall.style.display = 'none';
+
+        if(housing === 'villa'){
+          if(fUnderhall) fUnderhall.style.display = '';
+          if(fBolLan) fBolLan.style.display = '';
+        } else if(housing === 'brf'){
+          if(fAvgift) fAvgift.style.display = '';
+          if(fBolLan) fBolLan.style.display = '';
+        } else if(housing === 'hyra'){
+          if(fHyra) fHyra.style.display = '';
+        }
+      }
+
+      function fillFromExtra(){
+        var extra = getExtra() || {};
+        if(el) el.value = (extra.el != null ? extra.el : '');
+        if(varme) varme.value = (extra.varme != null ? extra.varme : '');
+        if(vattensopor) vattensopor.value = (extra.vattensopor != null ? extra.vattensopor : '');
+        if(bredbandtv) bredbandtv.value = (extra.bredbandtv != null ? extra.bredbandtv : '');
+        if(underhall) underhall.value = (extra.underhall != null ? extra.underhall : '');
+        if(avgift) avgift.value = (extra.avgift != null ? extra.avgift : '');
+        if(hyra) hyra.value = (extra.hyra != null ? extra.hyra : '');
+        if(bollån) bollån.value = (extra.bollan != null ? extra.bollan : '');
+        if(solceller) solceller.value = (extra.solceller != null ? extra.solceller : '');
+        if(laddbox) laddbox.value = (extra.laddbox != null ? extra.laddbox : '');
+        if(renovering) renovering.value = (extra.renovering != null ? extra.renovering : '');
+        if(note) note.value = (extra.note != null ? extra.note : '');
+      }
+
+      function numOrNull(v){
+        if(v === '' || v == null) return null;
+        var n = Number(v);
+        return isFinite(n) ? n : null;
+      }
+
+      function save(){
+        var profile = getProfile() || {};
+        var housing = (profile && profile.housing) ? String(profile.housing) : '';
+
+        var extra = getExtra() || {};
+        extra.version = 1;
+        extra.housing = housing;
+        extra.updatedAt = new Date().toISOString();
+
+        extra.el = numOrNull(el && el.value);
+        extra.varme = numOrNull(varme && varme.value);
+        extra.vattensopor = numOrNull(vattensopor && vattensopor.value);
+        extra.bredbandtv = numOrNull(bredbandtv && bredbandtv.value);
+        extra.underhall = numOrNull(underhall && underhall.value);
+        extra.avgift = numOrNull(avgift && avgift.value);
+        extra.hyra = numOrNull(hyra && hyra.value);
+        extra.bollan = numOrNull(bollån && bollån.value);
+
+        extra.solceller = (solceller && solceller.value) ? solceller.value : '';
+        extra.laddbox = (laddbox && laddbox.value) ? laddbox.value : '';
+        extra.renovering = (renovering && renovering.value) ? renovering.value : '';
+        extra.note = (note && note.value) ? note.value.trim() : '';
+
+        setExtra(extra);
+        renderGate();
+      }
+
+      function reset(){
+        setExtra({});
+        fillFromExtra();
+        renderGate();
+      }
+
+      var btnSave = document.getElementById('btnSave');
+      var btnReset = document.getElementById('btnReset');
+      if(btnSave) btnSave.addEventListener('click', save);
+      if(btnReset) btnReset.addEventListener('click', reset);
+
+      renderGate();
+      fillFromExtra();
+    })();
+  </script>
+</body>
+</html>

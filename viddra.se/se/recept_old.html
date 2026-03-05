@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viddra – Recept</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/viddra-ui.css">
+
+  <style>
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .search { flex: 1 1 220px; }
+    .search input{
+      width:100%; padding:12px 12px; border-radius:12px;
+      border:1px solid rgba(0,0,0,.10); background:#fff; outline:none; font-size:15px;
+    }
+    .select{
+      padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,.10);
+      background:#fff; font-size:14px;
+    }
+    .filters { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-top:12px; }
+    .box { border:1px solid var(--line); border-radius:16px; padding:12px; background:rgba(255,255,255,.45); }
+    .box h3{ margin:0 0 8px 0; font-family:Fraunces,serif; font-size:16px; }
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--line); background:#fff; border-radius:999px;
+      padding:6px 10px; font-size:13px; cursor:pointer; user-select:none;
+    }
+    .chip input{ margin:0; }
+    .count { margin-top:10px; color:var(--muted); font-size:13px; }
+
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:14px; }
+    .cardR {
+      border:1px solid var(--line); border-radius:16px;
+      background:rgba(255,255,255,.55); overflow:hidden;
+      cursor:pointer;
+    }
+    .hero {
+      height:140px;
+      background: linear-gradient(135deg, rgba(47,61,51,.25), rgba(47,61,51,.05));
+      display:flex; align-items:flex-end; padding:12px;
+    }
+    .hero img{ width:100%; height:140px; object-fit:cover; display:block; }
+    .rbody{ padding:12px; }
+    .rtitle{ margin:0; font-family:Fraunces,serif; font-size:18px; }
+    .rmeta{ margin-top:4px; color:var(--muted); font-size:13px; }
+    .rtags{ margin-top:8px; display:flex; gap:6px; flex-wrap:wrap; }
+    .tag { font-size:12px; padding:4px 8px; border-radius:999px; background:rgba(47,61,51,.08); font-weight:600; }
+
+    .detail { display:none; margin-top:14px; }
+    .detail.active { display:block; }
+    .backrow{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .portionRow{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .portionRow input{ width:110px; }
+    .cols { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+    .list { margin:0; padding-left:18px; color:#2b2b2b; }
+    .step { margin:0 0 8px 0; }
+    .muted { color:var(--muted); }
+
+    @media (max-width: 980px){
+      .filters{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .cols{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="shell">
+  <div class="topbar"></div>
+  <div class="frame">
+
+    <div class="brandrow">
+      <div class="logo"><img src="assets/logo.png" alt="" onerror="this.style.display='none'"></div>
+      <div class="brand">
+        <p class="name">Viddra</p>
+        <p class="tag">Recept som passar din budget</p>
+      </div>
+      <div class="nav">
+        <a href="min_sida.html">Min sida</a>
+        <a href="budget.html">Budget</a>
+        <a href="resultat.html">Resultat</a>
+        <a href="tips.html">Tips</a>
+        <a href="bibliotek.html">Bibliotek</a>
+        <a href="recept.html">Recept</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>Recept</h1>
+      <p class="lead">100 recept v1. Unika titlar + unika id (dublettskydd).</p>
+
+      <div class="card" id="listView">
+        <div class="toolbar">
+          <div class="search">
+            <input id="q" placeholder="Sök (t.ex. pasta, curry, matlåda)..." />
+          </div>
+
+          <select id="sort" class="select">
+            <option value="reco">Rekommenderat</option>
+            <option value="cost_asc">Billigast</option>
+            <option value="time_asc">Snabbast</option>
+            <option value="title_asc">A–Ö</option>
+          </select>
+
+          <button class="btn-secondary" id="clearFilters">Rensa filter</button>
+        </div>
+
+        <div class="filters">
+          <div class="box">
+            <h3>Kök</h3>
+            <div class="chips" id="cuisineChips"></div>
+          </div>
+
+          <div class="box">
+            <h3>Kost</h3>
+            <div class="chips" id="dietChips"></div>
+          </div>
+
+          <div class="box">
+            <h3>Taggar</h3>
+            <div class="chips" id="tagChips"></div>
+          </div>
+        </div>
+
+        <div class="count" id="count"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <div class="card detail" id="detailView">
+        <div class="backrow">
+          <button class="btn-secondary" id="backBtn">← Tillbaka</button>
+          <div class="muted" id="dMeta"></div>
+        </div>
+
+        <div style="margin-top:10px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.55);">
+          <div id="dHero" style="height:200px;background:linear-gradient(135deg, rgba(47,61,51,.25), rgba(47,61,51,.05));"></div>
+          <div style="padding:14px;">
+            <h2 id="dTitle" style="font-family:Fraunces,serif;margin:0;font-size:26px;"></h2>
+            <div class="rtags" id="dTags"></div>
+
+            <div class="portionRow" style="margin-top:12px;">
+              <div class="muted">Portioner</div>
+              <input type="number" id="portionInput" min="1" step="1">
+              <button class="btn-secondary" id="applyPortions">Skala</button>
+              <div class="muted" id="portionHint"></div>
+            </div>
+
+            <div class="cols">
+              <div>
+                <h3 style="font-family:Fraunces,serif;margin:0 0 8px 0;">Ingredienser</h3>
+                <ul class="list" id="dIng"></ul>
+              </div>
+              <div>
+                <h3 style="font-family:Fraunces,serif;margin:0 0 8px 0;">Gör så här</h3>
+                <div id="dSteps"></div>
+              </div>
+            </div>
+
+            <div class="actions" style="justify-content:flex-end;">
+              <div class="btns">
+                <button class="btn-secondary" onclick="alert('Kommer: markera som lagat + poäng')">Markera som lagat</button>
+                <button class="btn-primary" onclick="alert('Kommer: spara som favorit')">Spara favorit</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Filterdata ---------- */
+
+var CUISINES = [
+  { id:'italienskt', name:'Italienskt' },
+  { id:'mexikanskt', name:'Mexikanskt' },
+  { id:'svenskt', name:'Svenskt' },
+  { id:'indiskt', name:'Indiskt' },
+  { id:'asiatiskt', name:'Asiatiskt' },
+  { id:'medelhav', name:'Medelhav' },
+  { id:'mellanostern', name:'Mellanöstern' },
+  { id:'amerikanskt', name:'Amerikanskt' },
+  { id:'franskt', name:'Franskt' },
+  { id:'thailandskt', name:'Thailändskt' }
+];
+
+var DIETS = [
+  { id:'veganskt', name:'Veganskt' },
+  { id:'vegetariskt', name:'Vegetariskt' }
+];
+
+var TAGS = [
+  { id:'billigt', name:'Billigt' },
+  { id:'snabbt', name:'Snabbt' },
+  { id:'matlåda', name:'Matlåda' },
+  { id:'barn', name:'Barnvänligt' },
+  { id:'protein', name:'Proteinrikt' }
+];
+
+/* ---------- Unik generator (inga dubletter) ---------- */
+
+var BASES = [
+  { id:'pasta', name:'Pasta', time:20 },
+  { id:'ris', name:'Ris', time:20 },
+  { id:'potatis', name:'Potatis', time:35 },
+  { id:'wrap', name:'Wrap', time:15 },
+  { id:'sallad', name:'Sallad', time:15 },
+  { id:'gryta', name:'Gryta', time:30 },
+  { id:'soppa', name:'Soppa', time:30 },
+  { id:'wok', name:'Wok', time:20 },
+  { id:'gratang', name:'Gratäng', time:40 },
+  { id:'bowl', name:'Bowl', time:20 }
+];
+
+var PROTEINS = [
+  { id:'linser', name:'linser', diet:'veganskt', protein:true, cheap:true },
+  { id:'kikärter', name:'kikärter', diet:'veganskt', protein:true, cheap:true },
+  { id:'svarta-bonor', name:'svarta bönor', diet:'veganskt', protein:true, cheap:true },
+  { id:'tofu', name:'tofu', diet:'veganskt', protein:true, cheap:false },
+  { id:'tempeh', name:'tempeh', diet:'veganskt', protein:true, cheap:false },
+  { id:'ägg', name:'ägg', diet:'vegetariskt', protein:true, cheap:true },
+  { id:'halloumi', name:'halloumi', diet:'vegetariskt', protein:true, cheap:false },
+  { id:'kvarg', name:'kvarg/sky', diet:'vegetariskt', protein:true, cheap:true },
+  { id:'kyckling', name:'kyckling', diet:null, protein:true, cheap:false },
+  { id:'nötfärs', name:'nötfärs', diet:null, protein:true, cheap:false },
+  { id:'fläsk', name:'fläsk', diet:null, protein:true, cheap:false },
+  { id:'tonfisk', name:'tonfisk', diet:null, protein:true, cheap:false }
+];
+
+var FLAVORS = [
+  { id:'tomat', name:'tomat & vitlök', cuisines:['italienskt','medelhav','franskt'] },
+  { id:'curry', name:'curry & kokos', cuisines:['indiskt','asiatiskt','thailandskt'] },
+  { id:'taco', name:'taco & lime', cuisines:['mexikanskt','amerikanskt'] },
+  { id:'soja', name:'soja & ingefära', cuisines:['asiatiskt','thailandskt'] },
+  { id:'dill', name:'dill & senap', cuisines:['svenskt','franskt'] },
+  { id:'sumak', name:'citron & sumak', cuisines:['mellanostern','medelhav'] },
+  { id:'bbq', name:'BBQ & paprika', cuisines:['amerikanskt'] },
+  { id:'pesto', name:'pesto & citron', cuisines:['italienskt','medelhav'] },
+  { id:'misosmör', name:'miso & sesam', cuisines:['asiatiskt'] },
+  { id:'harissa', name:'harissa & spiskummin', cuisines:['mellanostern','medelhav'] }
+];
+
+var VEG = [
+  { id:'morot', name:'morot' },
+  { id:'paprika', name:'paprika' },
+  { id:'broccoli', name:'broccoli' },
+  { id:'spenat', name:'spenat' },
+  { id:'zucchini', name:'zucchini' },
+  { id:'champinjoner', name:'champinjoner' },
+  { id:'majs', name:'majs' },
+  { id:'blomkal', name:'blomkål' }
+];
+
+var TWISTS = [
+  { id:'citron', name:'citron' },
+  { id:'chili', name:'chili' },
+  { id:'örter', name:'örter' },
+  { id:'rostade-fron', name:'rostade frön' },
+  { id:'yoghurt', name:'yoghurt-sås' },
+  { id:'crunch', name:'krispig topping' },
+  { id:'ost', name:'ost-topping' },
+  { id:'pickles', name:'picklad lök' }
+];
+
+function pick(arr, n){ return arr[n % arr.length]; }
+
+function slug(s){
+  return (s||'')
+    .toLowerCase()
+    .replace(/å/g,'a').replace(/ä/g,'a').replace(/ö/g,'o')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/-+/g,'-')
+    .replace(/^-|-$/g,'');
+}
+
+function estimateCost(p){
+  if (p.cheap) return 14;
+  if (p.id==='tofu') return 20;
+  if (p.id==='tempeh') return 24;
+  if (p.id==='halloumi') return 26;
+  if (p.id==='kyckling') return 28;
+  if (p.id==='nötfärs') return 32;
+  if (p.id==='fläsk') return 30;
+  if (p.id==='tonfisk') return 27;
+  return 22;
+}
+
+function addAutoTags(r){
+  if (r.costPerPortion <= 20) r.tags.push('billigt');
+  if (r.time <= 20) r.tags.push('snabbt');
+  if (r.lunchbox) r.tags.push('matlåda');
+  if (r.family) r.tags.push('barn');
+  if (r.proteinRich) r.tags.push('protein');
+}
+
+function buildIngredients(base, protein, flavor, veg, twist, portions){
+  var ing = [];
+  ing.push({ qty:1, unit:'st', item:'gul lök' });
+  ing.push({ qty:2, unit:'klyftor', item:'vitlök' });
+  ing.push({ qty:1, unit:'msk', item:'olja' });
+  ing.push({ qty:1, unit:'tsk', item:'salt' });
+  ing.push({ qty:1, unit:'krm', item:'svartpeppar' });
+
+  // bas
+  if (base.id==='pasta') ing.push({ qty: portions*90, unit:'g', item:'pasta' });
+  if (base.id==='ris' || base.id==='bowl') ing.push({ qty: portions*0.75, unit:'dl', item:'ris' });
+  if (base.id==='potatis' || base.id==='gratang') ing.push({ qty: portions*2, unit:'st', item:'potatis' });
+  if (base.id==='wrap') ing.push({ qty: portions, unit:'st', item:'tortillabröd' });
+  if (base.id==='sallad') ing.push({ qty:1, unit:'påse', item:'bladsallad' });
+  if (base.id==='gryta' || base.id==='soppa' || base.id==='wok') ing.push({ qty:1, unit:'st', item:'buljongtärning' });
+
+  // protein (förenklat men varierat)
+  if (protein.id==='linser') ing.push({ qty: portions*0.5, unit:'dl', item:'röda linser' });
+  if (protein.id==='kikärter') ing.push({ qty:1, unit:'burk', item:'kikärter' });
+  if (protein.id==='svarta-bonor') ing.push({ qty:1, unit:'burk', item:'svarta bönor' });
+  if (protein.id==='tofu') ing.push({ qty: portions*100, unit:'g', item:'tofu' });
+  if (protein.id==='tempeh') ing.push({ qty: portions*90, unit:'g', item:'tempeh' });
+  if (protein.id==='ägg') ing.push({ qty: portions, unit:'st', item:'ägg' });
+  if (protein.id==='halloumi') ing.push({ qty: portions*60, unit:'g', item:'halloumi' });
+  if (protein.id==='kvarg') ing.push({ qty: 2, unit:'dl', item:'kvarg/sky' });
+  if (protein.id==='kyckling') ing.push({ qty: portions*120, unit:'g', item:'kyckling' });
+  if (protein.id==='nötfärs') ing.push({ qty: portions*120, unit:'g', item:'nötfärs' });
+  if (protein.id==='fläsk') ing.push({ qty: portions*120, unit:'g', item:'fläsk' });
+  if (protein.id==='tonfisk') ing.push({ qty:1, unit:'burk', item:'tonfisk' });
+
+  // smakprofil
+  if (flavor.id==='tomat') ing.push({ qty:1, unit:'burk', item:'krossade tomater' });
+  if (flavor.id==='curry') ing.push({ qty:1, unit:'burk', item:'kokosmjölk' });
+  if (flavor.id==='taco') ing.push({ qty:1, unit:'msk', item:'tacokrydda' });
+  if (flavor.id==='soja') ing.push({ qty:2, unit:'msk', item:'soja' });
+  if (flavor.id==='dill') ing.push({ qty:1, unit:'msk', item:'dijonsenap' });
+  if (flavor.id==='sumak') ing.push({ qty:1, unit:'st', item:'citron' });
+  if (flavor.id==='bbq') ing.push({ qty:2, unit:'msk', item:'BBQ-sås' });
+  if (flavor.id==='pesto') ing.push({ qty:2, unit:'msk', item:'pesto' });
+  if (flavor.id==='misosmör') ing.push({ qty:1, unit:'msk', item:'miso (eller soja)' });
+  if (flavor.id==='harissa') ing.push({ qty:1, unit:'tsk', item:'harissa (eller paprikapulver)' });
+
+  // grönsak + twist
+  ing.push({ qty:1, unit:'st', item: veg.name });
+  ing.push({ qty:1, unit:'nypa', item: twist.name });
+
+  return ing;
+}
+
+function buildSteps(base, protein){
+  var steps = [];
+  steps.push('Hacka lök och vitlök. Fräs i olja 2–3 minuter.');
+  if (protein.id==='nötfärs' || protein.id==='kyckling' || protein.id==='fläsk') steps.push('Tillsätt protein och stek tills klart. Salta och peppra.');
+  else steps.push('Tillsätt protein/huvudingrediens och rör om så allt får smak.');
+  steps.push('Tillsätt smaksättning + grönsak och låt puttra 8–12 min.');
+  if (base.id==='pasta') steps.push('Koka pastan. Blanda med såsen och servera.');
+  else if (base.id==='ris' || base.id==='bowl') steps.push('Koka ris. Servera med grytan/såsen.');
+  else if (base.id==='potatis' || base.id==='gratang') steps.push('Tillaga potatisen. Servera med sås/topping.');
+  else if (base.id==='wrap') steps.push('Fördela fyllning i tortillas, rulla ihop och servera.');
+  else if (base.id==='sallad') steps.push('Blanda allt med sallad. Toppa och servera.');
+  else if (base.id==='wok') steps.push('Woka snabbt på hög värme och servera direkt.');
+  else if (base.id==='soppa') steps.push('Späd med vatten/buljong och koka klart 10 min.');
+  else steps.push('Smaka av och servera.');
+  steps.push('Klart!');
+  return steps;
+}
+
+function generateUniqueRecipes(targetCount){
+  var recipes = [];
+  var usedId = {};
+  var usedTitle = {};
+  var attempts = 0;
+
+  var portions = 4;
+
+  // tillräckligt stor kombinationsrymd => unikt utan “fusk”
+  while (recipes.length < targetCount && attempts < 20000){
+    attempts++;
+
+    var base = pick(BASES, attempts);
+    var protein = pick(PROTEINS, attempts*3 + 7);
+    var flavor = pick(FLAVORS, attempts*5 + 11);
+    var veg = pick(VEG, attempts*7 + 13);
+    var twist = pick(TWISTS, attempts*11 + 17);
+
+    // cuisine väljs ur flavor-cuisines men varierar
+    var cuisine = flavor.cuisines[(attempts + veg.id.length) % flavor.cuisines.length];
+
+    var time = base.time;
+    var cost = estimateCost(protein);
+
+    // unik titel byggs med extra komponenter (veg + twist)
+    var title = base.name + ' med ' + protein.name + ' – ' + flavor.name + ' (' + veg.name + ', ' + twist.name + ')';
+
+    // unik id baserad på allt
+    var id = slug(cuisine + '-' + base.id + '-' + protein.id + '-' + flavor.id + '-' + veg.id + '-' + twist.id);
+
+    if (usedId[id] || usedTitle[title]) continue;
+
+    var r = {
+      id: id,
+      title: title,
+      image: null,
+      cuisine: cuisine,
+      diet: protein.diet,
+      portions: portions,
+      time: time,
+      costPerPortion: cost,
+      lunchbox: (attempts % 3 === 0),
+      family: (attempts % 4 === 0),
+      proteinRich: !!protein.protein,
+      tags: [],
+      ingredients: buildIngredients(base, protein, flavor, veg, twist, portions),
+      steps: buildSteps(base, protein)
+    };
+    addAutoTags(r);
+
+    usedId[id] = true;
+    usedTitle[title] = true;
+    recipes.push(r);
+  }
+
+  if (recipes.length < targetCount){
+    console.log('WARN: kunde bara generera', recipes.length, 'unika recept.');
+  }
+  return recipes;
+}
+
+var RECIPES = generateUniqueRecipes(100);
+
+/* ---------- UI state ---------- */
+
+var state = { q:'', cuisines:{}, diets:{}, tags:{}, sort:'reco' };
+
+function el(id){ return document.getElementById(id); }
+
+function cuisineName(id){
+  for (var i=0;i<CUISINES.length;i++) if (CUISINES[i].id===id) return CUISINES[i].name;
+  return id;
+}
+
+function makeChip(container, id, label, group){
+  var w = document.createElement('label');
+  w.className = 'chip';
+  var cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.checked = !!state[group][id];
+  cb.onchange = function(){
+    state[group][id] = cb.checked;
+    renderList();
+  };
+  var text = document.createElement('span');
+  text.textContent = label;
+  w.appendChild(cb);
+  w.appendChild(text);
+  container.appendChild(w);
+}
+
+function hasAny(obj){ for (var k in obj) if (obj[k]) return true; return false; }
+
+function matches(recipe){
+  var q = (state.q || '').toLowerCase().trim();
+  if (q){
+    var hay = (recipe.title + ' ' + cuisineName(recipe.cuisine) + ' ' + recipe.tags.join(' ') + ' ' + (recipe.diet||'')).toLowerCase();
+    if (hay.indexOf(q) === -1) return false;
+  }
+  if (hasAny(state.cuisines) && !state.cuisines[recipe.cuisine]) return false;
+
+  if (hasAny(state.diets)){
+    var d = recipe.diet || 'none';
+    if (state.diets['veganskt'] && d === 'veganskt') {}
+    else if (state.diets['vegetariskt'] && d === 'vegetariskt') {}
+    else return false;
+  }
+
+  if (hasAny(state.tags)){
+    for (var t in state.tags){
+      if (state.tags[t] && recipe.tags.indexOf(t) === -1) return false;
+    }
+  }
+  return true;
+}
+
+function sortList(list){
+  if (state.sort === 'cost_asc') list.sort(function(a,b){ return a.costPerPortion - b.costPerPortion; });
+  else if (state.sort === 'time_asc') list.sort(function(a,b){ return a.time - b.time; });
+  else if (state.sort === 'title_asc') list.sort(function(a,b){ return a.title.localeCompare(b.title); });
+  else {
+    list.sort(function(a,b){
+      var sa = (a.costPerPortion<=20?2:0) + (a.time<=20?2:0) + (a.lunchbox?1:0);
+      var sb = (b.costPerPortion<=20?2:0) + (b.time<=20?2:0) + (b.lunchbox?1:0);
+      return sb - sa;
+    });
+  }
+  return list;
+}
+
+function renderCard(r){
+  var div = document.createElement('div');
+  div.className = 'cardR';
+  div.onclick = function(){ openDetail(r.id); };
+
+  var hero = document.createElement('div');
+  hero.className = 'hero';
+
+  if (r.image){
+    var img = document.createElement('img');
+    img.src = r.image;
+    img.alt = r.title;
+    hero.innerHTML = '';
+    hero.appendChild(img);
+  } else {
+    hero.innerHTML = '<div class="muted" style="font-size:13px;">Bild kommer</div>';
+  }
+
+  var body = document.createElement('div');
+  body.className = 'rbody';
+  body.innerHTML =
+    '<p class="rtitle">'+r.title+'</p>' +
+    '<div class="rmeta">'+cuisineName(r.cuisine)+' · '+r.time+' min · '+r.costPerPortion+' kr/portion</div>' +
+    '<div class="rtags">'+ r.tags.slice(0,4).map(function(t){ return '<span class="tag">'+t+'</span>'; }).join('') + (r.diet?('<span class="tag">'+r.diet+'</span>'):'') + '</div>';
+
+  div.appendChild(hero);
+  div.appendChild(body);
+  return div;
+}
+
+function renderList(){
+  var filtered = [];
+  for (var i=0;i<RECIPES.length;i++) if (matches(RECIPES[i])) filtered.push(RECIPES[i]);
+  sortList(filtered);
+
+  el('count').textContent = filtered.length + ' recept matchar';
+
+  var grid = el('grid');
+  grid.innerHTML = '';
+  for (var j=0;j<filtered.length;j++) grid.appendChild(renderCard(filtered[j]));
+}
+
+/* ---------- Detail ---------- */
+
+var currentRecipe = null;
+var currentPortions = null;
+
+function ingredientLine(it, basePortions, newPortions){
+  var q = it.qty;
+  if (typeof q === 'number' && basePortions && newPortions){
+    q = q * (newPortions / basePortions);
+  }
+  var qStr = (typeof q === 'number') ? (Math.round(q*10)/10).toString().replace('.0','') : q;
+  return qStr + ' ' + it.unit + ' ' + it.item;
+}
+
+function openDetail(id){
+  currentRecipe = null;
+  for (var i=0;i<RECIPES.length;i++) if (RECIPES[i].id === id) { currentRecipe = RECIPES[i]; break; }
+  if (!currentRecipe) return;
+
+  var p = new URLSearchParams(window.location.search);
+  p.set('id', id);
+  history.replaceState(null,'', window.location.pathname + '?' + p.toString());
+
+  el('listView').style.display = 'none';
+  el('detailView').classList.add('active');
+
+  currentPortions = currentRecipe.portions;
+  el('portionInput').value = currentPortions;
+  el('portionHint').textContent = '(original: ' + currentRecipe.portions + ')';
+
+  el('dTitle').textContent = currentRecipe.title;
+  el('dMeta').textContent =
+    cuisineName(currentRecipe.cuisine) + ' · ' +
+    currentRecipe.time + ' min · ' +
+    currentRecipe.costPerPortion + ' kr/portion' +
+    (currentRecipe.diet ? (' · ' + currentRecipe.diet) : '');
+
+  if (currentRecipe.image){
+    el('dHero').innerHTML = '<img src="'+currentRecipe.image+'" alt="'+currentRecipe.title+'" style="width:100%;height:200px;object-fit:cover;display:block;">';
+  } else {
+    el('dHero').innerHTML = '<div class="muted" style="padding:12px;">Bild kommer – vi genererar en åt gången.</div>';
+  }
+
+  var tagsHtml = '';
+  for (var t=0;t<currentRecipe.tags.length;t++) tagsHtml += '<span class="tag">'+currentRecipe.tags[t]+'</span>';
+  if (currentRecipe.diet) tagsHtml += '<span class="tag">'+currentRecipe.diet+'</span>';
+  el('dTags').innerHTML = tagsHtml;
+
+  renderDetailPortions(currentPortions);
+}
+
+function renderDetailPortions(newPortions){
+  if (!currentRecipe) return;
+
+  var ing = el('dIng');
+  ing.innerHTML = '';
+  for (var i=0;i<currentRecipe.ingredients.length;i++){
+    var li = document.createElement('li');
+    li.textContent = ingredientLine(currentRecipe.ingredients[i], currentRecipe.portions, newPortions);
+    ing.appendChild(li);
+  }
+
+  var steps = el('dSteps');
+  steps.innerHTML = '';
+  for (var s=0;s<currentRecipe.steps.length;s++){
+    var p = document.createElement('p');
+    p.className = 'step';
+    p.innerHTML = '<b>'+(s+1)+'.</b> ' + currentRecipe.steps[s];
+    steps.appendChild(p);
+  }
+}
+
+function closeDetail(){
+  el('detailView').classList.remove('active');
+  el('listView').style.display = 'block';
+
+  var p = new URLSearchParams(window.location.search);
+  p.delete('id');
+  var qs = p.toString();
+  history.replaceState(null,'', window.location.pathname + (qs ? ('?'+qs) : ''));
+}
+
+/* ---------- Init ---------- */
+
+function initChips(){
+  var cBox = el('cuisineChips');
+  var dBox = el('dietChips');
+  var tBox = el('tagChips');
+  cBox.innerHTML = ''; dBox.innerHTML = ''; tBox.innerHTML = '';
+  for (var i=0;i<CUISINES.length;i++) makeChip(cBox, CUISINES[i].id, CUISINES[i].name, 'cuisines');
+  for (var j=0;j<DIETS.length;j++) makeChip(dBox, DIETS[j].id, DIETS[j].name, 'diets');
+  for (var k=0;k<TAGS.length;k++) makeChip(tBox, TAGS[k].id, TAGS[k].name, 'tags');
+}
+
+function applyFromUrl(){
+  var p = new URLSearchParams(window.location.search);
+  var f = p.get('filter');
+  if (f && f !== 'all') state.tags[f] = true;
+
+  var id = p.get('id');
+  if (id) openDetail(id);
+}
+
+el('q').addEventListener('input', function(e){ state.q = e.target.value; renderList(); });
+el('sort').addEventListener('change', function(e){ state.sort = e.target.value; renderList(); });
+el('clearFilters').onclick = function(){
+  state.q = '';
+  state.cuisines = {};
+  state.diets = {};
+  state.tags = {};
+  el('q').value = '';
+  el('sort').value = 'reco';
+  state.sort = 'reco';
+  initChips();
+  renderList();
+  history.replaceState(null,'', window.location.pathname);
+};
+el('backBtn').onclick = closeDetail;
+el('applyPortions').onclick = function(){
+  var v = parseInt(el('portionInput').value, 10);
+  if (!v || v < 1) v = currentRecipe ? currentRecipe.portions : 4;
+  currentPortions = v;
+  renderDetailPortions(v);
+};
+
+initChips();
+applyFromUrl();
+renderList();
+</script>
+</body>
+</html>

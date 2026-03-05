@@ -38,9 +38,9 @@ $active_group = "default";
 $active_record = TRUE;
 
 $db['default']['hostname'] = "localhost";
-$db['default']['username'] = "studente_1";
-$db['default']['password'] = "oyT_+hV045_;";
-$db['default']['database'] = "studente_1";
+$db['default']['username'] = "studen36_studenten20xx";
+$db['default']['password'] = "sXk0JGi9xuX3VA0CK#ZU";
+$db['default']['database'] = "studen36_studenten20xx";
 $db['default']['dbdriver'] = "mysql";
 $db['default']['dbprefix'] = "";
 $db['default']['pconnect'] = TRUE;

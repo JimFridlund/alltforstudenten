@@ -3,8 +3,8 @@
 <div id="left">
 	<div class="left_box">
 		<h1>Medarbetare</h1>
-		
-	  <p>Vi som jobbar med Studenten2021.se &auml;r:</p>
+
+	  <p>Vi som jobbar med Alltforstudenten.se &auml;r:</p>
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	    <tr>
 	      <td align="center"><img src="../public/images/stephanie.png" />&nbsp;</td>
